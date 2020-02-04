@@ -13,5 +13,69 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Файлы исходного кода\MainCore">
+      <UniqueIdentifier>{e7149bb5-f97e-4864-96ac-a1ec67ba9fb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы исходного кода\Ephemeris">
+      <UniqueIdentifier>{e9763b0a-49e3-4aed-9746-b3016c4e59a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\MainCore">
+      <UniqueIdentifier>{c51e683b-e0d8-4832-a519-cd91ad9a142b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\Ephemeris">
+      <UniqueIdentifier>{69315e19-a226-48fe-8020-9e4bd15bd532}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MainCore\BoundaryConditions.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
+    <ClCompile Include="MainCore\Numerical_scheme_Step_parallel.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
+    <ClCompile Include="MainCore\Prepare_raschet.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
+    <ClCompile Include="MainCore\Problem_Defenition.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
+    <ClCompile Include="MainCore\Raschet.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
+    <ClCompile Include="MainCore\technical.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
+    <ClCompile Include="MainCore\Time_control.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
+    <ClCompile Include="MainCore\Work_With_Techplot.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Тест_распад_столба.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="ephemeris\Ephemeris.cpp">
+      <Filter>Файлы исходного кода\Ephemeris</Filter>
+    </ClCompile>
+    <ClCompile Include="ephemeris\Calendar.cpp">
+      <Filter>Файлы исходного кода\Ephemeris</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainCore\Constants.h">
+      <Filter>Заголовочные файлы\MainCore</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCore\Problem_Defenition.h">
+      <Filter>Заголовочные файлы\MainCore</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCore\Raschet.h">
+      <Filter>Заголовочные файлы\MainCore</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCore\technical.h">
+      <Filter>Заголовочные файлы\MainCore</Filter>
+    </ClInclude>
+    <ClInclude Include="ephemeris\Ephemeris.h">
+      <Filter>Заголовочные файлы\Ephemeris</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
