@@ -1,9 +1,10 @@
 #pragma once
 #include <string>
-//#include "Variable.h" // Заголовочный файл описания класса сеточных значений для разностной схемы, НЕ ИСПОЛЬЗУЕТСЯ 
+
 #include "Problem_Defenition.h"
 #include "../ephemeris/Ephemeris.h"
-#include <time.h>
+//#include <time.h>
+#include <ctime>
 #include <iostream>
 #include "Constants.h"
 
@@ -186,7 +187,7 @@ public:
 	void Numerical_scheme_time_step_parallel(); // параллельная реализация(через openMP) функции численного счета
 	//void Numerical_scheme_time_step(); // убрана, поскольку используется параллельная реализация
 
-	void Prepare_Folder(string folder_path); // функция создания папки внутри проекта
+	void Prepare_Folder(string folder_path, bool ignore_warning = true); // Function to create folder
 	void Save_Data(double Time_of_work); // функция сохранения текущих данных
 	void Read_Data_from_file(string path_name); // функция загрузки величин из файла
 	void Print_info_about_point(string name, int index); // вывод информации о расчетной точке

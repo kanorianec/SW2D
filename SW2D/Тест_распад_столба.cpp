@@ -5,19 +5,18 @@
 #define _USE_MATH_DEFINES
 #define _XOPEN_SOURCE 600
 
-#include <math.h>
-#include <time.h>
+#include <cmath>
+//#include <time.h>
 #include <stdio.h>
 #include <string>
 #include <iostream>
 #include <fstream>
 
-//#include "Variable.h" // Заголовочный файл описания класса сеточных значений для разностной схемы, НЕ ИСПОЛЬЗУЕТСЯ 
 #include "MainCore/Problem_Defenition.h"
 #include "MainCore/Raschet.h"
 #include "MainCore/technical.h"
 
-#include <Windows.h>
+//#include <Windows.h>
 //#include <mmsystem.h>
 
 //#include <set>

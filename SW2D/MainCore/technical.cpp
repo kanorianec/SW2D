@@ -6,12 +6,16 @@
 #define _USE_MATH_DEFINES
 #define _XOPEN_SOURCE 600
 #include <cmath>
-#include <Windows.h>
+//#include <Windows.h>
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <time.h>
 #include <string>
+
+//#include <sys\stat.h>
+#include <direct.h>
 
 #include "Constants.h"
 #include "technical.h"
@@ -33,13 +37,38 @@ double polar_to_decart_y(double dlat) {
 	return y;
 }
 
-// функция создания папки внутри проекта
-void Raschet::Prepare_Folder(string folder_path)
+// Creating folder
+void Raschet::Prepare_Folder(string folder_path, bool ignore_warning)
 {
-	wstring stemp = wstring(folder_path.begin(), folder_path.end());
-	LPCWSTR pathW = stemp.c_str();
-	CreateDirectory(pathW, NULL);
-	//cout << "Prepare_Folder: " << folder_path << ";" << endl;
+	struct stat buffer;
+	if (stat(folder_path.c_str(), &buffer) != 0)
+	{
+			if (_mkdir(folder_path.c_str()) != 0)
+				cout << "Error: can't create folder " << folder_path << endl;
+	}
+	else
+	{
+		if (!ignore_warning)
+		{
+			cout << "Warning, " << folder_path << " already exists! Would you like to replace it? yes [y], no [n]:" << endl;
+			char c;
+			cin >> c;
+			while (c != 'y' && c != 'n')
+			{
+				cin >> c;
+				//cout << "!" << c << endl;
+			}
+			if (c == 'y')
+				Prepare_Folder(folder_path);
+			else
+			{
+				cin.ignore(1024, '\n');
+				cout << "Press Enter to stop the programm." << endl;
+				cin.get();
+				exit(0);
+			}
+		}
+	}
 }
 
 // функция сохранения текущих данных

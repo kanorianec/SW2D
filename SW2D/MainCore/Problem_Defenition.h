@@ -4,7 +4,6 @@
 
 #include <string>
 
-// #include "Variable.h" // Заголовочный файл описания класса сеточных значений для разностной схемы, НЕ ИСПОЛЬЗУЕТСЯ 
 using namespace std;
 
 class Problem_Defenition {

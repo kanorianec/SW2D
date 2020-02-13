@@ -208,7 +208,9 @@ Raschet::Raschet(string Test_name,
 
 void Raschet::Exec_Raschet()
 {
-	Raschet::Prepare_Folder(path); // подготовка папки хранения данных
+	Raschet::Prepare_Folder("Data"); // Checking and creating "Data" folder
+
+	Raschet::Prepare_Folder(path,false); // Creating Test_name folder
 	Raschet::Prepare_Raschet(); // подготовка расчёта:
 	cout << "Prepare_Raschet" << endl;
 	Raschet::Perform_Calculations(); // выполнение расчёта
