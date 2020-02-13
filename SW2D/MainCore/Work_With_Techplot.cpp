@@ -1,5 +1,5 @@
-/*
-Файл описания функций визуализации. Основной способ визуализации - построение графиков в "Tecplot 360 EX 2016 R2"
+п»ї/*
+Visualization function description file. The main way of visualization is using "Tecplot 360 EX 2016 R2"
 */
 #define _CRT_SECURE_NO_WARNINGS
 #include "Raschet.h"
@@ -15,19 +15,18 @@
 //#include <math.h>
 //#include <time.h>
 //#include <fstream>
-//#include "Variable.h" // Заголовочный файл описания класса сеточных значений для разностной схемы, НЕ ИСПОЛЬЗУЕТСЯ 
 
 using namespace std;
 
-/* 
-format of output tecplot file: 
+/*
+format of output tecplot file:
 TITLE= Test_name
-VARIABLES = "X" "Y" "H" "B" "Ux" "Uy" "S" // ordered list of variables 
-ZONE T="Time 0.000000" DATAPACKING=POINT, NODES=10000, ELEMENTS=9801, ZONETYPE=FEQUADRILATERAL // описание выводимых данных
+VARIABLES = "X" "Y" "H" "B" "Ux" "Uy" "S" // ordered list of variables
+ZONE T="Time 0.000000" DATAPACKING=POINT, NODES=10000, ELEMENTS=9801, ZONETYPE=FEQUADRILATERAL // Data descriptor
 
-Далее данные выводятся по столбцам по порядку
+Next, the data is displayed in columns 
 
-После этого выводятся индексы точек в специфической форме (так нужно для техплота)
+After that, the indices of the points are displayed in a specific form (as it necessary for the Tecplot)
 */
 
 void Raschet::SetVisualizationProperties(double T_start, double T_end, int iMin, int jMin, int iMax, int jMax)
@@ -89,7 +88,7 @@ void Raschet::Visualization_to_techplot_result()
 		first_visualization = true;
 		current_file_sizeMB = 0.0;
 	}
-	if (first_visualization) // условие для вывода в файл начальных условий (удобно для их визуализации) и проверки корректности их задания
+	if (first_visualization) // a condition for outputting first part of output data, it is necessary to write a header once
 	{
 		string RachetFileName = path + "\\Result_d" + to_string(output_per_file_counter) + ".dat";
 
