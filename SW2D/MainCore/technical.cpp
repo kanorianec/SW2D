@@ -6,7 +6,6 @@
 #define _USE_MATH_DEFINES
 #define _XOPEN_SOURCE 600
 #include <cmath>
-//#include <Windows.h>
 
 #include <iostream>
 #include <fstream>

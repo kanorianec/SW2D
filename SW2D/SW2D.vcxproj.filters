@@ -60,6 +60,9 @@
     <ClCompile Include="ephemeris\Calendar.cpp">
       <Filter>Файлы исходного кода\Ephemeris</Filter>
     </ClCompile>
+    <ClCompile Include="MainCore\Transport_Problem.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainCore\Constants.h">

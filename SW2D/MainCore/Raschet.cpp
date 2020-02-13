@@ -1,5 +1,5 @@
 /*
-Файл описания конструктора класса Расчет, а также его основных функций
+Description file of main class "Raschet" and its functions
 */
 
 #define _USE_MATH_DEFINES
@@ -19,8 +19,6 @@
 //#include <stdio.h>
 //#include <string>
 #include <algorithm>
-
-//#include "Variable.h" // Заголовочный файл описания класса сеточных значений для разностной схемы, НЕ ИСПОЛЬЗУЕТСЯ 
 
 using namespace std;
 
@@ -107,7 +105,7 @@ Raschet::Raschet(string Test_name,
 
 	Raschet::TransportProblemFlag = false;
 
-	Raschet::path = "Data\\" + Test_name + Postscript; // путь папки теста
+	Raschet::path = Data_folder + "\\" + Test_name + Postscript;
 
 	Raschet::BoundaryConditionsFromFile = false;
 	Raschet::InternalWallsFlag = false;
@@ -196,7 +194,7 @@ Raschet::Raschet(string Test_name,
 
 	Raschet::TransportProblemFlag = false;
 
-	Raschet::path = "Data\\" + Test_name + Postscript; // путь папки теста
+	Raschet::path = Data_folder + "\\" + Test_name + Postscript;
 
 	Raschet::BoundaryConditionsFromFile = false;
 	Raschet::InternalWallsFlag = false;

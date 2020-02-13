@@ -151,6 +151,7 @@
     <ClCompile Include="MainCore\Raschet.cpp" />
     <ClCompile Include="MainCore\technical.cpp" />
     <ClCompile Include="MainCore\Time_control.cpp" />
+    <ClCompile Include="MainCore\Transport_Problem.cpp" />
     <ClCompile Include="MainCore\Work_With_Techplot.cpp" />
     <ClCompile Include="Тест_распад_столба.cpp" />
   </ItemGroup>

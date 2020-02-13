@@ -23,9 +23,9 @@ public:
 	double hlat; // grid step by latitude
 	double hlon; // grid step by longitude
 
-	double alpha; // числовой коэффициент, выбираемый из условий точности и устойчивости счета(экспериментально)
-	double beta; // число Куранта - подбор(0; 1)
-	double NS; // коэффициент при тензоре Навье-Стокса
+	double alpha; // tuning parameter in range (0,1)
+	double beta; // CFL number (0, 1)
+	double NS; // coefficient at the Navier-Stokes tensor
 	
 	// Forcing:
 	double mu; // bottom friction coefficient
@@ -85,7 +85,7 @@ public:
 
 	
 	int HourMark;
-	double sea_level; // высота берега, которая входит в расчёт 
+	double sea_level; // shore height, which is included in the calculation
 
 	bool Visualization_to_techplot_flag; // output flag to Tecplot 
 
@@ -171,9 +171,9 @@ public:
 		double sea_level
 	);
 
-	void Prepare_Raschet();	// подготовка расчета
-	void Exec_Raschet(); // выполнение расчета
-	void Perform_Calculations(); // выполнение вычислений
+	void Prepare_Raschet();	// Preparing calculations
+	void Exec_Raschet(); // Calculations process execution 
+	void Perform_Calculations(); // Preforming calculations
 
 	void Initialize_Transport_Problem(double InitialC[],
 		double D

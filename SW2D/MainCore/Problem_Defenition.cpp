@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-//#include "Variable.h" // Заголовочный файл описания класса сеточных значений для разностной схемы, НЕ ИСПОЛЬЗУЕТСЯ 
+
 #include "Problem_Defenition.h"
 #include "Raschet.h"
 using namespace std;

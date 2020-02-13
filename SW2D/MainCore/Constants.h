@@ -40,6 +40,8 @@ const int border_WALL[4][8] = {
 	{ 1, 1, 1, 1, 1, 1, 1, 1 } // CONCENTRATION
 };
 
+const std::string Data_folder = "Data"; // main directory that contains all data folders
+
 enum TypeOfPoint {
 	BOTTOM = 0,
 	RIGHT = 1,

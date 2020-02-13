@@ -10,7 +10,6 @@
 //#include <string>
 //#include <fstream>
 //#include <algorithm>
-//#include "Variable.h" // Заголовочный файл описания класса сеточных значений для разностной схемы, НЕ ИСПОЛЬЗУЕТСЯ 
 
 using namespace std;
 
