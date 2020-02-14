@@ -13,7 +13,7 @@
 #include <time.h>
 #include <string>
 
-#ifdef linux
+#ifdef __linux__
 	#include <sys/types.h>
 	#include <sys/stat.h>
 #endif // linux
