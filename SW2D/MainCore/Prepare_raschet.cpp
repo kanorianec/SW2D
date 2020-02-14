@@ -4,7 +4,7 @@
 #include <iostream>
 #include "technical.h"
 
-//#include <math.h>
+#include <cmath>
 //#include <time.h>
 //#include <stdio.h>
 //#include <string>

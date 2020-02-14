@@ -14,7 +14,8 @@
 #include <string>
 
 #ifdef linux
-	#include <sys\stat.h>
+	#include <sys/types.h>
+	#include <sys/stat.h>
 #endif // linux
 
 #if defined(_WIN64) || defined(_WIN32)
