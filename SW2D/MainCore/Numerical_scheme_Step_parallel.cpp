@@ -1,8 +1,9 @@
-/*
+п»ї/*
 File of calculation module, includes difference scheme
 */
 #define _CRT_SECURE_NO_WARNINGS
-//#include <math.h>
+
+#include <cmath>
 #include <stdio.h>
 #include <iostream>
 //#include <fstream>
@@ -27,7 +28,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		// Internal points
 		if (S[k] == INTERNAL)
 		{	
-			// объявление вспомогательных переменных, за это должен был отвечать класс Variable, однако такой метод проигрывает по быстродействию
+			// РѕР±СЉСЏРІР»РµРЅРёРµ РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹С… РїРµСЂРµРјРµРЅРЅС‹С…
 
 			double xWS_05R, xWS_05L, xWS_05B, xWS_05T;
 			double yWS_05R, yWS_05L, yWS_05B, yWS_05T;
@@ -478,7 +479,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		int  i = int(m / Ny);
 		int j = m % Ny;
 		
-		// Если схема расходится, то программа сообщит об этом
+		// Г…Г±Г«ГЁ Г±ГµГҐГ¬Г  Г°Г Г±ГµГ®Г¤ГЁГІГ±Гї, ГІГ® ГЇГ°Г®ГЈГ°Г Г¬Г¬Г  Г±Г®Г®ГЎГ№ГЁГІ Г®ГЎ ГЅГІГ®Г¬
 		double check = fabs(Ht[m]) + fabs(xUt[m]) + fabs(yUt[m]);
 
 		if (check > CriticalVal || check != check)
@@ -509,8 +510,8 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			C[m] = Ct[m];
 		}
 
-		// заполнение условия сухого дна: массива условий является ли точка "сухой" или нет	
-		// если величина H меньше epsilon, то является, в таком случае сообщаем соседним точкам, что они тоже "сухие"
+		// Г§Г ГЇГ®Г«Г­ГҐГ­ГЁГҐ ГіГ±Г«Г®ГўГЁГї Г±ГіГµГ®ГЈГ® Г¤Г­Г : Г¬Г Г±Г±ГЁГўГ  ГіГ±Г«Г®ГўГЁГ© ГїГўГ«ГїГҐГІГ±Гї Г«ГЁ ГІГ®Г·ГЄГ  "Г±ГіГµГ®Г©" ГЁГ«ГЁ Г­ГҐГІ	
+		// ГҐГ±Г«ГЁ ГўГҐГ«ГЁГ·ГЁГ­Г  H Г¬ГҐГ­ГјГёГҐ epsilon, ГІГ® ГїГўГ«ГїГҐГІГ±Гї, Гў ГІГ ГЄГ®Г¬ Г±Г«ГіГ·Г ГҐ Г±Г®Г®ГЎГ№Г ГҐГ¬ Г±Г®Г±ГҐГ¤Г­ГЁГ¬ ГІГ®Г·ГЄГ Г¬, Г·ГІГ® Г®Г­ГЁ ГІГ®Г¦ГҐ "Г±ГіГµГЁГҐ"
 		if (H[m] < eps ) {
 			#pragma omp atomic
 			epsilon[m] += 1;
@@ -558,9 +559,9 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			
 		}
 		
-	}//конец for (m=0; m<(Ny*Nx); m++)
+	}//ГЄГ®Г­ГҐГ¶ for (m=0; m<(Ny*Nx); m++)
 
-	// вычисление tau
+	// ГўГ»Г·ГЁГ±Г«ГҐГ­ГЁГҐ tau
 	#pragma omp parallel for
 	for (int m = 0; m < Nx*Ny; m++)
 	{ 
@@ -583,6 +584,6 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			//Raschet::Visualization_to_techplot();
 			Stop_Raschet_Flag = 1;
 		}
-	}//конец for (m=0; m<(Ny*Nx); m++)
+	}//ГЄГ®Г­ГҐГ¶ for (m=0; m<(Ny*Nx); m++)
 
 }
