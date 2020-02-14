@@ -81,14 +81,14 @@ void Raschet::Prepare_Folder(string folder_path, bool ignore_warning)
 
 // функция сохранения текущих данных
 void Raschet::Save_Data(double Time_of_work) {
-	string save_path = path + "\\" + to_string((int)T_begin) + "-" + to_string((int)T_end); // путь папки сохраненных данных
+	string save_path = path + "/" + to_string((int)T_begin) + "-" + to_string((int)T_end); // путь папки сохраненных данных
 
 	Prepare_Folder(save_path);
 
-	string name_h = save_path + "\\H.dat";
-	string name_xU = save_path + "\\xU.dat";
-	string name_yU = save_path + "\\yU.dat";
-	string name_C = save_path + "\\C.dat";
+	string name_h = save_path + "/H.dat";
+	string name_xU = save_path + "/xU.dat";
+	string name_yU = save_path + "/yU.dat";
+	string name_C = save_path + "/C.dat";
 
 	FILE *fH = fopen(name_h.c_str(), "w");
 	FILE *fxU = fopen(name_xU.c_str(), "w");
@@ -129,12 +129,12 @@ void Raschet::Save_Data(double Time_of_work) {
 // функция загрузки величин из файла
 void Raschet::Read_Data_from_file(string path_name) {
 
-	string load_path = "Data\\" + path_name;
+	string load_path = "Data/" + path_name;
 
-	string name_h = load_path + "\\H.dat";
-	string name_xU = load_path + "\\xU.dat";
-	string name_yU = load_path + "\\yU.dat";
-	string name_C = load_path + "\\C.dat";
+	string name_h = load_path + "/H.dat";
+	string name_xU = load_path + "/xU.dat";
+	string name_yU = load_path + "/yU.dat";
+	string name_C = load_path + "/C.dat";
 
 	FILE *fH = fopen(name_h.c_str(), "r");
 	FILE *fxU = fopen(name_xU.c_str(), "r");
@@ -204,7 +204,7 @@ void Raschet::Print_info_about_point(string name, int index) {
 // вывод информации о точке в файл, ЛУЧШЕ ОПТИМИЗИРОВАТЬ: ВЫНЕСТИ УСЛОВИЕ В БЛОК ПРОГРАММЫ
 void Raschet::Write_point_to_file(int index, double X_cord, double Y_Cord, string file_name)
 {
-	file_name = path + "\\" + file_name;
+	file_name = path + "/" + file_name;
 	int  i = int(index / Ny);
 	int j = index % Ny;
 	if ((i*hx <= X_cord) && ((i + 1)*hx > X_cord) && (j*hy <= Y_Cord) && ((j + 1)*hy > Y_Cord))
@@ -217,7 +217,7 @@ void Raschet::Write_point_to_file(int index, double X_cord, double Y_Cord, strin
 
 void Raschet::Write_point_to_file(int index, string file_name)
 {
-	file_name = path + "\\" + file_name;
+	file_name = path + "/" + file_name;
 	FILE *F = fopen(file_name.c_str(), "a");
 	fprintf(F, "%lf %lf %lf %lf\n", Time_elapsed, H[index] + B[index], xU[index], yU[index]);
 	fclose(F);
@@ -230,9 +230,9 @@ void Raschet::write_extra_inf_to_file(double Time_of_work /*, double tt*/)
 	string file_name = "extra_inf.txt";
 	ofstream file;
 	file.precision(10);
-	file.open(path + "\\" + file_name);
+	file.open(path + "/" + file_name);
 	if (file.is_open())
-		cout << path + "\\" + file_name << endl;
+		cout << path + "/" + file_name << endl;
 
 	file << GetTimeStamp();
 

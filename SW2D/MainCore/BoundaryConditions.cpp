@@ -117,10 +117,10 @@ void Raschet::SetFileBoundaryConditions(TypeOfVariable VType, TypeOfPoint PType1
 	BoundaryConditionsFromFile = true;
 	if (t2_bound < 0)
 	{
-		FT = fopen("borders\\time_shift.dat", "r");
+		FT = fopen("borders/time_shift.dat", "r");
 		fscanf(FT, "%lf\n", &t2_bound);
 		if (FT == NULL)
-			std::cout << "Error: borders\\time_shift.dat was not found!" << endl;
+			std::cout << "Error: borders/time_shift.dat was not found!" << endl;
 	}
 
 	const int VarNum = 4;
@@ -130,7 +130,7 @@ void Raschet::SetFileBoundaryConditions(TypeOfVariable VType, TypeOfPoint PType1
 		TypeOfPoint PType = tempType[i];
 		if (PType != EXCLUDED)
 		{
-			string Name = "borders\\" + GetVariableName(VType) + "_" + to_string(PType) + ".dat";
+			string Name = "borders/" + GetVariableName(VType) + "_" + to_string(PType) + ".dat";
 
 			FV[VType][PType] = fopen(Name.c_str(), "r");
 			if (FV[VType][PType] == NULL)
