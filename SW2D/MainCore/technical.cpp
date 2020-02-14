@@ -13,8 +13,15 @@
 #include <time.h>
 #include <string>
 
-//#include <sys\stat.h>
-#include <direct.h>
+#ifdef linux
+	#include <sys\stat.h>
+#endif // linux
+
+#if defined(_WIN64) || defined(_WIN32)
+	#include <direct.h>
+#endif // _WIN64) || defined(_WIN32)
+
+
 
 #include "Constants.h"
 #include "technical.h"
