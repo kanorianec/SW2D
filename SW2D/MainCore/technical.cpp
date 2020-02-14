@@ -19,6 +19,7 @@
 
 #if defined(_WIN64) || defined(_WIN32)
 	#include <direct.h>
+	#define mkdir(dir, mode) _mkdir(dir)
 #endif // _WIN64) || defined(_WIN32)
 
 
@@ -47,9 +48,9 @@ double polar_to_decart_y(double dlat) {
 void Raschet::Prepare_Folder(string folder_path, bool ignore_warning)
 {
 	struct stat buffer;
-	if (stat(folder_path.c_str(), &buffer) != 0)
+	if (stat(folder_path.c_str(), &buffer))
 	{
-			if (mkdir(folder_path.c_str()) != 0)
+			if (mkdir(folder_path.c_str(), 0755))
 				cout << "Error: can't create folder " << folder_path << endl;
 	}
 	else
