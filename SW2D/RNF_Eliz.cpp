@@ -1,7 +1,7 @@
 ﻿#define _USE_MATH_DEFINES
 #define _XOPEN_SOURCE 600
 
-#include <math.h>
+#include <cmath>
 #include <time.h>
 #include <stdio.h>
 #include <string>

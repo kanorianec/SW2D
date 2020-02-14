@@ -14,7 +14,8 @@ Description file of main class "Raschet" and its functions
 #include <omp.h>
 #include <stdarg.h>
 
-//#include <math.h>
+#include <cmath>
+
 //#include <time.h>
 //#include <stdio.h>
 //#include <string>

@@ -127,7 +127,7 @@ void Raschet::Prepare_Raschet()
 				epsilon[m] += 1;
 
 				if (H[m] < 0)
-					H[m] = pow(10, -9);
+					H[m] = 10e-9;
 
 				//if (H[m] <= pow(10, -9)) {
 				if (i != Nx - 1) {
