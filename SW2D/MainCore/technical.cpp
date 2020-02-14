@@ -49,7 +49,7 @@ void Raschet::Prepare_Folder(string folder_path, bool ignore_warning)
 	struct stat buffer;
 	if (stat(folder_path.c_str(), &buffer) != 0)
 	{
-			if (_mkdir(folder_path.c_str()) != 0)
+			if (mkdir(folder_path.c_str()) != 0)
 				cout << "Error: can't create folder " << folder_path << endl;
 	}
 	else
