@@ -106,7 +106,7 @@ Raschet::Raschet(string Test_name,
 
 	Raschet::TransportProblemFlag = false;
 
-	Raschet::path = Data_folder + "\\" + Test_name + Postscript;
+	Raschet::path = Data_folder + "/" + Test_name + Postscript;
 
 	Raschet::BoundaryConditionsFromFile = false;
 	Raschet::InternalWallsFlag = false;
@@ -195,7 +195,7 @@ Raschet::Raschet(string Test_name,
 
 	Raschet::TransportProblemFlag = false;
 
-	Raschet::path = Data_folder + "\\" + Test_name + Postscript;
+	Raschet::path = Data_folder + "/" + Test_name + Postscript;
 
 	Raschet::BoundaryConditionsFromFile = false;
 	Raschet::InternalWallsFlag = false;

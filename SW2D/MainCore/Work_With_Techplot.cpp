@@ -44,7 +44,7 @@ void Raschet::SetVisualizationProperties(double T_start, double T_end, int iMin,
 
 void Raschet::Visualization_to_techplot_input()
 {
-	string InputDataFileName = path + "\\Input.dat";
+	string InputDataFileName = path + "/Input.dat";
 
 	FILE *F_in = fopen(InputDataFileName.c_str(), "w");
 
@@ -90,7 +90,7 @@ void Raschet::Visualization_to_techplot_result()
 	}
 	if (first_visualization) // a condition for outputting first part of output data, it is necessary to write a header once
 	{
-		string RachetFileName = path + "\\Result_d" + to_string(output_per_file_counter) + ".dat";
+		string RachetFileName = path + "/Result_d" + to_string(output_per_file_counter) + ".dat";
 
 		FILE *F = fopen(RachetFileName.c_str(), "w");
 
@@ -128,7 +128,7 @@ void Raschet::Visualization_to_techplot_result()
 	}
 	else
 	{
-		string RachetFileName = path + "\\Result_d" + to_string(output_per_file_counter) + ".dat";
+		string RachetFileName = path + "/Result_d" + to_string(output_per_file_counter) + ".dat";
 
 		FILE *F = fopen(RachetFileName.c_str(), "ab");
 
