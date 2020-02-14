@@ -1,4 +1,4 @@
-#include "Raschet.h";
+#include "Raschet.h"
 
 void Raschet::Initialize_Transport_Problem(double InitialC[],
 	double D)
