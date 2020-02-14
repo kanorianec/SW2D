@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class Problem_Defenition {
+class Problem_Definition {
 
 public:
 
@@ -51,11 +51,12 @@ public:
 	double* Lat; // array of Latitude coordinates
 	double* Lon; // array of Longitude coordinates
 
+	int PARALLEL_FLAG;
 	int OMP_THREADS_NUMBER;
 
 	// конструктор
-	Problem_Defenition();
-	Problem_Defenition(double x0, 
+	Problem_Definition();
+	Problem_Definition(double x0, 
 		double xN,
 		double y0,
 		double yN,
@@ -77,7 +78,7 @@ public:
 		double PhiY[]
 	);
 	// Деструктор 
-	~Problem_Defenition();
+	~Problem_Definition();
 
 	// !!! функция считывания данных из текстового файла
 	void Continue_from(char[80]);

@@ -36,9 +36,6 @@
     <ClCompile Include="MainCore\Prepare_raschet.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
     </ClCompile>
-    <ClCompile Include="MainCore\Problem_Defenition.cpp">
-      <Filter>Файлы исходного кода\MainCore</Filter>
-    </ClCompile>
     <ClCompile Include="MainCore\Raschet.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
     </ClCompile>
@@ -63,12 +60,12 @@
     <ClCompile Include="RNF_Eliz.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="MainCore\Problem_Definition.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainCore\Constants.h">
-      <Filter>Заголовочные файлы\MainCore</Filter>
-    </ClInclude>
-    <ClInclude Include="MainCore\Problem_Defenition.h">
       <Filter>Заголовочные файлы\MainCore</Filter>
     </ClInclude>
     <ClInclude Include="MainCore\Raschet.h">
@@ -79,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="ephemeris\Ephemeris.h">
       <Filter>Заголовочные файлы\Ephemeris</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCore\Problem_Definition.h">
+      <Filter>Заголовочные файлы\MainCore</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

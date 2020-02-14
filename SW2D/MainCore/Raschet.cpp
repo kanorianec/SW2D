@@ -22,7 +22,7 @@ Description file of main class "Raschet" and its functions
 
 using namespace std;
 
-// the constructor of the class "Raschet" is inherited from the "Problem_Defenition" class
+// the constructor of the class "Raschet" is inherited from the "Problem_Definition" class
 Raschet::Raschet(string Test_name,
 	string Postscript,
 	double x0,
@@ -55,7 +55,7 @@ Raschet::Raschet(string Test_name,
 	double t_step,
 	bool Visualization_to_techplot_flag,
 	double sea_level
-) : Problem_Defenition(x0,
+) : Problem_Definition(x0,
 	xN,
 	y0,
 	yN,
@@ -142,7 +142,7 @@ Raschet::Raschet(string Test_name,
 	double t_step,
 	bool Visualization_to_techplot_flag,
 	double sea_level
-) : Problem_Defenition(0.0,
+) : Problem_Definition(0.0,
 	polar_to_decart_x(lonN - lon0, 0.5*(lat0 + latN)),
 	0.0,
 	polar_to_decart_y(latN - lat0),

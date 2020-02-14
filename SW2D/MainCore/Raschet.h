@@ -1,14 +1,14 @@
 #pragma once
 #include <string>
 
-#include "Problem_Defenition.h"
+#include "Problem_Definition.h"
 #include "../ephemeris/Ephemeris.h"
 //#include <time.h>
 #include <ctime>
 #include <iostream>
 #include "Constants.h"
 
-class Raschet : public Problem_Defenition
+class Raschet : public Problem_Definition
 {
 public:
 	string Test_name; //  Name of problem

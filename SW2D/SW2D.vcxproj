@@ -148,7 +148,7 @@
     <ClCompile Include="MainCore\BoundaryConditions.cpp" />
     <ClCompile Include="MainCore\Numerical_scheme_Step_parallel.cpp" />
     <ClCompile Include="MainCore\Prepare_raschet.cpp" />
-    <ClCompile Include="MainCore\Problem_Defenition.cpp" />
+    <ClCompile Include="MainCore\Problem_Definition.cpp" />
     <ClCompile Include="MainCore\Raschet.cpp" />
     <ClCompile Include="MainCore\technical.cpp" />
     <ClCompile Include="MainCore\Time_control.cpp" />
@@ -159,7 +159,7 @@
   <ItemGroup>
     <ClInclude Include="ephemeris\Ephemeris.h" />
     <ClInclude Include="MainCore\Constants.h" />
-    <ClInclude Include="MainCore\Problem_Defenition.h" />
+    <ClInclude Include="MainCore\Problem_Definition.h" />
     <ClInclude Include="MainCore\Raschet.h" />
     <ClInclude Include="MainCore\technical.h" />
   </ItemGroup>

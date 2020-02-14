@@ -9,7 +9,7 @@
 #include <fstream>
 #include <omp.h>
 
-#include "MainCore/Problem_Defenition.h"
+#include "MainCore/Problem_Definition.h"
 #include "MainCore/Raschet.h"
 #include "MainCore/technical.h"
 
