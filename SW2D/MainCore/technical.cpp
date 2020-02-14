@@ -277,6 +277,10 @@ void Raschet::write_extra_inf_to_file(double Time_of_work /*, double tt*/)
 	if (TransportProblemFlag) file << GetConditionName(CONCENTRATION, border[CONCENTRATION][LB_CORNER], border_C[CONCENTRATION][LB_CORNER]) << GetConditionName(CONCENTRATION, border[CONCENTRATION][BOTTOM], border_C[CONCENTRATION][BOTTOM]) << GetConditionName(CONCENTRATION, border[CONCENTRATION][RB_CORNER], border_C[CONCENTRATION][RB_CORNER]) << endl;
 
 	file << endl << "======== TECHNICAL ========" << endl;
+	if (OMP_THREADS_NUMBER == 1)
+		file << "OpenMP is off. " << endl;
+	else
+		file << "OpenMP is on. Program uses " << OMP_THREADS_NUMBER << " threads." << endl;
 	file << "Time of work = " << Time_of_work << " seconds;" << endl;
 	file << "include forcing to regularization: F_reg = " << F_reg << "; Phi_reg" << Phi_reg << endl;
 	if (TransportProblemFlag)

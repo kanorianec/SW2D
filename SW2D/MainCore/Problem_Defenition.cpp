@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <omp.h>
 
 #include "Problem_Defenition.h"
 #include "Raschet.h"
@@ -54,6 +55,13 @@ Problem_Defenition::Problem_Defenition(
 	Problem_Defenition::ForceY = new double[Nx*Ny];
 	Problem_Defenition::PhiX = new double[Nx*Ny];
 	Problem_Defenition::PhiY = new double[Nx*Ny];
+
+	#pragma omp parallel
+	{
+		Problem_Defenition::OMP_THREADS_NUMBER = omp_get_num_threads();
+	}
+	
+	
 
 	for (int i = 0; i<Nx; i++)
 	{

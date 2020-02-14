@@ -51,9 +51,6 @@
     <ClCompile Include="MainCore\Work_With_Techplot.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
     </ClCompile>
-    <ClCompile Include="Тест_распад_столба.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="ephemeris\Ephemeris.cpp">
       <Filter>Файлы исходного кода\Ephemeris</Filter>
     </ClCompile>
@@ -62,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="MainCore\Transport_Problem.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
+    <ClCompile Include="RNF_Eliz.cpp">
+      <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

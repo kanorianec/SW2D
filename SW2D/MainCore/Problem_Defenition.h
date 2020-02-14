@@ -51,6 +51,8 @@ public:
 	double* Lat; // array of Latitude coordinates
 	double* Lon; // array of Longitude coordinates
 
+	int OMP_THREADS_NUMBER;
+
 	// конструктор
 	Problem_Defenition();
 	Problem_Defenition(double x0, 

@@ -211,6 +211,10 @@ void Raschet::Exec_Raschet()
 	Raschet::Prepare_Folder(path,false); // Creating Test_name folder
 	Raschet::Prepare_Raschet(); // подготовка расчёта:
 	cout << "Prepare_Raschet" << endl;
+	if (OMP_THREADS_NUMBER == 1)
+		cout << "OpenMP is off. " << endl;
+	else
+		cout << "OpenMP is on. Program uses " << OMP_THREADS_NUMBER << " threads." << endl;
 	Raschet::Perform_Calculations(); // выполнение расчёта
 }
 
