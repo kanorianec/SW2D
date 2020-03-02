@@ -90,11 +90,10 @@ void Raschet::Visualization_to_techplot_result()
 	}
 	if (first_visualization) // a condition for outputting first part of output data, it is necessary to write a header once
 	{
-		string RachetFileName = path + "/Result_d" + to_string(output_per_file_counter) + ".dat";
-
-		FILE *F = fopen(RachetFileName.c_str(), "w");
-
-		cout << "Visualization to techplot time moment = " << t_graph_export << "; time =  "<<Time_elapsed << "; " << RachetFileName << "; " << GetTimeStamp();
+		string RaschetFileName = path + "/Result_d" + to_string(output_per_file_counter) + ".dat";
+		FILE *F = fopen(RaschetFileName.c_str(), "w");
+		
+		cout << "Visualization to techplot time moment = " << t_graph_export << "; time =  "<<Time_elapsed << "; " << RaschetFileName << "; " << GetTimeStamp();
 
 		fprintf(F, "TITLE= \"%s\"\n", Test_name.c_str());
 		//fprintf(F, "VARIABLES = \"X\" \"Y\" \"H\" \"B\" \"Ux\" \"Uy\" \"Phix\" \"Phiy\" \"Fx\" \"Fy\"\n");
@@ -128,15 +127,16 @@ void Raschet::Visualization_to_techplot_result()
 	}
 	else
 	{
-		string RachetFileName = path + "/Result_d" + to_string(output_per_file_counter) + ".dat";
+		string RaschetFileName = path + "/Result_d" + to_string(output_per_file_counter) + ".dat";
 
-		FILE *F = fopen(RachetFileName.c_str(), "ab");
-
+		FILE *F = fopen(RaschetFileName.c_str(), "ab");
+		
+		
 		cout << "Visualization to techplot time moment = " << t_graph_export << "; time =  ";
 		if (t_step >= 3600)
-			cout << Time_elapsed/3600 << " hours; " << RachetFileName << "; " << GetTimeStamp();
+			cout << Time_elapsed/3600 << " hours; " << RaschetFileName << "; " << GetTimeStamp();
 		else
-			cout << Time_elapsed << "; " << RachetFileName << "; " << GetTimeStamp();
+			cout << Time_elapsed << "; " << RaschetFileName << "; " << GetTimeStamp();
 
 		//fprintf(F, "TITLE= \"%s\"\n", Test_name.c_str());
 		//fprintf(F, "VARIABLES = \"X\" \"Y\" \"H\" \"B\" \"Ux\" \"Uy\" \"Phix\" \"Phiy\" \"Fx\" \"Fy\"\n");

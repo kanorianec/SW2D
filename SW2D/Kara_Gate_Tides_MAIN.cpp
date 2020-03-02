@@ -137,7 +137,7 @@ int main() {
 			
 		}
 	}
-	cout << "I was here 1"<<endl;
+
 	Raschet *R = new Raschet(Test_name,
 		Postscript,
 		lat0,
@@ -168,7 +168,6 @@ int main() {
 		sea_level
 	);
 
-	cout << "I was here 2"<<endl;
 	R->SetStartTime(year, month, day, hour, minute, second);
 	//R->SetVisualizationProperties(0, T_end, Nx - 580, Ny - 150, Nx - 1, Ny - 1);
 	R->SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);

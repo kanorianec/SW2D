@@ -181,6 +181,7 @@ public:
 	
 	void Visualization_to_techplot_input(); // визуализация данных в формате, используемом для построения в Techplot
 	void Visualization_to_techplot_result();
+	
 	//void Visualization_to_techplot_TECIO(int start=0);
 	// void Visualization_to_techplot(); // старая реализация была сделана через fstream. Оказалась медленной, удалена. 
 
@@ -194,7 +195,8 @@ public:
 	void Write_point_to_file(int index, double X_cord, double Y_Cord, string file_name); // вывод информации о точке в файл, ЛУЧШЕ ОПТИМИЗИРОВАТЬ: ВЫНЕСТИ УСЛОВИЕ В БЛОК ПРОГРАММЫ
 	void Write_point_to_file(int index, string file_name);
 	void write_extra_inf_to_file(double Time_of_work); // Writes test description to file "extra_inf.txt"
-
+	void write_extra_inf(std::ostream &out, double Time_of_work); // Writes test description to file "extra_inf.txt"
+	
 	void SetVisualizationProperties(double T_start, double T_end, int iMin, int jMin, int iMax, int jMax);
 	void SetStartTime(int Year, int Month, int Day, int Hour, int Minute, int Second); // Function to set start time (UTC) in terms of time_t variable
 	

@@ -91,20 +91,6 @@ void Raschet::Prepare_Raschet()
 		}
 	}
 
-	cout << "Nx = " << Nx << "; Ny = " << Ny << ";" << endl;
-
-	cout << "dx = " << hx << "; dy =  " << hy << ";" << endl;
-	cout << "x0 = " << X[0] << "; xN = " << X[Nx*Ny - 1] << ";" << endl;
-	cout << "y0 = " << Y[0] << "; yN = " << Y[Nx*Ny - 1] << ";" << endl;
-	
-	if (hlon + hlat > 0)
-		cout << "dlat = " << hlat << "; dlon =  " << hlon << ";" << endl;
-	if (lonN + latN > 0)
-	{
-		cout << "lat0 = " << Lat[0] << "; latN = " << Lat[Ny - 1] << ";" << endl;
-		cout << "lon0 = " << Lon[0] << "; lonN = " << Lon[Nx*Ny - 1] << ";" << endl;
-	}	
-
 	// угловые точки:
 	S[0 * Ny + 0] = LB_CORNER;
 	S[(Nx - 1)*Ny + 0] = RB_CORNER;
@@ -182,38 +168,4 @@ void Raschet::Prepare_Raschet()
 			}
 		}
 	}
-	/*
-	for (int i = 0; i < 8; i++)
-	{
-		cout << HEIGHT << " " << i << " " << border[HEIGHT][i] << " " << border_C[HEIGHT][i] << endl;
-		cout << VELOCITY_X << " " << i << " " << border[VELOCITY_X][i] << " " << border_C[VELOCITY_X][i] << endl;
-		cout << VELOCITY_Y << " " <<  << " " << border[VELOCITY_Y][i] << " " << border_C[VELOCITY_Y][i] << endl << endl;
-	}*/
-
-	cout << "======================= BOUNDARY CONDITIONS =========================" << endl;
-	cout << "    LEFT-TOP:           TOP:                RIGHT-TOP:" << endl;
-	cout << GetConditionName(HEIGHT, border[HEIGHT][LT_CORNER], border_C[HEIGHT][LT_CORNER]) << GetConditionName(HEIGHT, border[HEIGHT][TOP] , border_C[HEIGHT][TOP]) << GetConditionName(HEIGHT, border[HEIGHT][RT_CORNER], border_C[HEIGHT][RT_CORNER]) << endl;
-	cout << GetConditionName(VELOCITY_X, border[VELOCITY_X][LT_CORNER], border_C[VELOCITY_X][LT_CORNER]) << GetConditionName(VELOCITY_X, border[VELOCITY_X][TOP], border_C[VELOCITY_X][TOP]) << GetConditionName(VELOCITY_X, border[VELOCITY_X][RT_CORNER], border_C[VELOCITY_X][RT_CORNER]) << endl;
-	cout << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][LT_CORNER], border_C[VELOCITY_Y][LT_CORNER]) << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][TOP], border_C[VELOCITY_Y][TOP]) << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][RT_CORNER], border_C[VELOCITY_Y][RT_CORNER]) << endl;
-	if (TransportProblemFlag) cout << GetConditionName(CONCENTRATION, border[CONCENTRATION][LT_CORNER], border_C[CONCENTRATION][LT_CORNER]) << GetConditionName(CONCENTRATION, border[CONCENTRATION][TOP], border_C[CONCENTRATION][TOP]) << GetConditionName(CONCENTRATION, border[CONCENTRATION][RT_CORNER], border_C[CONCENTRATION][RT_CORNER]) << endl;
-	cout << "                   \\ ___________________ /" << endl;
-	cout << "                    |                   |" << endl;
-	cout << "                    |                   |" << endl;
-	cout << "    LEFT:           |                   |    RIGHT:" << endl;
-	cout << GetConditionName(HEIGHT, border[HEIGHT][LEFT], border_C[HEIGHT][LEFT]) << "|                   |" << GetConditionName(HEIGHT, border[HEIGHT][RIGHT], border_C[HEIGHT][RIGHT]) << endl;
-	cout << GetConditionName(VELOCITY_X, border[VELOCITY_X][LEFT], border_C[VELOCITY_X][LEFT]) << "|                   |" << GetConditionName(VELOCITY_X, border[VELOCITY_X][RIGHT], border_C[VELOCITY_X][RIGHT]) << endl;
-	cout << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][LEFT], border_C[VELOCITY_Y][LEFT]) << "|                   |" << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][RIGHT], border_C[VELOCITY_Y][RIGHT]) << endl;
-	if (TransportProblemFlag)
-		cout << GetConditionName(CONCENTRATION, border[CONCENTRATION][LEFT], border_C[CONCENTRATION][LEFT]) << "|                   |" << GetConditionName(CONCENTRATION, border[CONCENTRATION][RIGHT], border_C[CONCENTRATION][RIGHT]) << endl;
-	cout << "                    |                   |" << endl;
-	cout << "                    |                   |" << endl;
-	cout << "                    |                   |" << endl;
-	cout << "                    |___________________|" << endl;
-	cout << "                   /                     \\" << endl;
-	cout << "    LEFT-BOTTOM:        BOTTOM:             RIGHT-BOTTOM:" << endl;
-	cout << GetConditionName(HEIGHT, border[HEIGHT][LB_CORNER], border_C[HEIGHT][LB_CORNER]) << GetConditionName(HEIGHT, border[HEIGHT][BOTTOM], border_C[HEIGHT][BOTTOM]) << GetConditionName(HEIGHT, border[HEIGHT][RB_CORNER], border_C[HEIGHT][RB_CORNER]) << endl;
-	cout << GetConditionName(VELOCITY_X, border[VELOCITY_X][LB_CORNER], border_C[VELOCITY_X][LB_CORNER]) << GetConditionName(VELOCITY_X, border[VELOCITY_X][BOTTOM], border_C[VELOCITY_X][BOTTOM]) << GetConditionName(VELOCITY_X, border[VELOCITY_X][RB_CORNER], border_C[VELOCITY_X][RB_CORNER]) << endl;
-	cout << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][LB_CORNER], border_C[VELOCITY_Y][LB_CORNER]) << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][BOTTOM], border_C[VELOCITY_Y][BOTTOM]) << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][RB_CORNER], border_C[VELOCITY_Y][RB_CORNER]) << endl;
-	if (TransportProblemFlag) cout << GetConditionName(CONCENTRATION, border[CONCENTRATION][LB_CORNER], border_C[CONCENTRATION][LB_CORNER]) << GetConditionName(CONCENTRATION, border[CONCENTRATION][BOTTOM], border_C[CONCENTRATION][BOTTOM]) << GetConditionName(CONCENTRATION, border[CONCENTRATION][RB_CORNER], border_C[CONCENTRATION][RB_CORNER]) << endl;
-	cout << "=====================================================================" << endl;
 }
