@@ -1,6 +1,16 @@
 #include "Raschet.h"
 #include <time.h>
 
+time_t mkgmtime(struct tm* tm)
+{
+#if defined(_WIN32) || defined(_WIN64)
+    return _mkgmtime(tm);
+#elif defined(__linux__)
+    return timegm(tm);
+#endif
+}
+      
+
 void Raschet::SetStartTime(int Year, int Month, int Day, int Hour, int Minute, int Second)
 {
 	struct tm tmp = { 0 };
@@ -12,5 +22,5 @@ void Raschet::SetStartTime(int Year, int Month, int Day, int Hour, int Minute, i
 	tmp.tm_sec = Second;
 	tmp.tm_isdst = 0;
 	
-	RaschetTime = _mkgmtime(&tmp);
+	RaschetTime = mkgmtime(&tmp);
 }

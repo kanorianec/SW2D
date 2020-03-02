@@ -25,7 +25,7 @@ double Bmin;
 int main() {	
 	// T_begin, T_end - start and end time respectively, in seconds 
 	double T_begin = 0;
-	double T_end = 0.001;// T_begin + 50;
+	double T_end = T_begin + 50;
 	int num_of_output_data =  50;
 							   // параметры отрисовки
 	bool Visualization_to_techplot_flag = true; // вывод результатов дл¤ визуализации в Tecplot
