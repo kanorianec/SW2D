@@ -242,7 +242,7 @@ void Raschet::Perform_Calculations()
 	int est_time = 1;
 	double estimation_time = omp_get_wtime();
 
-	while (T_end>Time_elapsed)
+	while (T_end>Time_elapsed && !Stop_Raschet_Flag)
 	{
 		Numerical_scheme_time_step_parallel();
 

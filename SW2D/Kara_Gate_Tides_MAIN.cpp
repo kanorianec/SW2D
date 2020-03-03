@@ -23,7 +23,7 @@ double Bmin;
 int main() {
 	// T_begin, T_end - start and end time respectively, in seconds 
 	double T_begin = 0;
-	double T_end = 48 * 3600;
+	double T_end = 8 * 24 * 3600;
 	int num_of_output_data = 1;// 50;
 
 	int Visualization_to_techplot_flag = 1; //
@@ -63,7 +63,7 @@ int main() {
 	int Ny = 480;// 960; // 1080;
 
 	string Test_name = "KaraGate_tides_test"; 
-	string Postscript = "_48h_" + to_string(Nx) + "x" + to_string(Ny); 
+	string Postscript = "_" + to_str((T_end - T_begin)/3600) + "h_" + to_string(Nx) + "x" + to_string(Ny); 
 
 	//double t_graph_export = T_begin;  
 
@@ -171,10 +171,11 @@ int main() {
 	R->SetStartTime(year, month, day, hour, minute, second);
 	//R->SetVisualizationProperties(0, T_end, Nx - 580, Ny - 150, Nx - 1, Ny - 1);
 	R->SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
-	R->SetFileBoundaryConditions(VELOCITY_X, RIGHT, LEFT, TOP/*, BOTTOM*/);
-	R->SetFileBoundaryConditions(VELOCITY_Y, RIGHT, LEFT, TOP/*, BOTTOM*/);
-	
-	
+	//R->SetFileBoundaryConditions(VELOCITY_X, RIGHT, LEFT, TOP/*, BOTTOM*/);
+	//R->SetFileBoundaryConditions(VELOCITY_Y, RIGHT, LEFT, TOP/*, BOTTOM*/);
+	R->SetFileBoundaryConditions(VELOCITY_X, LEFT);//, TOP/*, BOTTOM*/);
+	R->SetFileBoundaryConditions(VELOCITY_Y, LEFT);
+	R->SetFileBoundaryConditions(HEIGHT, LEFT);
 	//R->SetWallBoundaryConditions(RIGHT, LEFT, TOP, BOTTOM);
 	//R->SetFixedBoundaryConditions(VELOCITY_X, RIGHT, -0.01);
 

@@ -28,7 +28,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		// Internal points
 		if (S[k] == INTERNAL)
 		{	
-			// объявление вспомогательных переменных
+			// Resetting of additional variables
 
 			double xWS_05R, xWS_05L, xWS_05B, xWS_05T;
 			double yWS_05R, yWS_05L, yWS_05B, yWS_05T;
@@ -485,6 +485,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		if (check > CriticalVal || check != check)
 		{
 			cout << "Critical Value: " << CriticalVal << " " << check << endl;
+			/*
 			Print_info_about_point("ERROR POINT", i*Ny + j);
 			Print_info_about_point("L:ERROR POINT", (i - 1)*Ny + j);
 			Print_info_about_point("R:ERROR POINT", (i + 1)*Ny + j);
@@ -494,8 +495,9 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			Print_info_about_point("LU:ERROR POINT", (i - 1)*Ny + j + 1);
 			Print_info_about_point("RD:ERROR POINT", (i + 1)*Ny + j - 1);
 			Print_info_about_point("LD:ERROR POINT", (i - 1)*Ny + j - 1);
+			*/
 			//Visualization_to_techplot_fstream();
-			system("pause");
+			//system("pause");
 			//Raschet::Visualization_to_techplot();
 			Stop_Raschet_Flag = 1;
 		}
@@ -579,8 +581,8 @@ void Raschet::Numerical_scheme_time_step_parallel()
 
 		if (tau[m]> CriticalVal || tau[m] != tau[m])
 		{
-			Print_info_about_point("ERROR POINT", m);
-			system("pause");
+			//Print_info_about_point("ERROR POINT", m);
+			//system("pause");
 			//Raschet::Visualization_to_techplot();
 			Stop_Raschet_Flag = 1;
 		}

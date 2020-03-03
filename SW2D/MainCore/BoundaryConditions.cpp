@@ -248,6 +248,7 @@ void Raschet::RecalcFileBoundaryConditions()
 					for (int k = 0; k < N; k++)
 					{
 						Ht[Na*k + Nb] = (Time_elapsed + dT) * lin_k[VType][PType][k] + lin_b[VType][PType][k];
+						Ht[Na*k + Nb] -= Bmin + B[Na*k + Nb];
 					}
 					break;
 				case VELOCITY_X:
