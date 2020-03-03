@@ -29,10 +29,10 @@ Next, the data is displayed in columns
 After that, the indices of the points are displayed in a specific form (as it necessary for the Tecplot)
 */
 
-void Raschet::SetVisualizationProperties(double T_start, double T_end, int iMin, int jMin, int iMax, int jMax)
+void Raschet::SetVisualizationProperties(double Vis_T_start, double Vis_T_end, int iMin, int jMin, int iMax, int jMax)
 {
-	Raschet::t_graph_export = T_start;
-	Raschet::t_end_graph_export = T_end;
+	Raschet::t_graph_export = max(Vis_T_start,T_begin);
+	Raschet::t_end_graph_export = min(Vis_T_end,T_end);
 	Raschet::i_maxVis = iMax;
 	Raschet::i_minVis = iMin;
 	Raschet::j_maxVis = jMax;
@@ -76,7 +76,8 @@ void Raschet::Visualization_to_techplot_input()
 			fprintf(F_in, "%d %d %d %d\n", ((j_maxVis - j_minVis + 1)*i + j + 1), ((j_maxVis - j_minVis + 1)*(i + 1) + j + 1), ((j_maxVis - j_minVis + 1)*(i + 1) + j + 2), ((j_maxVis - j_minVis + 1)*i + j + 2));
 		}
 	}
-
+	if (!restart)
+		Save_Data();
 	fclose(F_in);
 }
 
@@ -161,6 +162,8 @@ void Raschet::Visualization_to_techplot_result()
 		fclose(F);
 	}
 	current_file_sizeMB += Nx*Ny * 9 * 7 / (1024 * 1024);
+
+	Save_Data();
 	//cout << current_file_sizeMB << endl;
 	//system("pause");
 }

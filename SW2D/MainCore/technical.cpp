@@ -23,7 +23,7 @@
 	#define mkdir(dir, mode) _mkdir(dir)
 #endif // _WIN64) || defined(_WIN32)
 
-
+using namespace std;
 
 #include "Constants.h"
 #include "technical.h"
@@ -45,11 +45,17 @@ double polar_to_decart_y(double dlat) {
 	return y;
 }
 
+bool folderExists(string folder_path)
+{
+	struct stat buffer;
+	return stat(folder_path.c_str(), &buffer);
+}
+
 // Creating folder
 void Raschet::Prepare_Folder(string folder_path, bool ignore_warning)
 {
 	struct stat buffer;
-	if (stat(folder_path.c_str(), &buffer))
+	if (folderExists(folder_path))
 	{
 			if (mkdir(folder_path.c_str(), 0755))
 				cout << "Error: can't create folder " << folder_path << endl;
@@ -78,7 +84,7 @@ void Raschet::Prepare_Folder(string folder_path, bool ignore_warning)
 		}
 	}
 }
-
+/*
 // функция сохранения текущих данных
 void Raschet::Save_Data(double Time_of_work) {
 	string save_path = path + "/" + to_string((int)T_begin) + "-" + to_string((int)T_end); // путь папки сохраненных данных
@@ -123,7 +129,7 @@ void Raschet::Save_Data(double Time_of_work) {
 		fclose(fC);
 	}
 
-	write_extra_inf_to_file(Time_of_work);
+	//write_extra_inf_to_file(Time_of_work);
 }
 
 // функция загрузки величин из файла
@@ -175,7 +181,7 @@ void Raschet::Read_Data_from_file(string path_name) {
 		fclose(fC);
 	}
 };
-
+*/
 // 
 void Raschet::Print_info_about_point(string name, int index) {
 	int  i = int(index / Ny);

@@ -14,7 +14,8 @@ g++ $1.cpp $CPLUS_INCLUDE_PATH/Raschet.cpp\
       $CPLUS_INCLUDE_PATH/Transport_Problem.cpp\
        $CPLUS_INCLUDE_PATH/Numerical_scheme_Step_parallel.cpp\
         $CPLUS_INCLUDE_PATH/Time_control.cpp\
-    	 ephemeris/Ephemeris.cpp\
-          ephemeris/Calendar.cpp\
+		 $CPLUS_INCLUDE_PATH/IO_system.cpp\
+    	  ephemeris/Ephemeris.cpp\
+           ephemeris/Calendar.cpp\
        -o $1_compiled -std=c++11 -fopenmp -lm
 ./$1_compiled

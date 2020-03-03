@@ -146,6 +146,7 @@
     <ClCompile Include="ephemeris\Calendar.cpp" />
     <ClCompile Include="ephemeris\Ephemeris.cpp" />
     <ClCompile Include="MainCore\BoundaryConditions.cpp" />
+    <ClCompile Include="MainCore\IO_system.cpp" />
     <ClCompile Include="MainCore\Numerical_scheme_Step_parallel.cpp" />
     <ClCompile Include="MainCore\Prepare_raschet.cpp" />
     <ClCompile Include="MainCore\Problem_Definition.cpp" />

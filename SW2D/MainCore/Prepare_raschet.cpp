@@ -17,6 +17,8 @@ void Raschet::Prepare_Raschet()
 {
 	Ephemeris::setLocationOnEarth((float)(lat0 + latN)*0.5, (float)(lon0 + lonN)*0.5); // for ephemeris calculation
 
+	Time_elapsed = T_begin;
+
 	//**************************************************************************
 	//	Шаг 0-> Задание основных параметров расчета
 	//**************************************************************************

@@ -63,6 +63,9 @@
     <ClCompile Include="MainCore\Problem_Definition.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
     </ClCompile>
+    <ClCompile Include="MainCore\IO_system.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainCore\Constants.h">

@@ -11,9 +11,9 @@
 class Raschet : public Problem_Definition
 {
 public:
-	string Test_name; //  Name of problem
-	string Postscript; // additional postscript
-	string path; // path to the test directory
+	std::string Test_name; //  Name of problem
+	std::string Postscript; // additional postscript
+	std::string path; // path to the test directory
 
 	int Polar; // flag of Polar(1) or Cartesian(0) is main coordinate system
 
@@ -101,13 +101,15 @@ public:
 	int output_per_file_counter;
 	double current_file_sizeMB;
 
+	bool restart;
+
 	time_t RaschetTime; // Date and time (UTC) in seconds from 1900 year of problem start 
 
 	//Raschet();
 
 	// Constructor for ordinary Catesian area
-	Raschet(string Test_name,
-		string Postscript,
+	Raschet(std::string Test_name,
+		std::string Postscript,
 		double x0,
 		double xN,
 		double y0,
@@ -141,8 +143,8 @@ public:
 	);
 
 	// Constructor for Polar area
-	Raschet(string Test_name,
-		string Postscript,
+	Raschet(std::string Test_name,
+		std::string Postscript,
 		double lat0,
 		double latN,
 		double lon0,
@@ -188,16 +190,18 @@ public:
 	void Numerical_scheme_time_step_parallel(); // параллельная реализация(через openMP) функции численного счета
 	//void Numerical_scheme_time_step(); // убрана, поскольку используется параллельная реализация
 
-	void Prepare_Folder(string folder_path, bool ignore_warning = true); // Function to create folder
-	void Save_Data(double Time_of_work); // функция сохранения текущих данных
-	void Read_Data_from_file(string path_name); // функция загрузки величин из файла
-	void Print_info_about_point(string name, int index); // вывод информации о расчетной точке
-	void Write_point_to_file(int index, double X_cord, double Y_Cord, string file_name); // вывод информации о точке в файл, ЛУЧШЕ ОПТИМИЗИРОВАТЬ: ВЫНЕСТИ УСЛОВИЕ В БЛОК ПРОГРАММЫ
-	void Write_point_to_file(int index, string file_name);
+	void Prepare_Folder(std::string folder_path, bool ignore_warning = true); // Function to create folder
+
+	void Save_Data(); // Save all variable at time moment "Time_elapsed"
+	void Restart_from_time_moment(double Time_moment); // Reastart: reading all variables from time moment "Time_moment"
+
+	void Print_info_about_point(std::string name, int index); // вывод информации о расчетной точке
+	void Write_point_to_file(int index, double X_cord, double Y_Cord, std::string file_name); // вывод информации о точке в файл, ЛУЧШЕ ОПТИМИЗИРОВАТЬ: ВЫНЕСТИ УСЛОВИЕ В БЛОК ПРОГРАММЫ
+	void Write_point_to_file(int index, std::string file_name);
 	void write_extra_inf_to_file(double Time_of_work); // Writes test description to file "extra_inf.txt"
 	void write_extra_inf(std::ostream &out, double Time_of_work); // Writes test description to file "extra_inf.txt"
 	
-	void SetVisualizationProperties(double T_start, double T_end, int iMin, int jMin, int iMax, int jMax);
+	void SetVisualizationProperties(double Vis_T_start, double Vis_T_end, int iMin, int jMin, int iMax, int jMax);
 	void SetStartTime(int Year, int Month, int Day, int Hour, int Minute, int Second); // Function to set start time (UTC) in terms of time_t variable
 	
 	void SetFixedBoundaryConditions(TypeOfVariable VType, TypeOfPoint PType, double Value);

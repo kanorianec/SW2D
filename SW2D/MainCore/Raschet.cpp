@@ -102,7 +102,7 @@ Raschet::Raschet(string Test_name,
 	Raschet::PhiYt = new double[N]();
 	Raschet::S = new int[N]();
 	Raschet::sea_level = sea_level;
-	Raschet::Time_elapsed = T_begin;
+	//Raschet::Time_elapsed = T_begin;
 
 	Raschet::TransportProblemFlag = false;
 
@@ -110,6 +110,8 @@ Raschet::Raschet(string Test_name,
 
 	Raschet::BoundaryConditionsFromFile = false;
 	Raschet::InternalWallsFlag = false;
+
+	Raschet::restart = false;
 	
 	Raschet::SetOpenBoundaryConditions(TOP, BOTTOM, RIGHT, LEFT, RT_CORNER, LT_CORNER, RB_CORNER, LB_CORNER);
 	Raschet::SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
@@ -191,7 +193,7 @@ Raschet::Raschet(string Test_name,
 	Raschet::PhiYt = new double[N]();
 	Raschet::S = new int[N]();
 	Raschet::sea_level = sea_level;
-	Raschet::Time_elapsed = T_begin;
+	//Raschet::Time_elapsed = T_begin;
 
 	Raschet::TransportProblemFlag = false;
 
@@ -199,6 +201,8 @@ Raschet::Raschet(string Test_name,
 
 	Raschet::BoundaryConditionsFromFile = false;
 	Raschet::InternalWallsFlag = false;
+
+	Raschet::restart = false;
 
 	Raschet::SetOpenBoundaryConditions(TOP, BOTTOM, RIGHT, LEFT, RT_CORNER, LT_CORNER, RB_CORNER, LB_CORNER);
 	Raschet::SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
@@ -209,7 +213,7 @@ void Raschet::Exec_Raschet()
 {
 	Raschet::Prepare_Folder("Data"); // Checking and creating "Data" folder
 
-	Raschet::Prepare_Folder(path,false); // Creating Test_name folder
+	Raschet::Prepare_Folder(path, false || restart); // Creating Test_name folder
 	Raschet::Prepare_Raschet(); // подготовка расчёта:
 	cout << "Prepare_Raschet" << endl;
 	Raschet::Perform_Calculations(); // выполнение расчёта
@@ -270,7 +274,7 @@ void Raschet::Perform_Calculations()
 
 	double Time_of_work = (omp_get_wtime() - scheme_time); // время работы программы
 	std::cout << "Time of work = " << Time_of_work << " seconds." << endl;
-	Save_Data(Time_of_work); 
+	//Save_Data(Time_of_work); 
 }
 
 Raschet::~Raschet()
