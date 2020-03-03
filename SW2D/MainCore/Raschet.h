@@ -194,6 +194,7 @@ public:
 
 	void Save_Data(); // Save all variable at time moment "Time_elapsed"
 	void Restart_from_time_moment(double Time_moment); // Reastart: reading all variables from time moment "Time_moment"
+	void Save_Grid(); // function for saving grid data: B, X, Y, ...
 
 	void Print_info_about_point(std::string name, int index); // вывод информации о расчетной точке
 	void Write_point_to_file(int index, double X_cord, double Y_Cord, std::string file_name); // вывод информации о точке в файл, ЛУЧШЕ ОПТИМИЗИРОВАТЬ: ВЫНЕСТИ УСЛОВИЕ В БЛОК ПРОГРАММЫ

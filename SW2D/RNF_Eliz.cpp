@@ -25,7 +25,7 @@ double Bmin;
 int main() {	
 	// T_begin, T_end - start and end time respectively, in seconds 
 	double T_begin = 0;
-	double T_end = T_begin + 2;// 50;
+	double T_end = T_begin + 1;// 50;
 	int num_of_output_data =  10;
 							   // параметры отрисовки
 	bool Visualization_to_techplot_flag = true; // вывод результатов дл¤ визуализации в Tecplot
@@ -152,7 +152,7 @@ int main() {
 		sea_level
 	);
 
-	R->Restart_from_time_moment(1.000443);
+	//R->Restart_from_time_moment(1.000443);
 
 	R->Initialize_Transport_Problem(C, D);
 	R->SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);

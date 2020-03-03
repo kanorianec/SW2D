@@ -76,8 +76,9 @@ void Raschet::Visualization_to_techplot_input()
 			fprintf(F_in, "%d %d %d %d\n", ((j_maxVis - j_minVis + 1)*i + j + 1), ((j_maxVis - j_minVis + 1)*(i + 1) + j + 1), ((j_maxVis - j_minVis + 1)*(i + 1) + j + 2), ((j_maxVis - j_minVis + 1)*i + j + 2));
 		}
 	}
-	if (!restart)
-		Save_Data();
+	Save_Data();
+	Save_Grid();
+
 	fclose(F_in);
 }
 

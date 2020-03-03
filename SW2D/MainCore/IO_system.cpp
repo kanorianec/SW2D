@@ -3,6 +3,31 @@
 //#include <iostream>
 #include <fstream>
 
+
+// Save all variable at time moment "Time_of_work"
+void Raschet::Save_Grid() {
+	string save_path = path + "/Grid"; // full path name to the preparing folder
+
+	Prepare_Folder(save_path);
+
+	string name_X = save_path + "/X.dat";
+	string name_Y = save_path + "/Y.dat";
+	string name_B = save_path + "/B.dat";
+
+
+	std::ofstream fX(name_X, std::ios::out | std::ios::binary);
+	std::ofstream fY(name_Y, std::ios::out | std::ios::binary);
+	std::ofstream fB(name_B, std::ios::out | std::ios::binary);
+
+	fX.write(reinterpret_cast<const char*> (X), sizeof(double) * Nx * Ny);
+	fY.write(reinterpret_cast<const char*> (Y), sizeof(double) * Nx * Ny);
+	fB.write(reinterpret_cast<const char*> (B), sizeof(double) * Nx * Ny);
+
+	fX.close();
+	fY.close();
+	fB.close();
+}
+
 // Save all variable at time moment "Time_of_work"
 void Raschet::Save_Data() {
 	string save_path = path + "/" + to_str(Time_elapsed); // full path name to the preparing folder
@@ -20,8 +45,8 @@ void Raschet::Save_Data() {
 	std::ofstream fC;
 	
 	fH.write(reinterpret_cast<const char*> (H), sizeof(double) * Nx * Ny);
-	fxU.write(reinterpret_cast<const char*> (H), sizeof(double) * Nx * Ny);
-	fyU.write(reinterpret_cast<const char*> (H), sizeof(double) * Nx * Ny);
+	fxU.write(reinterpret_cast<const char*> (xU), sizeof(double) * Nx * Ny);
+	fyU.write(reinterpret_cast<const char*> (yU), sizeof(double) * Nx * Ny);
 
 	fH.close();
 	fxU.close();
@@ -30,7 +55,7 @@ void Raschet::Save_Data() {
 	if (TransportProblemFlag)
 	{
 		fC.open(name_C, std::ios::out | std::ios::binary);
-		fC.write(reinterpret_cast<const char*> (H), sizeof(double) * Nx * Ny);
+		fC.write(reinterpret_cast<const char*> (C), sizeof(double) * Nx * Ny);
 		fC.close();
 	}
 }

@@ -233,7 +233,7 @@ void Raschet::Perform_Calculations()
 	Recalc_forces_parallel(); // forces calculating 
 
 
-	if (Visualization_to_techplot_flag) // визуализация при условии
+	if (Visualization_to_techplot_flag && !restart) // визуализация при условии
 	{
 		Visualization_to_techplot_input();
 		if (Time_elapsed >= t_graph_export) {
