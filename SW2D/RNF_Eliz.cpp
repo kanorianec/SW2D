@@ -73,16 +73,16 @@ int main() {
 	double sea_level = 10000;  // высота берега, которая входит в расчёт 
 
 	// выделение памяти для массивов данных
-	double* B = new double[Nx*Ny]; // дно
-	double* H = new double[Nx*Ny]; // высота слоя
-	double* C = new double[Nx*Ny]; // концентрация примеси
-	double* xU = new double[Nx*Ny]; // скорость по x
-	double* yU = new double[Nx*Ny]; // скорость по y
+	double* B = new double[Nx*Ny](); // bathymetry
+	double* H = new double[Nx*Ny](); // water height
+	double* C = new double[Nx*Ny](); // pollution concentration
+	double* xU = new double[Nx*Ny](); // velocity along x axis
+	double* yU = new double[Nx*Ny](); // velocity along y axis
 
-	double* ForceX = new double[Nx*Ny]; // внешние силы по x
-	double* ForceY = new double[Nx*Ny]; // внешние силы по y
-	double* PhiX = new double[Nx*Ny];// !!! сила ветра по x
-	double* PhiY = new double[Nx*Ny];// !!! сила ветра по y
+	double* ForceX = new double[Nx*Ny](); // volume external forces x
+	double* ForceY = new double[Nx*Ny](); // volume external forces y
+	double* PhiX = new double[Nx*Ny]();// surface external forces x
+	double* PhiY = new double[Nx*Ny]();// surface external forces y
 
 	
 	int sea_points = 0;  //! что это? 
@@ -100,7 +100,7 @@ int main() {
 			double y = y0 + j*(yN - y0) / (Ny - 1);
 
 			int k = i*Ny + j;
-			H[k] = 1.53;
+			H[k] = 1.0;
 
 			//if (j < (Ny-1)/2 && i < ust_i_end)
 			//	H[k] = -1.0;

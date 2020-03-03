@@ -1,6 +1,4 @@
 #pragma once
-// файл, содержащий необходимые константы задачи 
-// !!! но так ли он (этот файл) необходим? Pi можно использовать из библиотек си, а g - может отличаться
 //================= Technical Constants ====================
 // include forcing to regularization
 const int F_reg = 0;// 1;
@@ -12,7 +10,7 @@ const double NSC = 0.0;
 //=========================================================
 
 //const float pi = 3.1415926535;
-//const int Nmax = 1555000; //! что это? 
+//const int Nmax = 1555000; // !? 
 const double gc = 9.81;
 //const double G = 0.0000000000667408; // gravitational constant
 const double CriticalVal = 10000.0;

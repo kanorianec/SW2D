@@ -101,6 +101,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="ephemeris\Calendar.cpp" />
     <ClCompile Include="ephemeris\Ephemeris.cpp" />
+    <ClCompile Include="Kara_Gate_Tides_MAIN.cpp" />
     <ClCompile Include="MainCore\BoundaryConditions.cpp" />
     <ClCompile Include="MainCore\IO_system.cpp" />
     <ClCompile Include="MainCore\Numerical_scheme_Step_parallel.cpp" />
@@ -155,7 +157,6 @@
     <ClCompile Include="MainCore\Time_control.cpp" />
     <ClCompile Include="MainCore\Transport_Problem.cpp" />
     <ClCompile Include="MainCore\Work_With_Techplot.cpp" />
-    <ClCompile Include="RNF_Eliz.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ephemeris\Ephemeris.h" />
