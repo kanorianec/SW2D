@@ -261,11 +261,15 @@ void Raschet::Perform_Calculations()
 		if (Time_elapsed > 3600 * (HourMark + 1))
 			HourMark++;
 
-		if (Stop_Raschet_Flag == 1) { Time_elapsed = T_end; }
+		/*if (Stop_Raschet_Flag) 
+		{ 
+		    Visualization_to_techplot_result();
+		    //Time_elapsed = T_end; 
+		}*/
 		
 		if (Visualization_to_techplot_flag) // визуализация при условии
 		{
-			if (Time_elapsed >= t_graph_export) {
+			if (Time_elapsed >= t_graph_export || Stop_Raschet_Flag) {
 				Visualization_to_techplot_result();
 				t_graph_export = t_graph_export + t_step;
 			}

@@ -59,8 +59,8 @@ int main() {
 
 	double NS = 1.0; //
 	
-	int Nx = 528;//1320; // 3240; // 
-	int Ny = 480;// 960; // 1080;
+	int Nx = 859;//1320; // 3240; // 
+	int Ny = 457;// 960; // 1080;
 
 	string Test_name = "KaraGate_tides_test"; 
 	string Postscript = "_" + to_str((T_end - T_begin)/3600) + "h_" + to_string(Nx) + "x" + to_string(Ny); 
@@ -86,7 +86,7 @@ int main() {
 
 	/* === »Õ»÷»¿À»«¿÷»ﬂ ƒ¿ÕÕ€’ ===  GEBCO_2019_30.0_70.0_45.0_63.0_ESRIASCII.asc*/
 
-	FILE *F = fopen("bathymetry/Kara_Gate_480x528.dat", "r");
+	FILE *F = fopen("bathymetry/Kara_Gate_extend_457x859.dat", "r");
 	if (F == NULL)
 	    cout<<"Can't open bathymetry file!"<<endl;
 	FILE *FH = fopen("initial/H_in.dat", "r");

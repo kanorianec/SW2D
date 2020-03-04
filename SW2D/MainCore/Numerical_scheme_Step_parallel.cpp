@@ -485,8 +485,10 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		if (check > CriticalVal || check != check)
 		{
 			cout << "Critical Value: " << CriticalVal << " " << check << endl;
-			/*
+			
 			Print_info_about_point("ERROR POINT", i*Ny + j);
+			
+			/*
 			Print_info_about_point("L:ERROR POINT", (i - 1)*Ny + j);
 			Print_info_about_point("R:ERROR POINT", (i + 1)*Ny + j);
 			Print_info_about_point("U:ERROR POINT", i*Ny + j + 1);

@@ -12,20 +12,42 @@ void Raschet::Save_Grid() {
 
 	string name_X = save_path + "/X.dat";
 	string name_Y = save_path + "/Y.dat";
+	
+	string name_Lon = save_path + "/Lon.dat";
+	string name_Lat = save_path + "/Lat.dat";
+	
 	string name_B = save_path + "/B.dat";
+	string name_t = save_path + "/t.dat";
 
 
 	std::ofstream fX(name_X, std::ios::out | std::ios::binary);
 	std::ofstream fY(name_Y, std::ios::out | std::ios::binary);
+	
+	std::ofstream fLon(name_Lon, std::ios::out | std::ios::binary);
+	std::ofstream fLat(name_Lat, std::ios::out | std::ios::binary);
+	
 	std::ofstream fB(name_B, std::ios::out | std::ios::binary);
 
 	fX.write(reinterpret_cast<const char*> (X), sizeof(double) * Nx * Ny);
 	fY.write(reinterpret_cast<const char*> (Y), sizeof(double) * Nx * Ny);
+	
+	if (hlat + hlon > 0)
+	{
+	    fLon.write(reinterpret_cast<const char*> (Lon), sizeof(double) * Nx * Ny);
+	    fLat.write(reinterpret_cast<const char*> (Lat), sizeof(double) * Nx * Ny);
+	}
+	
 	fB.write(reinterpret_cast<const char*> (B), sizeof(double) * Nx * Ny);
 
 	fX.close();
 	fY.close();
+	fLon.close();
+	fLat.close();
+	
 	fB.close();
+	
+	std::ofstream ft(name_t, std::ios::out);
+	ft.close();
 }
 
 // Save all variable at time moment "Time_of_work"
@@ -38,11 +60,17 @@ void Raschet::Save_Data() {
 	string name_xU = save_path + "/xU.dat";
 	string name_yU = save_path + "/yU.dat";
 	string name_C = save_path + "/C.dat";
+	
+	string name_t = path + "/Grid/t.dat";
 
 	std::ofstream fH (name_h, std::ios::out | std::ios::binary);
 	std::ofstream fxU(name_xU, std::ios::out | std::ios::binary);
 	std::ofstream fyU(name_yU, std::ios::out | std::ios::binary);
 	std::ofstream fC;
+	
+	std::ofstream ft(name_t, std::ios::out | std::ios::app);
+	
+	ft << to_str(Time_elapsed) << " ";
 	
 	fH.write(reinterpret_cast<const char*> (H), sizeof(double) * Nx * Ny);
 	fxU.write(reinterpret_cast<const char*> (xU), sizeof(double) * Nx * Ny);
@@ -51,6 +79,7 @@ void Raschet::Save_Data() {
 	fH.close();
 	fxU.close();
 	fyU.close();
+	ft.close();
 	
 	if (TransportProblemFlag)
 	{

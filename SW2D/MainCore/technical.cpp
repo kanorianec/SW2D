@@ -203,7 +203,7 @@ void Raschet::Print_info_about_point(string name, int index) {
 		}
 		cout << "tau = " << tau[index] << "; " << endl;
 		cout << "Type of point: " << S[index] << endl;
-		cout << "Time = " << Time_elapsed << endl;
+		cout << "Time = " << Time_elapsed + dT << endl;
 	}	
 };
 
