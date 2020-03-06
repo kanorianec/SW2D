@@ -44,10 +44,10 @@ int main() {
 	double y0 = 0;
 	double yN = 0;
 
-	double lon0 = 51.0208;
-	double lonN = 62;
-	double lat0 = 68;
-	double latN = 71.9917;
+	double lon0 = 51.4250;
+	double lonN = 69.2750;
+	double lat0 = 68.0083;
+	double latN = 71.8;
 
 	double mu = 0.0026; // bottom friction coffitient
 	int fc = 1; // use Coriolis force (1) or not (0) 
@@ -59,8 +59,8 @@ int main() {
 
 	double NS = 1.0; //
 	
-	int Nx = 859;//1320; // 3240; // 
-	int Ny = 457;// 960; // 1080;
+	int Nx = 715;//1320; // 3240; // 
+	int Ny = 456;// 960; // 1080;
 
 	string Test_name = "KaraGate_tides_test"; 
 	string Postscript = "_" + to_str((T_end - T_begin)/3600) + "h_" + to_string(Nx) + "x" + to_string(Ny); 
@@ -86,7 +86,7 @@ int main() {
 
 	/* === »Õ»÷»¿À»«¿÷»ﬂ ƒ¿ÕÕ€’ ===  GEBCO_2019_30.0_70.0_45.0_63.0_ESRIASCII.asc*/
 
-	FILE *F = fopen("bathymetry/Kara_Gate_extend_457x859.dat", "r");
+	FILE *F = fopen("bathymetry/Kara_Gate_extend_715x456.dat", "r");
 	if (F == NULL)
 	    cout<<"Can't open bathymetry file!"<<endl;
 	FILE *FH = fopen("initial/H_in.dat", "r");
@@ -173,9 +173,13 @@ int main() {
 	R->SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
 	//R->SetFileBoundaryConditions(VELOCITY_X, RIGHT, LEFT, TOP/*, BOTTOM*/);
 	//R->SetFileBoundaryConditions(VELOCITY_Y, RIGHT, LEFT, TOP/*, BOTTOM*/);
-	R->SetFileBoundaryConditions(VELOCITY_X, LEFT);//, TOP/*, BOTTOM*/);
+	
+	/*
+	R->SetFileBoundaryConditions(VELOCITY_X, LEFT);//, TOP, BOTTOM);
 	R->SetFileBoundaryConditions(VELOCITY_Y, LEFT);
 	R->SetFileBoundaryConditions(HEIGHT, LEFT);
+	*/
+	
 	//R->SetWallBoundaryConditions(RIGHT, LEFT, TOP, BOTTOM);
 	//R->SetFixedBoundaryConditions(VELOCITY_X, RIGHT, -0.01);
 
