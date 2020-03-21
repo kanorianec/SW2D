@@ -135,8 +135,8 @@ void Raschet::Visualization_to_techplot_result()
 		
 		
 		cout << "Visualization to techplot time moment = " << t_graph_export << "; time =  ";
-		if (t_step >= 3600)
-			cout << Time_elapsed/3600 << " hours; " << RaschetFileName << "; " << GetTimeStamp();
+		if (t_step >= 3600.0)
+			cout << Time_elapsed/3600.0 << " hours; " << RaschetFileName << "; " << GetTimeStamp();
 		else
 			cout << Time_elapsed << "; " << RaschetFileName << "; " << GetTimeStamp();
 

@@ -366,7 +366,17 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			
 
 			int k = n + 1 * (type == BOTTOM) - Ny*(type == RIGHT) - 1 * (type == TOP) + Ny*(type == LEFT) + (Ny + 1)*(type == LB_CORNER) + (1 - Ny)*(type == RB_CORNER) + (-Ny - 1)*(type == RT_CORNER) + (Ny - 1)*(type == LT_CORNER);
-
+			
+			double boundaryForce = 0.0;
+			
+			if (F_bound)
+			{
+			    boundaryForce = 
+				- (type == BOTTOM) * 0.5 * (ForceX[n] + ForceX[k]) * hx / gc
+				+ (type == TOP) * 0.5 * (ForceX[n] + ForceX[k]) * hx / gc
+				- (type == LEFT) * 0.5 * (ForceY[n] + ForceY[k]) * hy / gc
+				+ (type == RIGHT) * 0.5 * (ForceY[n] + ForceY[k]) * hy / gc;
+			}
 
 			if (Ht[k]  > eps/* && !epsilon[k]*/)
 			{
@@ -376,7 +386,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				if (border[VELOCITY_Y][type] != FROM_FILE)
 					yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
 				if (border[HEIGHT][type] != FROM_FILE)
-					Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + 2 * border_C[HEIGHT][type];
+					Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + boundaryForce + 2 * border_C[HEIGHT][type];
 				if (TransportProblemFlag)
 				{
 					if (border[CONCENTRATION][type] != FROM_FILE)

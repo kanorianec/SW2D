@@ -213,28 +213,32 @@ void Raschet::RecalcFileBoundaryConditions()
 
 	for (int PType = BOTTOM; PType <= LEFT; PType++)
 	{
-		int Na, Nb, N;
+		int Na, Nb, N, dn;
 		switch (PType) // set up corners
 		{
 		case LEFT:
 			Na = 1;
 			Nb = 0;
 			N = Ny;
+			dn = Ny;
 			break;
 		case RIGHT:
 			Na = 1;
 			Nb = (Nx - 1)*Ny;
 			N = Ny;
+			dn = -Ny;
 			break;
 		case TOP:
 			Na = Ny;
 			Nb = Ny - 1;
 			N = Nx;
+			dn = -1;
 			break;
 		case BOTTOM:
 			Na = Ny;
 			Nb = 0;
 			N = Nx;
+			dn = 1;
 			break;
 		}
 
@@ -274,6 +278,33 @@ void Raschet::RecalcFileBoundaryConditions()
 					break;
 				}
 			}
+		
+		if (COMBINE_FILE_AND_FREE_BOUNDARY_CONDITIONS)
+		{
+			#pragma omp parallel for
+			for (int k = 0; k < N; k++)
+			{
+				int i = Na*k + Nb;
+				if (PType == LEFT || PType == RIGHT)
+				{
+					if (dn*xUt[i] < 0)
+					{
+						xUt[i] = xUt[i + dn];
+						yUt[i] = yUt[i + dn];
+						//Ht[i] = Ht[i + dn];
+					}
+				}
+				else
+				{
+					if (dn*yUt[i] < 0)
+					{
+						xUt[i] = xUt[i + dn];
+						yUt[i] = yUt[i + dn];
+						//Ht[i] = Ht[i + dn];
+					}
+				}
+			}
+		}
 	}
 
 	/*

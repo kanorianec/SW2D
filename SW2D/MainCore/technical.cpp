@@ -275,6 +275,7 @@ void Raschet::write_extra_inf(ostream &out, double Time_of_work /*, double tt*/)
 	out << "Start Date and time of problem solving: " << asctime(gmtime(&RaschetTime));
 
 	out << "======================= BOUNDARY CONDITIONS =========================" << endl;
+	out << "Combine file and free boundary conditions: " << COMBINE_FILE_AND_FREE_BOUNDARY_CONDITIONS << ";"<<endl;
 	out << "    LEFT-TOP:           TOP:                RIGHT-TOP:" << endl;
 	out << GetConditionName(HEIGHT, border[HEIGHT][LT_CORNER], border_C[HEIGHT][LT_CORNER]) << GetConditionName(HEIGHT, border[HEIGHT][TOP], border_C[HEIGHT][TOP]) << GetConditionName(HEIGHT, border[HEIGHT][RT_CORNER], border_C[HEIGHT][RT_CORNER]) << endl;
 	out << GetConditionName(VELOCITY_X, border[VELOCITY_X][LT_CORNER], border_C[VELOCITY_X][LT_CORNER]) << GetConditionName(VELOCITY_X, border[VELOCITY_X][TOP], border_C[VELOCITY_X][TOP]) << GetConditionName(VELOCITY_X, border[VELOCITY_X][RT_CORNER], border_C[VELOCITY_X][RT_CORNER]) << endl;

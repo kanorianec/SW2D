@@ -232,15 +232,19 @@ void Raschet::Perform_Calculations()
 	double visualization_time = omp_get_wtime(); // время на визуализацию 
 	Recalc_forces_parallel(); // forces calculating 
 
-
-	if (Visualization_to_techplot_flag && !restart) // визуализация при условии
+	if (!restart)
 	{
-		Visualization_to_techplot_input();
-		if (Time_elapsed >= t_graph_export) {
-			Visualization_to_techplot_result();
-			t_graph_export = t_graph_export + t_step;
-		}			
-	}		
+	    //Save_Grid();
+	    //Save_Data();
+	    if (Visualization_to_techplot_flag) // визуализация при условии
+	    {
+	    	    Visualization_to_techplot_input();
+	    	    if (Time_elapsed >= t_graph_export) {
+	    		    Visualization_to_techplot_result();
+			    t_graph_export = t_graph_export + t_step;
+		    }			
+	    }		
+	}
 
 	visualization_time = omp_get_wtime() - visualization_time;
 	int est_time = 1;
@@ -266,7 +270,6 @@ void Raschet::Perform_Calculations()
 		    Visualization_to_techplot_result();
 		    //Time_elapsed = T_end; 
 		}*/
-		
 		if (Visualization_to_techplot_flag) // визуализация при условии
 		{
 			if (Time_elapsed >= t_graph_export || Stop_Raschet_Flag) {

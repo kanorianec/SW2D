@@ -1,8 +1,14 @@
 #pragma once
 //================= Technical Constants ====================
 // include forcing to regularization
-const int F_reg = 0;// 1;
-const int Phi_reg = 0;// 1;
+const int F_reg = 0;
+const int Phi_reg = 0;
+
+const bool COMBINE_FILE_AND_FREE_BOUNDARY_CONDITIONS = false; //true;
+
+// include forcing in bpundary conditions
+const int F_bound = 0;
+
 // type of transport equation regularization: alpha_c = 1 - normal, alpha_c = 0 - simplified, also could be between (0,1).
 const double alpha_c = 1.0;
 // Coefficient of viscosity in the transport equation, basic = 0.0, for special cases = 1.0/gc
@@ -17,7 +23,8 @@ const double CriticalVal = 10000.0;
 
 const double SD = 1.2035; // Dudson's constant for Sun
 const double MD = 2.6206; // Dudson's constant for Moon
-const int TideForcing = 0; //
+const int TideForcing = 1; //
+const int CoriolisForcing = 1;
 
 const double length_mer = 40007.86 * 1000; // Earth 2*Pi*R in meridian direction
 const double length_ekv = 40075.017 * 1000; // Earth 2*Pi*R in equator direction

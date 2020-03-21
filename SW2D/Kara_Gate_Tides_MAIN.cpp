@@ -27,7 +27,7 @@ int main() {
 	int num_of_output_data = 1;// 50;
 
 	int Visualization_to_techplot_flag = 1; //
-	double t_step = 3600;// (T_end - T_begin) / num_of_output_data; 
+	double t_step = 3600.0;// (T_end - T_begin) / num_of_output_data; 
 
 	// start date and time of current problem (UTC)
 
@@ -53,16 +53,16 @@ int main() {
 	int fc = 1; // use Coriolis force (1) or not (0) 
 
 
-	double beta = 0.2; // CFL number (0; 1)
+	double beta = 0.1; // CFL number (0; 1)
 	double alpha = 0.5; //
 	double eps = 0.1; //
 
-	double NS = 1.0; //
+	double NS = 0.0;//1.0; //
 	
 	int Nx = 715;//1320; // 3240; // 
 	int Ny = 456;// 960; // 1080;
 
-	string Test_name = "KaraGate_tides_test"; 
+	string Test_name = "KaraGate_tides";//_noForce"; 
 	string Postscript = "_" + to_str((T_end - T_begin)/3600) + "h_" + to_string(Nx) + "x" + to_string(Ny); 
 
 	//double t_graph_export = T_begin;  
@@ -171,9 +171,10 @@ int main() {
 	R->SetStartTime(year, month, day, hour, minute, second);
 	//R->SetVisualizationProperties(0, T_end, Nx - 580, Ny - 150, Nx - 1, Ny - 1);
 	R->SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
-	//R->SetFileBoundaryConditions(VELOCITY_X, RIGHT, LEFT, TOP/*, BOTTOM*/);
-	//R->SetFileBoundaryConditions(VELOCITY_Y, RIGHT, LEFT, TOP/*, BOTTOM*/);
-	
+//	R->SetWallBoundaryConditions(TOP,RIGHT);
+	R->SetFileBoundaryConditions(VELOCITY_X, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
+	R->SetFileBoundaryConditions(VELOCITY_Y, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
+	//R->SetFileBoundaryConditions(HEIGHT, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 	/*
 	R->SetFileBoundaryConditions(VELOCITY_X, LEFT);//, TOP, BOTTOM);
 	R->SetFileBoundaryConditions(VELOCITY_Y, LEFT);
