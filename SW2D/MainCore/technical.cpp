@@ -216,7 +216,7 @@ void Raschet::Write_point_to_file(int index, double X_cord, double Y_Cord, strin
 	if ((i*hx <= X_cord) && ((i + 1)*hx > X_cord) && (j*hy <= Y_Cord) && ((j + 1)*hy > Y_Cord))
 	{
 		FILE *F = fopen(file_name.c_str(),"a");
-		fprintf(F, "%lf %lf %lf %lf %lf %lf\n", Time_elapsed, H[i*Ny + j] + B[i*Ny + j] - Bmax, xU[i*Ny + j], yU[i*Ny + j], PhiXt[i*Ny + j], PhiYt[i*Ny + j]);
+		fprintf(F, "%lf %lf %lf %lf %lf %lf\n", Time_elapsed, H[i*Ny + j] + B[i*Ny + j] - Bmax, xU[i*Ny + j], yU[i*Ny + j], PhiX[i*Ny + j], PhiY[i*Ny + j]);
 		fclose(F);
 	}
 }
@@ -256,6 +256,7 @@ void Raschet::write_extra_inf(ostream &out, double Time_of_work /*, double tt*/)
 	out << endl << "====== FORCING ======" << endl;
 	out << "fc = " << fc << "; mu = " << mu << ";" << endl;
 	out << "Tide forcing = " << TideForcing << ";" << endl;
+	out << "Wind forcing = " << windForcing << ";" << endl;
 	if (TransportProblemFlag) out << "Diffusion coefficient: D = " << D << ";" << endl;
 
 	out << endl << "======== AREA & TIME ========" << endl;

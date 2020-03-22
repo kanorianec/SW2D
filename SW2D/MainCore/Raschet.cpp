@@ -98,8 +98,8 @@ Raschet::Raschet(string Test_name,
 	Raschet::xUt = new double[N]();
 	Raschet::yUt = new double[N]();
 	Raschet::Ht = new double[N]();
-	Raschet::PhiXt = new double[N]();
-	Raschet::PhiYt = new double[N]();
+	//Raschet::PhiXt = new double[N]();
+	//Raschet::PhiYt = new double[N]();
 	Raschet::S = new int[N]();
 	Raschet::sea_level = sea_level;
 	//Raschet::Time_elapsed = T_begin;
@@ -112,6 +112,7 @@ Raschet::Raschet(string Test_name,
 	Raschet::InternalWallsFlag = false;
 
 	Raschet::restart = false;
+	Raschet::windForcing = false;
 	
 	Raschet::SetOpenBoundaryConditions(TOP, BOTTOM, RIGHT, LEFT, RT_CORNER, LT_CORNER, RB_CORNER, LB_CORNER);
 	Raschet::SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
@@ -189,8 +190,8 @@ Raschet::Raschet(string Test_name,
 	Raschet::xUt = new double[N](); // Initialization by zero
 	Raschet::yUt = new double[N]();
 	Raschet::Ht = new double[N]();
-	Raschet::PhiXt = new double[N]();
-	Raschet::PhiYt = new double[N]();
+	//Raschet::PhiXt = new double[N]();
+	//Raschet::PhiYt = new double[N]();
 	Raschet::S = new int[N]();
 	Raschet::sea_level = sea_level;
 	//Raschet::Time_elapsed = T_begin;
@@ -203,6 +204,7 @@ Raschet::Raschet(string Test_name,
 	Raschet::InternalWallsFlag = false;
 
 	Raschet::restart = false;
+	Raschet::windForcing = false;
 
 	Raschet::SetOpenBoundaryConditions(TOP, BOTTOM, RIGHT, LEFT, RT_CORNER, LT_CORNER, RB_CORNER, LB_CORNER);
 	Raschet::SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
@@ -286,14 +288,18 @@ void Raschet::Perform_Calculations()
 
 Raschet::~Raschet()
 {
-	/*delete B;
-	delete H;
-	delete xU;
-	delete yU;
-	delete ForceX;
-	delete ForceY;
-	delete PhiX;
-	delete PhiY;*/
+	/*delete[] B;
+	delete[] H;
+	delete[] xU;
+	delete[] yU;
+	delete[] ForceX;
+	delete[] ForceY;
+	delete[] PhiX;
+	delete[] PhiY;*/
+
+	delete[] Ht;
+	delete[] xUt;
+	delete[] yUt;
 
 	for (int PType = BOTTOM; PType <= LEFT; PType++)
 	{
@@ -315,7 +321,35 @@ Raschet::~Raschet()
 				delete[] lin_k[CONCENTRATION][PType];
 			}
 		}
-	}	
+	}
+
+	if (windForcing)
+	{
+		FWindX.close();
+		FWindY.close();
+
+		delete[] xWind;
+		delete[] yWind;
+	}
+}
+
+void Raschet::SetWindSpeed(double WindFrictionCoefficient, double period)
+{
+	windFrictionCoef = WindFrictionCoefficient;
+	timeWind = T_begin - 1;
+	timeWindPeriod = period;
+	windForcing = true;
+
+	FWindX.open("windSpeed/xWind.dat", std::ios::binary);
+	FWindY.open("windSpeed/yWind.dat", std::ios::binary);
+
+	if (!FWindX.is_open() || !FWindY.is_open())
+		std::cout << "Error: windSpeed/x(y)Wind was not found!" << endl;
+	else
+	{
+		xWind = new double[Nx*Ny]();
+		yWind = new double[Nx*Ny]();
+	}
 }
 
 void Raschet::Recalc_forces_parallel()
@@ -381,6 +415,24 @@ void Raschet::Recalc_forces_parallel()
 			//cout << MD / gc /* (MoonAxis / MDist) * (MoonAxis / MDist) * (MoonAxis / MDist)*/ * cos(latN * rad)*cos(latN * rad)*cos(Mbeta)*cos(Mbeta) << endl;
 			//system("pause");
 	}
+
+	if (windForcing)
+	{
+		if (Time_elapsed > timeWind)
+		{
+			if (FWindX.eof() || FWindY.eof())
+			{
+				cout << "END OF FILE OF WIND VELOCITIES! Continue with last values" << endl;
+			}
+			else
+			{
+				FWindX.read(reinterpret_cast<char*> (xWind), sizeof(double) * Nx * Ny);
+				FWindY.read(reinterpret_cast<char*> (yWind), sizeof(double) * Nx * Ny);
+			}
+			timeWind += timeWindPeriod;
+		}
+	}
+
 	#pragma omp parallel for
 	for (int k = 0; k < Nx*Ny; k++)
 	{
@@ -413,6 +465,13 @@ void Raschet::Recalc_forces_parallel()
 		ForceY[k] = TideForcing * Omy + -fc * 0.000145842 * sin(rad*Lat[k]) * xU[k];
 		PhiX[k] = - mu * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * xU[k];
 		PhiY[k] = - mu * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * yU[k];
+
+		if (windForcing)
+		{
+			double gamma = 0.001268 *(1.1 + 0.04 * sqrt(xWind[k] * xWind[k] + yWind[k] * yWind[k])) * 0.001;
+			PhiX[k] += gamma * xWind[k];
+			PhiY[k] += gamma * yWind[k];
+		}
 	}
 };
 

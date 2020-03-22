@@ -86,14 +86,14 @@ Problem_Definition::Problem_Definition(){}
 // деструктор
 Problem_Definition::~Problem_Definition()
 {
-	delete B;
-	delete H;
-	delete xU;
-	delete yU;
-	delete ForceX;
-	delete ForceY;
-	delete PhiX;
-	delete PhiY;
+	delete[] B;
+	delete[] H;
+	delete[] xU;
+	delete[] yU;
+	delete[] ForceX;
+	delete[] ForceY;
+	delete[] PhiX;
+	delete[] PhiY;
 }
 
 // !!! функция считывания данных из текстового файла

@@ -112,6 +112,8 @@ void Raschet::SetWallBoundaryConditions(TypeOfPoint PType1, TypeOfPoint PType2, 
 	}
 }
 
+
+
 void Raschet::SetFileBoundaryConditions(TypeOfVariable VType, TypeOfPoint PType1, TypeOfPoint PType2, TypeOfPoint PType3, TypeOfPoint PType4)
 {
 	BoundaryConditionsFromFile = true;

@@ -174,6 +174,8 @@ int main() {
 //	R->SetWallBoundaryConditions(TOP,RIGHT);
 	R->SetFileBoundaryConditions(VELOCITY_X, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 	R->SetFileBoundaryConditions(VELOCITY_Y, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
+
+	R->SetWindSpeed(0.0, 3600);// 3600);
 	//R->SetFileBoundaryConditions(HEIGHT, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 	/*
 	R->SetFileBoundaryConditions(VELOCITY_X, LEFT);//, TOP, BOTTOM);
@@ -186,14 +188,14 @@ int main() {
 
 	R->Exec_Raschet();
 
-	delete B;
-	delete H;
-	delete xU;
-	delete yU;
-	delete ForceX;
-	delete ForceY;
-	delete PhiX;
-	delete PhiY;
+	delete[] B;
+	delete[] H;
+	delete[] xU;
+	delete[] yU;
+	delete[] ForceX;
+	delete[] ForceY;
+	delete[] PhiX;
+	delete[] PhiY;
 	
 	return 0;
 }

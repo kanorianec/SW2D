@@ -6,6 +6,7 @@
 //#include <time.h>
 #include <ctime>
 #include <iostream>
+#include <fstream>
 #include "Constants.h"
 
 class Raschet : public Problem_Definition
@@ -29,6 +30,7 @@ public:
 	
 	// Forcing:
 	double mu; // bottom friction coefficient
+	double windFrictionCoef; // wind friction coefficient
 	int fc; // use Coriolis force (1) or not (0)
 
 	// Transport problem:
@@ -49,8 +51,11 @@ public:
 	double* xUt;
 	double* yUt;
 	double* Ht;
-	double* PhiXt;
-	double* PhiYt;
+	//double* PhiXt;
+	//double* PhiYt;
+
+	double* xWind;
+	double* yWind;
 
 	double* Ct;
 	bool TransportProblemFlag;
@@ -66,8 +71,14 @@ public:
 	double* lin_k[3][4];
 	double t1_bound; // first time moment in seconds
 	double t2_bound;
-	FILE* FV[3][4];
-	FILE* FT;
+	FILE* FV[3][4]; // 3 vars x 4 walls: arrray of pointers to boundary conditions file 
+	FILE* FT; // arrray of pointers to time shifts file
+
+	bool windForcing;
+	std::ifstream FWindX; // xU arrray of pointers to wind speed file
+	std::ifstream FWindY; // yU arrray of pointers to wind speed file
+	double timeWind;
+	double timeWindPeriod;
 
 	// ephemeris for tides calculation
 	double Sbeta; // declination of Sun in rad
@@ -219,6 +230,9 @@ public:
 	// Boundary conditions from file
 	void SetFileBoundaryConditions(TypeOfVariable VType, TypeOfPoint PType1, TypeOfPoint PType2 = EXCLUDED, TypeOfPoint PType3 = EXCLUDED, TypeOfPoint PType4 = EXCLUDED);
 	void RecalcFileBoundaryConditions();
+
+	// Setting wind speed to initialize wind friction force
+	void SetWindSpeed(double WindFrictionCoefficient, double period);
 
 	void Recalc_forces_parallel(); // Forces recalculation with OpenMP
 

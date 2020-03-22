@@ -60,8 +60,8 @@ void Raschet::Save_Data() {
 	string name_yU = save_path + "/yU.dat";
 	string name_C = save_path + "/C.dat";
 
-	string name_Fx = save_path + "/ForceY.dat";
-	string name_Fy = save_path + "/ForceX.dat";
+	string name_Fx = save_path + "/ForceX.dat";
+	string name_Fy = save_path + "/ForceY.dat";
 	
 	string name_t = path + "/Grid/t.dat";
 
@@ -80,8 +80,8 @@ void Raschet::Save_Data() {
 	fH.write(reinterpret_cast<const char*> (H), sizeof(double) * Nx * Ny);
 	fxU.write(reinterpret_cast<const char*> (xU), sizeof(double) * Nx * Ny);
 	fyU.write(reinterpret_cast<const char*> (yU), sizeof(double) * Nx * Ny);
-	fFx.write(reinterpret_cast<const char*> (ForceX), sizeof(double) * Nx * Ny);
-	fFy.write(reinterpret_cast<const char*> (ForceY), sizeof(double) * Nx * Ny);
+	fFx.write(reinterpret_cast<const char*> (xWind), sizeof(double) * Nx * Ny); //ForceX
+	fFy.write(reinterpret_cast<const char*> (yWind), sizeof(double) * Nx * Ny); //ForceY
 
 	fH.close();
 	fxU.close();
@@ -123,8 +123,8 @@ void Raschet::Restart_from_time_moment(double Time_moment) {
 		std::ifstream fC;
 
 		fH.read(reinterpret_cast<char*> (H), sizeof(double) * Nx * Ny);
-		fxU.read(reinterpret_cast<char*> (H), sizeof(double) * Nx * Ny);
-		fyU.read(reinterpret_cast<char*> (H), sizeof(double) * Nx * Ny);
+		fxU.read(reinterpret_cast<char*> (xU), sizeof(double) * Nx * Ny);
+		fyU.read(reinterpret_cast<char*> (yU), sizeof(double) * Nx * Ny);
 
 		fH.close();
 		fxU.close();
@@ -133,7 +133,7 @@ void Raschet::Restart_from_time_moment(double Time_moment) {
 		if (TransportProblemFlag)
 		{
 			fC.open(name_C, std::ios::out | std::ios::binary);
-			fC.read(reinterpret_cast<char*> (H), sizeof(double) * Nx * Ny);
+			fC.read(reinterpret_cast<char*> (C), sizeof(double) * Nx * Ny);
 			fC.close();
 		}
 	}
