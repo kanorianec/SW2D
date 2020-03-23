@@ -230,24 +230,11 @@ void Raschet::Perform_Calculations()
 	
 	write_extra_inf_to_file(0); // output metadata to the special file extra_inf.txt
 
-	double scheme_time = omp_get_wtime(); // общий подсчет времени
-	double visualization_time = omp_get_wtime(); // время на визуализацию 
-	Recalc_forces_parallel(); // forces calculating 
+	double scheme_time = omp_get_wtime(); // time of calculations 
+	double visualization_time = omp_get_wtime(); // time of visualisation 
 
-	if (!restart)
-	{
-	    //Save_Grid();
-	    //Save_Data();
-	    if (Visualization_to_techplot_flag) // визуализация при условии
-	    {
-	    	    Visualization_to_techplot_input();
-	    	    if (Time_elapsed >= t_graph_export) {
-	    		    Visualization_to_techplot_result();
-			    t_graph_export = t_graph_export + t_step;
-		    }			
-	    }		
-	}
-
+	outputInputs();
+	
 	visualization_time = omp_get_wtime() - visualization_time;
 	int est_time = 1;
 	double estimation_time = omp_get_wtime();
@@ -267,23 +254,22 @@ void Raschet::Perform_Calculations()
 		if (Time_elapsed > 3600 * (HourMark + 1))
 			HourMark++;
 
-		/*if (Stop_Raschet_Flag) 
-		{ 
-		    Visualization_to_techplot_result();
-		    //Time_elapsed = T_end; 
-		}*/
-		if (Visualization_to_techplot_flag) // визуализация при условии
+		if (Time_elapsed >= t_graph_export || Stop_Raschet_Flag)
 		{
-			if (Time_elapsed >= t_graph_export || Stop_Raschet_Flag) {
-				Visualization_to_techplot_result();
-				t_graph_export = t_graph_export + t_step;
-			}
+			outputResults();
+			t_graph_export = t_graph_export + t_step;
 		}
 	}
 
-	double Time_of_work = (omp_get_wtime() - scheme_time); // время работы программы
+	if (Stop_Raschet_Flag)
+		outputResults();
+
+	double Time_of_work = (omp_get_wtime() - scheme_time); 
 	std::cout << "Time of work = " << Time_of_work << " seconds." << endl;
-	//Save_Data(Time_of_work); 
+
+	std::ofstream fLog("timeLog.dat", std::ios::out | std::ios::app);
+	fLog << "Time of work = " << Time_of_work << " seconds." << endl;
+	fLog.close();
 }
 
 Raschet::~Raschet()

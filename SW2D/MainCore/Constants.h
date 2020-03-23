@@ -1,5 +1,5 @@
 #pragma once
-//================= Technical Constants ====================
+//================= Technical Constants and parameters ====================
 // include forcing to regularization
 const int F_reg = 0;
 const int Phi_reg = 0;
@@ -13,6 +13,8 @@ const int F_bound = 0;
 const double alpha_c = 1.0;
 // Coefficient of viscosity in the transport equation, basic = 0.0, for special cases = 1.0/gc
 const double NSC = 0.0;
+
+const bool binaryOutputFlag = true; // output to binary flag
 //=========================================================
 
 //const float pi = 3.1415926535;

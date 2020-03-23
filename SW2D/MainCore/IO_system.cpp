@@ -4,6 +4,59 @@
 #include <fstream>
 
 
+// output input data procedure
+void Raschet::outputInputs()
+{
+	if (!restart)
+	{
+		cout << "Visualization of initial data; " << GetTimeStamp();
+		std::ofstream fLog("timeLog.dat", std::ios::out);
+		fLog << "Visualization of initial data; " << GetTimeStamp();
+		fLog.close();
+
+		if (binaryOutputFlag)
+		{
+			Save_Data();
+			Save_Grid();
+		}
+
+		if (Visualization_to_techplot_flag) 
+		{
+			Visualization_to_techplot_input();
+			Visualization_to_techplot_result();
+		}
+	}
+	t_graph_export = t_graph_export + t_step;
+}
+
+// output results procedure
+void Raschet::outputResults()
+{
+	std::ofstream fLog("timeLog.dat", std::ios::out | std::ios::app);
+	fLog << "Visualization time moment = " << t_graph_export << "; time =  ";
+	
+
+	cout << "Visualization time moment = " << t_graph_export << "; time =  ";
+	if (t_step >= 3600.0)
+	{
+		cout << Time_elapsed / 3600.0 << " hours; " << GetTimeStamp();
+		fLog << Time_elapsed / 3600.0 << " hours; " << GetTimeStamp();
+	}		
+	else
+	{
+		cout << Time_elapsed << "; " << GetTimeStamp();
+		fLog << Time_elapsed << "; " << GetTimeStamp();
+	}
+		
+	fLog.close();
+
+	if (binaryOutputFlag)
+		Save_Data();
+
+	if (Visualization_to_techplot_flag)
+		Visualization_to_techplot_result();
+}
+
 // Save all variable at time moment "Time_of_work"
 void Raschet::Save_Grid() {
 	string save_path = path + "/Grid"; // full path name to the preparing folder
@@ -108,6 +161,10 @@ void Raschet::Restart_from_time_moment(double Time_moment) {
 	cout << "Restarting from time moment " << Time_moment << endl;
 
 	T_begin = Time_moment;
+
+	if (t_graph_export < T_begin)
+		t_graph_export = T_begin;
+
 	restart = true;
 
 	if (folderExists(load_path))

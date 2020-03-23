@@ -48,8 +48,6 @@ void Raschet::Visualization_to_techplot_input()
 
 	FILE *F_in = fopen(InputDataFileName.c_str(), "w");
 
-	cout << "Visualization of initial data; " << GetTimeStamp();
-
 	fprintf(F_in, "TITLE= \"%s\"\n", Test_name.c_str());
 	//fprintf(F, "VARIABLES = \"X\" \"Y\" \"H\" \"B\" \"Ux\" \"Uy\" \"Phix\" \"Phiy\" \"Fx\" \"Fy\"\n");
 	fprintf(F_in, "VARIABLES = \"X\" \"Y\" \"Longitude\" \"Latitude\" \"B\" \"H\" \"Ux\" \"Uy\" \"S\" ");
@@ -76,8 +74,6 @@ void Raschet::Visualization_to_techplot_input()
 			fprintf(F_in, "%d %d %d %d\n", ((j_maxVis - j_minVis + 1)*i + j + 1), ((j_maxVis - j_minVis + 1)*(i + 1) + j + 1), ((j_maxVis - j_minVis + 1)*(i + 1) + j + 2), ((j_maxVis - j_minVis + 1)*i + j + 2));
 		}
 	}
-	Save_Data();
-	Save_Grid();
 
 	fclose(F_in);
 }
@@ -95,7 +91,7 @@ void Raschet::Visualization_to_techplot_result()
 		string RaschetFileName = path + "/Result_d" + to_string(output_per_file_counter) + ".dat";
 		FILE *F = fopen(RaschetFileName.c_str(), "w");
 		
-		cout << "Visualization to techplot time moment = " << t_graph_export << "; time =  "<<Time_elapsed << "; " << RaschetFileName << "; " << GetTimeStamp();
+		//cout << "Visualization to techplot time moment = " << t_graph_export << "; time =  "<<Time_elapsed << "; " << RaschetFileName << "; " << GetTimeStamp();
 
 		fprintf(F, "TITLE= \"%s\"\n", Test_name.c_str());
 		//fprintf(F, "VARIABLES = \"X\" \"Y\" \"H\" \"B\" \"Ux\" \"Uy\" \"Phix\" \"Phiy\" \"Fx\" \"Fy\"\n");
@@ -132,13 +128,6 @@ void Raschet::Visualization_to_techplot_result()
 		string RaschetFileName = path + "/Result_d" + to_string(output_per_file_counter) + ".dat";
 
 		FILE *F = fopen(RaschetFileName.c_str(), "ab");
-		
-		
-		cout << "Visualization to techplot time moment = " << t_graph_export << "; time =  ";
-		if (t_step >= 3600.0)
-			cout << Time_elapsed/3600.0 << " hours; " << RaschetFileName << "; " << GetTimeStamp();
-		else
-			cout << Time_elapsed << "; " << RaschetFileName << "; " << GetTimeStamp();
 
 		//fprintf(F, "TITLE= \"%s\"\n", Test_name.c_str());
 		//fprintf(F, "VARIABLES = \"X\" \"Y\" \"H\" \"B\" \"Ux\" \"Uy\" \"Phix\" \"Phiy\" \"Fx\" \"Fy\"\n");
@@ -163,8 +152,6 @@ void Raschet::Visualization_to_techplot_result()
 		fclose(F);
 	}
 	current_file_sizeMB += Nx*Ny * 9 * 7 / (1024 * 1024);
-
-	Save_Data();
 	//cout << current_file_sizeMB << endl;
 	//system("pause");
 }

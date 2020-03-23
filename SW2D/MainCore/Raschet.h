@@ -192,6 +192,8 @@ public:
 		double D
 	);
 	
+	void outputResults();
+	void outputInputs();
 	void Visualization_to_techplot_input(); // визуализация данных в формате, используемом для построения в Techplot
 	void Visualization_to_techplot_result();
 	
