@@ -10,7 +10,7 @@ void Raschet::outputInputs()
 	if (!restart)
 	{
 		cout << "Visualization of initial data; " << GetTimeStamp();
-		std::ofstream fLog("timeLog.dat", std::ios::out);
+		std::ofstream fLog(path + "/timeLog.dat", std::ios::out);
 		fLog << "Visualization of initial data; " << GetTimeStamp();
 		fLog.close();
 
@@ -32,19 +32,19 @@ void Raschet::outputInputs()
 // output results procedure
 void Raschet::outputResults()
 {
-	std::ofstream fLog("timeLog.dat", std::ios::out | std::ios::app);
+	std::ofstream fLog(path + "/timeLog.dat", std::ios::out | std::ios::app);
 	fLog << "Visualization time moment = " << t_graph_export << "; time =  ";
 	
 
 	cout << "Visualization time moment = " << t_graph_export << "; time =  ";
 	if (t_step >= 3600.0)
 	{
-		cout << Time_elapsed / 3600.0 << " hours; " << GetTimeStamp();
+		cout << Time_elapsed / 3600.0 << " hours; " << GetTimeStamp() << flush;
 		fLog << Time_elapsed / 3600.0 << " hours; " << GetTimeStamp();
 	}		
 	else
 	{
-		cout << Time_elapsed << "; " << GetTimeStamp();
+		cout << Time_elapsed << "; " << GetTimeStamp() << flush;
 		fLog << Time_elapsed << "; " << GetTimeStamp();
 	}
 		

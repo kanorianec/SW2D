@@ -309,7 +309,7 @@ void Raschet::write_extra_inf(ostream &out, double Time_of_work /*, double tt*/)
 		out << "OpenMP is on. Program uses " << OMP_THREADS_NUMBER << " threads." << endl;
 	if (Time_of_work > 0.0)
 	    out << "Time of work = " << Time_of_work << " seconds;" << endl;
-	out << "include forcing to regularization: F_reg = " << F_reg << "; Phi_reg" << Phi_reg << endl;
+	out << "include forcing to regularization: F_reg = " << F_reg << "; Phi_reg = " << Phi_reg << endl;
 	if (TransportProblemFlag)
 	{
 		out << "type of transport equation regularization: alpha_c = 1 - normal, alpha_c = 0 - simplified, also could be between (0,1). alpha_c = " << alpha_c << ";" << endl;

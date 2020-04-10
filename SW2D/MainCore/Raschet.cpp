@@ -267,9 +267,10 @@ void Raschet::Perform_Calculations()
 	double Time_of_work = (omp_get_wtime() - scheme_time); 
 	std::cout << "Time of work = " << Time_of_work << " seconds." << endl;
 
-	std::ofstream fLog("timeLog.dat", std::ios::out | std::ios::app);
+	std::ofstream fLog(path + "/timeLog.dat", std::ios::out | std::ios::app);
 	fLog << "Time of work = " << Time_of_work << " seconds." << endl;
 	fLog.close();
+	write_extra_inf_to_file(Time_of_work);
 }
 
 Raschet::~Raschet()
