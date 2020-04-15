@@ -80,6 +80,10 @@ public:
 	double timeWind;
 	double timeWindPeriod;
 
+	bool tidesHarmonics; // include tides calculation in boundary conditions
+	double* tideA[4][tideNum];
+	double* tidePh[4][tideNum];
+
 	// ephemeris for tides calculation
 	double Sbeta; // declination of Sun in rad
 	double Sa; // right ascension of Sun in rad
@@ -232,6 +236,9 @@ public:
 	// Boundary conditions from file
 	void SetFileBoundaryConditions(TypeOfVariable VType, TypeOfPoint PType1, TypeOfPoint PType2 = EXCLUDED, TypeOfPoint PType3 = EXCLUDED, TypeOfPoint PType4 = EXCLUDED);
 	void RecalcFileBoundaryConditions();
+
+	void SetTidesHarmonicsBoundaryConditions(TypeOfPoint PType1, TypeOfPoint PType2 = EXCLUDED, TypeOfPoint PType3 = EXCLUDED, TypeOfPoint PType4 = EXCLUDED);
+	void addTidesHarmonicsBoundaryConditions();
 
 	// Setting wind speed to initialize wind friction force
 	void SetWindSpeed(double WindFrictionCoefficient, double period);

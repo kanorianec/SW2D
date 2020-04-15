@@ -477,6 +477,11 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			}
 		}
 	}
+
+	if (tidesHarmonics)
+	{
+		addTidesHarmonicsBoundaryConditions();
+	}
 	
 
 	// set array of epsilons to zero

@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 //================= Technical Constants and parameters ====================
 // include forcing to regularization
 const int F_reg = 0;
@@ -6,7 +7,7 @@ const int Phi_reg = 0;
 
 const bool COMBINE_FILE_AND_FREE_BOUNDARY_CONDITIONS = false; //true;
 
-// include forcing in bpundary conditions
+															  // include forcing in bpundary conditions
 const int F_bound = 0;
 
 // type of transport equation regularization: alpha_c = 1 - normal, alpha_c = 0 - simplified, also could be between (0,1).
@@ -14,11 +15,11 @@ const double alpha_c = 1.0;
 // Coefficient of viscosity in the transport equation, basic = 0.0, for special cases = 1.0/gc
 const double NSC = 0.0;
 
-const bool binaryOutputFlag = false;//true; // output to binary flag
-//=========================================================
+const bool binaryOutputFlag = true;//true; // output to binary flag
+									//=========================================================
 
-//const float pi = 3.1415926535;
-//const int Nmax = 1555000; // !? 
+									//const float pi = 3.1415926535;
+									//const int Nmax = 1555000; // !? 
 const double gc = 9.81;
 //const double G = 0.0000000000667408; // gravitational constant
 const double CriticalVal = 10000.0;
@@ -41,13 +42,14 @@ const double outputMaxSizeMB = 800; // max size of one output file in MB
 
 const int border_WALL[4][8] = {
 	//BOTTOM, RIGHT, TOP, LEFT, RB_CORNER, LB_CORNER, RT_CORNER, LT_CORNER
-	{1, 1, 1, 1, 1, 1, 1, 1 }, // HEIGHT
-	{ 1, -1, 1, -1, -1, -1, -1, -1}, // VELOCITY_X
-	{-1, 1, -1, 1, -1, -1, -1, -1 }, // VELOCITY_Y
+	{ 1, 1, 1, 1, 1, 1, 1, 1 }, // HEIGHT
+	{ 1, -1, 1, -1, -1, -1, -1, -1 }, // VELOCITY_X
+	{ -1, 1, -1, 1, -1, -1, -1, -1 }, // VELOCITY_Y
 	{ 1, 1, 1, 1, 1, 1, 1, 1 } // CONCENTRATION
 };
 
 const std::string Data_folder = "Data"; // main directory that contains all data folders
+
 
 enum TypeOfPoint {
 	BOTTOM = 0,
@@ -58,7 +60,7 @@ enum TypeOfPoint {
 	LB_CORNER = 5,
 	RT_CORNER = 6,
 	LT_CORNER = 7,
-	INTERNAL = 8,	
+	INTERNAL = 8,
 	INTERNALWALL = 9,
 	EXCLUDED = -9
 };
@@ -67,7 +69,8 @@ enum TypeOfVariable {
 	HEIGHT = 0,
 	VELOCITY_X = 1,
 	VELOCITY_Y = 2,
-	CONCENTRATION = 3
+	CONCENTRATION = 3,
+	TIDE = 777
 };
 
 enum BoundaryConditions {
@@ -77,5 +80,23 @@ enum BoundaryConditions {
 	FROM_FILE = 2
 };
 
+const int tideNum = 8; // number of tides harmonics
+extern const char* HRM[];
+const std::string tideHarmonicsFolder = "tidesHarmonics"; // directory of tide harmonics characteristics
+extern bool tideSide[4];
+
+enum tideType {  // tide harmonics
+	K1,
+	K2,
+	M2,
+	N2,
+	O1,
+	P1,
+	Q1,
+	S2
+};
+
+extern const double qTide[tideNum];
+
 //char *name_of_boundary_condition[] = {"Open border", "Wall", "Fixed boundary" };
-//const float normirovka = 1000.0000000000; //! что это? 
+//const float normirovka = 1000.0000000000; // 

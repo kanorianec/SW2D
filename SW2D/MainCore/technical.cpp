@@ -45,7 +45,7 @@ double polar_to_decart_y(double dlat) {
 	return y;
 }
 
-bool folderExists(string folder_path)
+bool folderNotExists(string folder_path)
 {
 	struct stat buffer;
 	return stat(folder_path.c_str(), &buffer);
@@ -55,7 +55,7 @@ bool folderExists(string folder_path)
 void Raschet::Prepare_Folder(string folder_path, bool ignore_warning)
 {
 	struct stat buffer;
-	if (folderExists(folder_path))
+	if (folderNotExists(folder_path))
 	{
 			if (mkdir(folder_path.c_str(), 0755))
 				cout << "Error: can't create folder " << folder_path << endl;
@@ -276,12 +276,14 @@ void Raschet::write_extra_inf(ostream &out, double Time_of_work /*, double tt*/)
 	out << "Start Date and time of problem solving: " << asctime(gmtime(&RaschetTime));
 
 	out << "======================= BOUNDARY CONDITIONS =========================" << endl;
+	out << "Tide harmonics boundary conditions: " << tidesHarmonics << ";" << endl;
 	out << "Combine file and free boundary conditions: " << COMBINE_FILE_AND_FREE_BOUNDARY_CONDITIONS << ";"<<endl;
 	out << "    LEFT-TOP:           TOP:                RIGHT-TOP:" << endl;
 	out << GetConditionName(HEIGHT, border[HEIGHT][LT_CORNER], border_C[HEIGHT][LT_CORNER]) << GetConditionName(HEIGHT, border[HEIGHT][TOP], border_C[HEIGHT][TOP]) << GetConditionName(HEIGHT, border[HEIGHT][RT_CORNER], border_C[HEIGHT][RT_CORNER]) << endl;
 	out << GetConditionName(VELOCITY_X, border[VELOCITY_X][LT_CORNER], border_C[VELOCITY_X][LT_CORNER]) << GetConditionName(VELOCITY_X, border[VELOCITY_X][TOP], border_C[VELOCITY_X][TOP]) << GetConditionName(VELOCITY_X, border[VELOCITY_X][RT_CORNER], border_C[VELOCITY_X][RT_CORNER]) << endl;
 	out << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][LT_CORNER], border_C[VELOCITY_Y][LT_CORNER]) << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][TOP], border_C[VELOCITY_Y][TOP]) << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][RT_CORNER], border_C[VELOCITY_Y][RT_CORNER]) << endl;
 	if (TransportProblemFlag) out << GetConditionName(CONCENTRATION, border[CONCENTRATION][LT_CORNER], border_C[CONCENTRATION][LT_CORNER]) << GetConditionName(CONCENTRATION, border[CONCENTRATION][TOP], border_C[CONCENTRATION][TOP]) << GetConditionName(CONCENTRATION, border[CONCENTRATION][RT_CORNER], border_C[CONCENTRATION][RT_CORNER]) << endl;
+	out << "                     " << GetConditionName(TIDE, int(tideSide[TOP]), 0) << endl;
 	out << "                   \\ ___________________ /" << endl;
 	out << "                    |                   |" << endl;
 	out << "                    |                   |" << endl;
@@ -291,12 +293,14 @@ void Raschet::write_extra_inf(ostream &out, double Time_of_work /*, double tt*/)
 	out << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][LEFT], border_C[VELOCITY_Y][LEFT]) << "|                   |" << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][RIGHT], border_C[VELOCITY_Y][RIGHT]) << endl;
 	if (TransportProblemFlag)
 		out << GetConditionName(CONCENTRATION, border[CONCENTRATION][LEFT], border_C[CONCENTRATION][LEFT]) << "|                   |" << GetConditionName(CONCENTRATION, border[CONCENTRATION][RIGHT], border_C[CONCENTRATION][RIGHT]) << endl;
+	out << GetConditionName(TIDE, int(tideSide[LEFT]), 0) << "|                   |" << GetConditionName(TIDE, int(tideSide[RIGHT]), 0) << endl;
 	out << "                    |                   |" << endl;
 	out << "                    |                   |" << endl;
 	out << "                    |                   |" << endl;
 	out << "                    |___________________|" << endl;
 	out << "                   /                     \\" << endl;
 	out << "    LEFT-BOTTOM:        BOTTOM:             RIGHT-BOTTOM:" << endl;
+	out << "                     " << GetConditionName(TIDE, int(tideSide[BOTTOM]), 0) << endl;
 	out << GetConditionName(HEIGHT, border[HEIGHT][LB_CORNER], border_C[HEIGHT][LB_CORNER]) << GetConditionName(HEIGHT, border[HEIGHT][BOTTOM], border_C[HEIGHT][BOTTOM]) << GetConditionName(HEIGHT, border[HEIGHT][RB_CORNER], border_C[HEIGHT][RB_CORNER]) << endl;
 	out << GetConditionName(VELOCITY_X, border[VELOCITY_X][LB_CORNER], border_C[VELOCITY_X][LB_CORNER]) << GetConditionName(VELOCITY_X, border[VELOCITY_X][BOTTOM], border_C[VELOCITY_X][BOTTOM]) << GetConditionName(VELOCITY_X, border[VELOCITY_X][RB_CORNER], border_C[VELOCITY_X][RB_CORNER]) << endl;
 	out << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][LB_CORNER], border_C[VELOCITY_Y][LB_CORNER]) << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][BOTTOM], border_C[VELOCITY_Y][BOTTOM]) << GetConditionName(VELOCITY_Y, border[VELOCITY_Y][RB_CORNER], border_C[VELOCITY_Y][RB_CORNER]) << endl;
@@ -342,6 +346,8 @@ std::string GetVariableName(TypeOfVariable VType)
 	case CONCENTRATION:
 		Var = "C";
 		break;
+	case TIDE:
+		Var = "Tide";
 	}
 
 	return Var;
@@ -367,6 +373,14 @@ std::string GetConditionName(TypeOfVariable VType, int border, double border_C)
 		Name += Var + ": file " + GetVariableName(VType) + "_?.dat";
 	else
 		Name += Var + ": unknown" + to_string(border) + " " +  streamObj.str();
+
+	if (VType == TIDE)
+	{
+		Name = "   ";
+		if (border)
+			Name += "~~~Tide~~~";
+	}
+	
 	
 	int CurLen = Name.length();
 

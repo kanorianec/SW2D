@@ -24,11 +24,11 @@ double Bmin;
 int main() {
 	// T_begin, T_end - start and end time respectively, in seconds 
 	double T_begin = 0;
-	double T_end = 2 * 24 * 3600;
+	double T_end = 2*3600;// 2 * 24 * 3600;
 	int num_of_output_data = 1;// 50;
 
 	int Visualization_to_techplot_flag = 0; //
-	double t_step = 3600.0;// (T_end - T_begin) / num_of_output_data; 
+	double t_step = 3600;// 3600.0;// (T_end - T_begin) / num_of_output_data; 
 
 	// start date and time of current problem (UTC)
 
@@ -71,7 +71,7 @@ int main() {
 	
 	//omp_set_num_threads(2);
 
-	string Test_name = "KaraGate_tides_wind_OMP_" + to_str(threadsNumber);//_noForce"; 
+	string Test_name = "KaraGate_tidesHarm_wind"; //_noForce";  _OMP_" + to_str(threadsNumber)
 	string Postscript = "_" + to_str((T_end - T_begin)/3600) + "h_" + to_string(Nx) + "x" + to_string(Ny); 
 
 	//double t_graph_export = T_begin;  
@@ -181,11 +181,13 @@ int main() {
 	//R->SetVisualizationProperties(0, T_end, Nx - 580, Ny - 150, Nx - 1, Ny - 1);
 	R->SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
 //	R->SetWallBoundaryConditions(TOP,RIGHT);
-	R->SetFileBoundaryConditions(VELOCITY_X, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
-	R->SetFileBoundaryConditions(VELOCITY_Y, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
+	
+	//R->SetFileBoundaryConditions(VELOCITY_X, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
+	//R->SetFileBoundaryConditions(VELOCITY_Y, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 
 	R->SetWindSpeed(0.0, 3600);// 3600);
-	//R->SetFileBoundaryConditions(HEIGHT, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
+	R->SetTidesHarmonicsBoundaryConditions(LEFT, TOP);
+	R->SetFileBoundaryConditions(HEIGHT, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 	/*
 	R->SetFileBoundaryConditions(VELOCITY_X, LEFT);//, TOP, BOTTOM);
 	R->SetFileBoundaryConditions(VELOCITY_Y, LEFT);
@@ -206,5 +208,6 @@ int main() {
 	delete[] PhiX;
 	delete[] PhiY;
 	
+	system("pause");
 	return 0;
 }

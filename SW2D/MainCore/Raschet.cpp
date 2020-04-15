@@ -113,9 +113,10 @@ Raschet::Raschet(string Test_name,
 
 	Raschet::restart = false;
 	Raschet::windForcing = false;
+	Raschet::tidesHarmonics = false;
 	
 	Raschet::SetOpenBoundaryConditions(TOP, BOTTOM, RIGHT, LEFT, RT_CORNER, LT_CORNER, RB_CORNER, LB_CORNER);
-	Raschet::SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
+	Raschet::SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);	
 }
 
 Raschet::Raschet(string Test_name,
@@ -205,6 +206,7 @@ Raschet::Raschet(string Test_name,
 
 	Raschet::restart = false;
 	Raschet::windForcing = false;
+	Raschet::tidesHarmonics = false;
 
 	Raschet::SetOpenBoundaryConditions(TOP, BOTTOM, RIGHT, LEFT, RT_CORNER, LT_CORNER, RB_CORNER, LB_CORNER);
 	Raschet::SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
@@ -317,6 +319,20 @@ Raschet::~Raschet()
 
 		delete[] xWind;
 		delete[] yWind;
+	}
+
+	if (tidesHarmonics)
+	{
+		for (int PType = BOTTOM; PType <= LEFT; PType++)
+		{
+			if (tideSide[PType])
+			{
+				for (int h = 0; h < tideNum; h++)
+				{
+					delete[] tideA[PType][h];
+				}
+			}
+		}
 	}
 }
 

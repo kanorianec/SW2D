@@ -167,7 +167,7 @@ void Raschet::Restart_from_time_moment(double Time_moment) {
 
 	restart = true;
 
-	if (folderExists(load_path))
+	if (!folderNotExists(load_path))
 	{
 		string name_h = load_path + "/H.dat";
 		string name_xU = load_path + "/xU.dat";

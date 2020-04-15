@@ -66,6 +66,9 @@
     <ClCompile Include="Kara_Gate_Tides_MAIN.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
+    <ClCompile Include="Constants.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainCore\Constants.h">
