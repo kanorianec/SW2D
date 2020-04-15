@@ -26,7 +26,7 @@ const double CriticalVal = 10000.0;
 
 const double SD = 1.2035; // Dudson's constant for Sun
 const double MD = 2.6206; // Dudson's constant for Moon
-const int TideForcing = 1; //
+const int TideForcing = 0; //
 const int CoriolisForcing = 1;
 
 const double length_mer = 40007.86 * 1000; // Earth 2*Pi*R in meridian direction

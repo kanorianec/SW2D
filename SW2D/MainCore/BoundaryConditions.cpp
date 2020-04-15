@@ -1,5 +1,6 @@
 #include "Raschet.h"
 #include "technical.h"
+#include <cmath>
 
 // Set up boundary conditions of d/dn = 0
 void Raschet::SetZeroDerivativeConditions(TypeOfVariable VType, TypeOfPoint PType1, TypeOfPoint PType2, TypeOfPoint PType3, TypeOfPoint PType4, TypeOfPoint PType5, TypeOfPoint PType6, TypeOfPoint PType7, TypeOfPoint PType8)

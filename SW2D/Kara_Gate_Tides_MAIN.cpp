@@ -24,7 +24,7 @@ double Bmin;
 int main() {
 	// T_begin, T_end - start and end time respectively, in seconds 
 	double T_begin = 0;
-	double T_end = 2*3600;// 2 * 24 * 3600;
+	double T_end = 2 * 24 * 3600;
 	int num_of_output_data = 1;// 50;
 
 	int Visualization_to_techplot_flag = 0; //
@@ -186,8 +186,8 @@ int main() {
 	//R->SetFileBoundaryConditions(VELOCITY_Y, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 
 	R->SetWindSpeed(0.0, 3600);// 3600);
-	R->SetTidesHarmonicsBoundaryConditions(LEFT, TOP);
-	R->SetFileBoundaryConditions(HEIGHT, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
+	R->SetTidesHarmonicsBoundaryConditions(LEFT/*, TOP*/);
+	R->SetFileBoundaryConditions(HEIGHT, /*RIGHT,*/ LEFT/*, TOP*//*, BOTTOM*/);
 	/*
 	R->SetFileBoundaryConditions(VELOCITY_X, LEFT);//, TOP, BOTTOM);
 	R->SetFileBoundaryConditions(VELOCITY_Y, LEFT);
@@ -208,6 +208,6 @@ int main() {
 	delete[] PhiX;
 	delete[] PhiY;
 	
-	system("pause");
+	//system("pause");
 	return 0;
 }

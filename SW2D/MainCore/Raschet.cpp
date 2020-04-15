@@ -356,7 +356,8 @@ void Raschet::SetWindSpeed(double WindFrictionCoefficient, double period)
 }
 
 void Raschet::Recalc_forces_parallel()
-{
+{	
+
 	if (TideForcing)
 	{
 		// Block of tide force initialization =============================
@@ -418,6 +419,8 @@ void Raschet::Recalc_forces_parallel()
 			//cout << MD / gc /* (MoonAxis / MDist) * (MoonAxis / MDist) * (MoonAxis / MDist)*/ * cos(latN * rad)*cos(latN * rad)*cos(Mbeta)*cos(Mbeta) << endl;
 			//system("pause");
 	}
+	
+	
 
 	if (windForcing)
 	{

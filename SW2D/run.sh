@@ -15,6 +15,7 @@ g++ $1.cpp $CPLUS_INCLUDE_PATH/Raschet.cpp\
  $CPLUS_INCLUDE_PATH/Prepare_raschet.cpp\
   $CPLUS_INCLUDE_PATH/Problem_Definition.cpp\
    $CPLUS_INCLUDE_PATH/technical.cpp\
+   $CPLUS_INCLUDE_PATH/Constants.cpp\
     $CPLUS_INCLUDE_PATH/Work_With_Techplot.cpp\
      $CPLUS_INCLUDE_PATH/BoundaryConditions.cpp\
       $CPLUS_INCLUDE_PATH/Transport_Problem.cpp\

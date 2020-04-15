@@ -1,4 +1,4 @@
-#include "MainCore\Constants.h";
+#include "Constants.h"
 
 //const std::string Data_folder = "Data";
 //const std::string tideHarmonicsFolder = "tideHarmonics";
