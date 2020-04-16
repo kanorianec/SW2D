@@ -1,9 +1,13 @@
 #pragma once
 #include <string>
 //================= Technical Constants and parameters ====================
+// use OpenMP
+const bool parallelOpenMP = true;// false;
 // include forcing to regularization
 const int F_reg = 0;
 const int Phi_reg = 0;
+
+const bool ignore_warning = true;// false; // ignote warning of existing case folder
 
 const bool COMBINE_FILE_AND_FREE_BOUNDARY_CONDITIONS = false; //true;
 
@@ -15,7 +19,7 @@ const double alpha_c = 1.0;
 // Coefficient of viscosity in the transport equation, basic = 0.0, for special cases = 1.0/gc
 const double NSC = 0.0;
 
-const bool binaryOutputFlag = true;//true; // output to binary flag
+const bool binaryOutputFlag = false; // output to binary flag
 									//=========================================================
 
 									//const float pi = 3.1415926535;
@@ -27,7 +31,7 @@ const double CriticalVal = 10000.0;
 const double SD = 1.2035; // Dudson's constant for Sun
 const double MD = 2.6206; // Dudson's constant for Moon
 const int TideForcing = 0; //
-const int CoriolisForcing = 1;
+//const int CoriolisForcing = 1;
 
 const double length_mer = 40007.86 * 1000; // Earth 2*Pi*R in meridian direction
 const double length_ekv = 40075.017 * 1000; // Earth 2*Pi*R in equator direction

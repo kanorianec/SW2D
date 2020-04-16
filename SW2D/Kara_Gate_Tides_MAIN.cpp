@@ -24,7 +24,7 @@ double Bmin;
 int main() {
 	// T_begin, T_end - start and end time respectively, in seconds 
 	double T_begin = 0;
-	double T_end = 2 * 24 * 3600;
+	double T_end = 2 * 3600 * 24;
 	int num_of_output_data = 1;// 50;
 
 	int Visualization_to_techplot_flag = 0; //
@@ -51,18 +51,23 @@ int main() {
 	double latN = 71.8;
 
 	double mu = 0.0026; // bottom friction coffitient
-	int fc = 1; // use Coriolis force (1) or not (0) 
+	int fc = 0; // use Coriolis force (1) or not (0) 
 
 
 	double beta = 0.1; // CFL number (0; 1)
 	double alpha = 0.5; //
-	double eps = 0.1; //
+	double eps = 1; //
 
-	double NS = 0.0;//1.0; //
+	double NS = 1.0;//1.0; //
 	
 	int Nx = 715;//1320; // 3240; // 
 	int Ny = 456;// 960; // 1080;
 	
+	if (!parallelOpenMP)
+	{
+		omp_set_num_threads(1);
+	}
+
 	int threadsNumber;
 	#pragma omp parallel
 	{
@@ -71,7 +76,7 @@ int main() {
 	
 	//omp_set_num_threads(2);
 
-	string Test_name = "KaraGate_tidesHarm_wind"; //_noForce";  _OMP_" + to_str(threadsNumber)
+	string Test_name = "KaraGate_tidesHarm_wind_DEBUG11"; //_noForce";  _OMP_" + to_str(threadsNumber)
 	string Postscript = "_" + to_str((T_end - T_begin)/3600) + "h_" + to_string(Nx) + "x" + to_string(Ny); 
 
 	//double t_graph_export = T_begin;  
@@ -113,8 +118,8 @@ int main() {
 
 			fscanf(F, "%lf ", &B[k]);
 			fscanf(FH, "%lf ", &H[k]);
-			fscanf(FU, "%lf ", &xU[k]);
-			fscanf(FV, "%lf ", &yU[k]);
+			//fscanf(FU, "%lf ", &xU[k]);
+			//fscanf(FV, "%lf ", &yU[k]);
 
 			if (B[k] < Bmin)
 				Bmin = B[k];
@@ -133,17 +138,15 @@ int main() {
 		for (int i = 0; i < Nx; i++)
 		{
 			int k = i*Ny + j;
-			H[k] += -B[k];
+			B[k] -= Bmin;
+			H[k] -= B[k] + Bmin;
 			
 			if (H[k] < 0)
 			{
 				H[k] = 0.0;// pow(10, -6);
 				xU[k] = 0.0;
 				yU[k] = 0.0;
-			}
-				
-			B[k] -= Bmin;
-			
+			}			
 		}
 	}
 
@@ -185,9 +188,9 @@ int main() {
 	//R->SetFileBoundaryConditions(VELOCITY_X, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 	//R->SetFileBoundaryConditions(VELOCITY_Y, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 
-	R->SetWindSpeed(0.0, 3600);// 3600);
-	R->SetTidesHarmonicsBoundaryConditions(LEFT/*, TOP*/);
-	R->SetFileBoundaryConditions(HEIGHT, /*RIGHT,*/ LEFT/*, TOP*//*, BOTTOM*/);
+	//R->SetWindSpeed(0.0, 3600);// 3600);
+	//R->SetTidesHarmonicsBoundaryConditions(LEFT, TOP);
+	//R->SetFileBoundaryConditions(HEIGHT, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 	/*
 	R->SetFileBoundaryConditions(VELOCITY_X, LEFT);//, TOP, BOTTOM);
 	R->SetFileBoundaryConditions(VELOCITY_Y, LEFT);
@@ -208,6 +211,6 @@ int main() {
 	delete[] PhiX;
 	delete[] PhiY;
 	
-	//system("pause");
+	system("pause");
 	return 0;
 }

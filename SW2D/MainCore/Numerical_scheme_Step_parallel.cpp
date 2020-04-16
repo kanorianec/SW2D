@@ -168,119 +168,180 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			tau_05B = 0.5*(tau[k_B] + tau[k]);
 
 			// W
-			xW_05R = (tau_05R)*((H_1R * xU_1R * xU_1R - H_c * xU_c * xU_c) / hx
-				+ (H_05R05T * xU_05R05T * yU_05R05T - H_05R05B * xU_05R05B * yU_05R05B) / hy 
-				+ gc * H_05R * ((H_1R + B_1R) - (H_c + B_c)) / hx - H_05R * F_reg * ForceX_05R - Phi_reg * PhiX_05R);
-			xW_05L = (tau_05L)*((H_c * xU_c * xU_c - H_1L * xU_1L * xU_1L) / hx
+			xW_05R = (tau_05R)*(
+				(H_1R * xU_1R * xU_1R - H_c * xU_c * xU_c) / hx
+				+ (H_05R05T * xU_05R05T * yU_05R05T - H_05R05B * xU_05R05B * yU_05R05B) / hy
+				+ gc * H_05R * ((H_1R + B_1R) - (H_c + B_c)) / hx
+				- F_reg * H_05R * ForceX_05R
+				- Phi_reg * PhiX_05R
+				); //**APPROVED**//
+			xW_05L = (tau_05L)*(
+				(H_c * xU_c * xU_c - H_1L * xU_1L * xU_1L) / hx
 				+ (H_05L05T * xU_05L05T * yU_05L05T - H_05L05B * xU_05L05B * yU_05L05B) / hy
-				+ gc * H_05L * ((H_c + B_c) - (H_1L + B_1L)) / hx - H_05L * F_reg * ForceX_05L - Phi_reg * PhiX_05L);
-			yW_05T = (tau_05T)*((H_05R05T * xU_05R05T * yU_05R05T - H_05L05T * xU_05L05T * yU_05L05T) / hx
+				+ gc * H_05L * ((H_c + B_c) - (H_1L + B_1L)) / hx 
+				- F_reg * H_05L * ForceX_05L
+				- Phi_reg * PhiX_05L
+				); //**APPROVED**//
+			yW_05T = (tau_05T)*(
+				(H_05R05T * xU_05R05T * yU_05R05T - H_05L05T * xU_05L05T * yU_05L05T) / hx
 				+ (H_1T * yU_1T * yU_1T - H_c * yU_c * yU_c) / hy
-				+ gc * H_05T * ((H_1T + B_1T) - (H_c + B_c)) / hy - H_05T * F_reg * ForceY_05T - Phi_reg * PhiY_05T);
-			yW_05B = (tau_05B)*((H_05R05B * xU_05R05B * yU_05R05B - H_05L05B * xU_05L05B * yU_05L05B) / hx
+				+ gc * H_05T * ((H_1T + B_1T) - (H_c + B_c)) / hy 
+				- F_reg * H_05T * ForceY_05T
+				- Phi_reg * PhiY_05T
+				); //**APPROVED**//
+			yW_05B = (tau_05B)*(
+				(H_05R05B * xU_05R05B * yU_05R05B - H_05L05B * xU_05L05B * yU_05L05B) / hx
 				+ (H_c * yU_c * yU_c - H_1B * yU_1B * yU_1B) / hy
-				+ gc * H_05B * ((H_c + B_c) - (H_1B + B_1B)) / hy - H_05B * F_reg * ForceY_05B - Phi_reg * PhiY_05B);
+				+ gc * H_05B * ((H_c + B_c) - (H_1B + B_1B)) / hy 
+				- F_reg * H_05B * ForceY_05B
+				- Phi_reg * PhiY_05B
+				); //**APPROVED**//
 				
 
 			//xJ
-			xJ_05R = H_05R*xU_05R - xW_05R;
-			xJ_05L = H_05L*xU_05L - xW_05L;
+			xJ_05R = H_05R*xU_05R - xW_05R; //**APPROVED**//
+			xJ_05L = H_05L*xU_05L - xW_05L; //**APPROVED**//
 
 			//yJ
-			yJ_05T = H_05T*yU_05T - yW_05T;
-			yJ_05B = H_05B*yU_05B - yW_05B;
+			yJ_05T = H_05T*yU_05T - yW_05T; //**APPROVED**//
+			yJ_05B = H_05B*yU_05B - yW_05B; //**APPROVED**//
 
 			// Next time-step H
 
-			Ht[k] = H_c - (dT / hx)*(xJ_05R - xJ_05L) - (dT / hy)*(yJ_05T - yJ_05B);	
-
+			Ht[k] = H_c - (dT / hx)*(xJ_05R - xJ_05L) - (dT / hy)*(yJ_05T - yJ_05B); //**APPROVED**//
 					
 			// Dry-zone condition
 			if ( Ht[k]>eps && !epsilon[k])
 			{
 				
 				//xWS
-				xWS_05R = tau_05R * H_05R * (xU_05R *(xU_1R - xU_c) / hx + yU_05R * (xU_05R05T - xU_05R05B) / hy
-					+ gc * ((H_1R + B_1R) - (H_c + B_c)) / hx - F_reg * ForceX_05R) - Phi_reg * tau_05R * PhiX_05R;
-				xWS_05L = tau_05L * H_05L * (xU_05L *(xU_c - xU_1L) / hx + yU_05L * (xU_05L05T - xU_05L05B) / hy
-					+ gc * ((H_c + B_c) - (H_1L + B_1L)) / hx - F_reg * ForceX_05L) - Phi_reg * tau_05L * PhiX_05L;
-				xWS_05T = tau_05T * H_05T * (xU_05T *(xU_05R05T - xU_05L05T) / hx + yU_05T * (xU_1T - xU_c) / hy
-					+ gc * ((H_05R05T + B_05R05T) - (H_05L05T + B_05L05T)) / hx - F_reg * ForceX_05T) - Phi_reg * tau_05T * PhiX_05T;
-				xWS_05B = tau_05B * H_05B * (xU_05B *(xU_05R05B - xU_05L05B) / hx + yU_05B * (xU_c - xU_1B) / hy
-					+ gc * ((H_05R05B + B_05R05B) - (H_05L05B + B_05L05B)) / hx - F_reg * ForceX_05B) - Phi_reg * tau_05B * PhiX_05B;
+				xWS_05R = tau_05R * H_05R * (
+					xU_05R *(xU_1R - xU_c) / hx 
+					+ yU_05R * (xU_05R05T - xU_05R05B) / hy
+					+ gc * ((H_1R + B_1R) - (H_c + B_c)) / hx 
+					- F_reg * ForceX_05R
+					) 
+					- Phi_reg * tau_05R * PhiX_05R; //**APPROVED**//
+				xWS_05L = tau_05L * H_05L * (
+					xU_05L *(xU_c - xU_1L) / hx 
+					+ yU_05L * (xU_05L05T - xU_05L05B) / hy
+					+ gc * ((H_c + B_c) - (H_1L + B_1L)) / hx 
+					- F_reg * ForceX_05L
+					) 
+					- Phi_reg * tau_05L * PhiX_05L; //**APPROVED**//
+				xWS_05T = tau_05T * H_05T * (
+					xU_05T *(xU_05R05T - xU_05L05T) / hx 
+					+ yU_05T * (xU_1T - xU_c) / hy
+					+ gc * ((H_05R05T + B_05R05T) - (H_05L05T + B_05L05T)) / hx 
+					- F_reg * ForceX_05T
+					) 
+					- Phi_reg * tau_05T * PhiX_05T; //**APPROVED**//
+				xWS_05B = tau_05B * H_05B * (
+					xU_05B *(xU_05R05B - xU_05L05B) / hx 
+					+ yU_05B * (xU_c - xU_1B) / hy
+					+ gc * ((H_05R05B + B_05R05B) - (H_05L05B + B_05L05B)) / hx 
+					- F_reg * ForceX_05B
+					) 
+					- Phi_reg * tau_05B * PhiX_05B; //**APPROVED**//
 
 				//yWS
-				yWS_05R = tau_05R * H_05R * (xU_05R *(yU_1R - yU_c) / hx + yU_05R * (yU_05R05T - yU_05R05B) / hy
-					+ gc * ((H_05R05T + B_05R05T) - (H_05R05B + B_05R05B)) / hy - F_reg * ForceY_05R) - Phi_reg * tau_05R * PhiY_05R;
-				yWS_05L = tau_05L * H_05L * (xU_05L *(yU_c - yU_1L) / hx + yU_05L * (yU_05L05T - yU_05L05B) / hy
-					+ gc * ((H_05L05T + B_05L05T) - (H_05L05B + B_05L05B)) / hy - F_reg * ForceY_05L) - Phi_reg * tau_05L * PhiY_05L;
-				yWS_05T = tau_05T * H_05T * (xU_05T *(yU_05R05T - yU_05L05T) / hx + yU_05T * (yU_1T - yU_c) / hy
-					+ gc * ((H_1T + B_1T) - (H_c + B_c)) / hy - F_reg * ForceY_05T) - Phi_reg * tau_05T * PhiY_05T;
-				yWS_05B = tau_05B * H_05B * (xU_05B *(yU_05R05B - yU_05L05B) / hx + yU_05B * (yU_c - yU_1B) / hy
-					+ gc * ((H_c + B_c) - (H_1B + B_1B)) / hy - F_reg * ForceY_05B) - Phi_reg * tau_05B * PhiY_05B;
+				yWS_05R = tau_05R * H_05R * (
+					xU_05R *(yU_1R - yU_c) / hx 
+					+ yU_05R * (yU_05R05T - yU_05R05B) / hy
+					+ gc * ((H_05R05T + B_05R05T) - (H_05R05B + B_05R05B)) / hy 
+					- F_reg * ForceY_05R
+					) 
+					- Phi_reg * tau_05R * PhiY_05R; //**APPROVED**//
+				yWS_05L = tau_05L * H_05L * (
+					xU_05L *(yU_c - yU_1L) / hx 
+					+ yU_05L * (yU_05L05T - yU_05L05B) / hy
+					+ gc * ((H_05L05T + B_05L05T) - (H_05L05B + B_05L05B)) / hy 
+					- F_reg * ForceY_05L
+					) 
+					- Phi_reg * tau_05L * PhiY_05L; //**APPROVED**//
+				yWS_05T = tau_05T * H_05T * (
+					xU_05T *(yU_05R05T - yU_05L05T) / hx 
+					+ yU_05T * (yU_1T - yU_c) / hy
+					+ gc * ((H_1T + B_1T) - (H_c + B_c)) / hy 
+					- F_reg * ForceY_05T
+					) 
+					- Phi_reg * tau_05T * PhiY_05T; //**APPROVED**//
+				yWS_05B = tau_05B * H_05B * (
+					xU_05B *(yU_05R05B - yU_05L05B) / hx 
+					+ yU_05B * (yU_c - yU_1B) / hy
+					+ gc * ((H_c + B_c) - (H_1B + B_1B)) / hy 
+					- F_reg * ForceY_05B
+					) 
+					- Phi_reg * tau_05B * PhiY_05B; //**APPROVED**//
 
 
 				//RS
 				RS_05R = gc * tau_05R * (
-					xU_05R * (0.5 * H_1R * H_1R - 0.5 * H_c * H_c) / hx 
-					+ yU_05R * (0.5 * H_05R05T * H_05R05T - 0.5 * H_05R05B * H_05R05B) / hy
+					xU_05R * 0.5 * (H_1R * H_1R - H_c * H_c) / hx
+					+ yU_05R * 0.5 * (H_05R05T * H_05R05T - H_05R05B * H_05R05B) / hy
 					+ H_05R * H_05R * ((xU_1R - xU_c) / hx + (yU_05R05T - yU_05R05B) / hy) 
-					);
+					); //**APPROVED**//
 				RS_05L = gc * tau_05L * (
-					xU_05L * (0.5 * H_c * H_c - 0.5 * H_1L * H_1L) / hx 
-					+ yU_05L * (0.5 * H_05L05T * H_05L05T - 0.5 * H_05L05B * H_05L05B) / hy
+					xU_05L * 0.5 * (H_c * H_c - H_1L * H_1L) / hx
+					+ yU_05L * 0.5 * (H_05L05T * H_05L05T - H_05L05B * H_05L05B) / hy
 					+ H_05L * H_05L * ((xU_c - xU_1L) / hx + (yU_05L05T - yU_05L05B) / hy)
-					);
+					); //**APPROVED**//
 				RS_05T = gc * tau_05T * (
-					xU_05T * (0.5 * H_05R05T * H_05R05T - 0.5 * H_05L05T * H_05L05T) / hx 
-					+ yU_05T * (0.5 * H_1T * H_1T - 0.5 * H_c * H_c) / hy
+					xU_05T * 0.5 * (H_05R05T * H_05R05T - H_05L05T * H_05L05T) / hx
+					+ yU_05T * 0.5 * (H_1T * H_1T - H_c * H_c) / hy
 					+ H_05T * H_05T * ((xU_05R05T - xU_05L05T) / hx + (yU_1T - yU_c) / hy) 
-					);
+					); //**APPROVED**//
 				RS_05B = gc * tau_05B * (
-					xU_05B * (0.5 * H_05R05B * H_05R05B - 0.5 * H_05L05B * H_05L05B) / hx 
-					+ yU_05B * (0.5 * H_c * H_c - 0.5 * H_1B * H_1B) / hy
+					xU_05B * 0.5 * (H_05R05B * H_05R05B - H_05L05B * H_05L05B) / hx
+					+ yU_05B * 0.5 * (H_c * H_c - H_1B * H_1B) / hy
 					+ H_05B * H_05B * ((xU_05R05B - xU_05L05B) / hx + (yU_c - yU_1B) / hy) 
-					);
-				
+					); //**APPROVED**//
 				
 				////xxPT
-				xxPT_05R = xU_05R * xWS_05R + RS_05R + NS *2 * gc * tau_05R * H_05R * H_05R * 0.5 * (xU_1R - xU_c) / hx;
-				xxPT_05L = xU_05L * xWS_05L + RS_05L + NS *2 * gc * tau_05L * H_05L * H_05L * 0.5 * (xU_c - xU_1L) / hx;
-
-				////yxPT
-				yxPT_05T = yU_05T * xWS_05T + NS*gc * tau_05T * H_05T * H_05T * 0.5 * ((xU_1T - xU_c) / hy + (yU_05R05T - yU_05L05T) / hx);
-				yxPT_05B = yU_05B * xWS_05B + NS*gc * tau_05B * H_05B * H_05B * 0.5 * ((xU_c - xU_1B) / hy + (yU_05R05B - yU_05L05B) / hx);
-
-				////xyPT
-				xyPT_05R = xU_05R * yWS_05R + NS*gc * tau_05R * H_05R * H_05R * 0.5 * ((xU_05R05T - xU_05R05B) / hy + (yU_1R - yU_c) / hx);
-				xyPT_05L = xU_05L * yWS_05L + NS*gc * tau_05L * H_05L * H_05L * 0.5 * ((xU_05L05T - xU_05L05B) / hy + (yU_c - yU_1L) / hx);
+				xxPT_05R = xU_05R * xWS_05R + RS_05R + NS * 2 * gc * tau_05R * H_05R * H_05R * 0.5 * (xU_1R - xU_c) / hx; //**APPROVED**//
+				xxPT_05L = xU_05L * xWS_05L + RS_05L + NS * 2 * gc * tau_05L * H_05L * H_05L * 0.5 * (xU_c - xU_1L) / hx; //**APPROVED**//
 
 				////yyPT
-				yyPT_05T = yU_05T * yWS_05T + RS_05T + NS *2 * gc * tau_05T * H_05T * H_05T * 0.5 * (yU_1T - yU_c) / hy;
-				yyPT_05B = yU_05B * yWS_05B + RS_05B + NS *2 * gc * tau_05B * H_05B * H_05B * 0.5 * (yU_c - yU_1B) / hy;
+				yyPT_05T = yU_05T * yWS_05T + RS_05T + NS * 2 * gc * tau_05T * H_05T * H_05T * 0.5 * (yU_1T - yU_c) / hy; //**APPROVED**//
+				yyPT_05B = yU_05B * yWS_05B + RS_05B + NS * 2 * gc * tau_05B * H_05B * H_05B * 0.5 * (yU_c - yU_1B) / hy; //**APPROVED**//
 
+				////yxPT
+				yxPT_05T = yU_05T * xWS_05T + NS * gc * tau_05T * H_05T * H_05T * 0.5 * ((xU_1T - xU_c) / hy + (yU_05R05T - yU_05L05T) / hx); //**APPROVED**//
+				yxPT_05B = yU_05B * xWS_05B + NS * gc * tau_05B * H_05B * H_05B * 0.5 * ((xU_c - xU_1B) / hy + (yU_05R05B - yU_05L05B) / hx); //**APPROVED**//
+
+				////xyPT
+				xyPT_05R = xU_05R * yWS_05R + NS * gc * tau_05R * H_05R * H_05R * 0.5 * ((xU_05R05T - xU_05R05B) / hy + (yU_1R - yU_c) / hx); //**APPROVED**//
+				xyPT_05L = xU_05L * yWS_05L + NS * gc * tau_05L * H_05L * H_05L * 0.5 * ((xU_05L05T - xU_05L05B) / hy + (yU_c - yU_1L) / hx); //**APPROVED**//
 								
 				////xUt	
 				//// Well balanced: H[k] _c 0.5*(H2y2+H2y1)
-				xUt[k] = (H_c * xU_c 
-					+ dT * PhiX_c 
+				xUt[k] = (H_c * xU_c
+					+ dT * PhiX_c
 					+ (dT / hx) * ((xxPT_05R - xxPT_05L) - (xU_05R * xJ_05R - xU_05L * xJ_05L))
-					+ (dT / hy) * ((yxPT_05T - yxPT_05B) - (xU_05T * yJ_05T - xU_05B * yJ_05B)) 
-					- 0.5 * gc * (dT / hx) * (H_05R + H_05L) * ((ForceX_c) * hx / (-gc) 
-						+ (0.5*(H_1R + B_1R + H_c  + B_c)) - (0.5*(H_1L + B_1L + H_c  + B_c))) + dT * (-tau_c * ((H_05R * xU_05R - H_05L * xU_05L) / hx
-						+ (H_05T * yU_05T - H_05B * yU_05B) / hy)) * (ForceX_c - gc * (B_05R - B_05L) / hx)
-					) / Ht[k];
+					+ (dT / hy) * ((yxPT_05T - yxPT_05B) - (xU_05T * yJ_05T - xU_05B * yJ_05B))
+					- 0.5 * gc * (dT / hx) * (H_05R + H_05L) * (
+						ForceX_c * hx / (-gc)
+						+ 0.5 * ((H_1R + B_1R) - (H_1L + B_1L))
+						) 
+					- dT * tau_c * ((H_05R * xU_05R - H_05L * xU_05L) / hx
+						+ (H_05T * yU_05T - H_05B * yU_05B) / hy
+						) * (ForceX_c - gc * (B_05R - B_05L) / hx)
+					) / Ht[k]; //**APPROVED**//
 				
 				////yUt
 				//// Well balanced: H[k] _c 0.5*(H2y2+H2y1)
-				yUt[k] = (H_c * yU_c 
-					+ dT * PhiY_c 
+				yUt[k] = (H_c * yU_c
+					+ dT * PhiY_c
 					+ (dT / hx) * ((xyPT_05R - xyPT_05L) - (yU_05R * xJ_05R - yU_05L * xJ_05L))
-					+ (dT / hy) * ((yyPT_05T - yyPT_05B) - (yU_05T * yJ_05T - yU_05B * yJ_05B)) 
-					- 0.5 * gc * (dT / hy) * (H_05T + H_05B) * (ForceY_c * hy / (-gc) 
-						+ (0.5*(H_1T + B_1T + H_c  + B_c)) - (0.5*(H_1B + B_1B + H_c + B_c))) + dT * (-tau_c * ((H_05R * xU_05R - H_05L * xU_05L) / hx
-						+ (H_05T * yU_05T - H_05B * yU_05B) / hy)) * (ForceY_c - gc * (B_05T - B_05B) / hy)
-					) / Ht[k];
+					+ (dT / hy) * ((yyPT_05T - yyPT_05B) - (yU_05T * yJ_05T - yU_05B * yJ_05B))
+					- 0.5 * gc * (dT / hy) * (H_05T + H_05B) * (
+						ForceY_c * hy / (-gc)
+						+ 0.5 * ((H_1T + B_1T) - (H_1B + B_1B))
+						)
+					- dT * tau_c * ((H_05R * xU_05R - H_05L * xU_05L) / hx
+						+ (H_05T * yU_05T - H_05B * yU_05B) / hy
+						) * (ForceY_c - gc * (B_05T - B_05B) / hy)
+					) / Ht[k]; //**APPROVED**//
 			}
 			else
 			{
@@ -322,8 +383,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 					Ct[k] = C_c;
 				}
 			}
-		} 
-		  // end if (TypeOfPoint == INTERNAL)	
+		} // end if (TypeOfPoint == INTERNAL)
 	} //end for (int k = Ny + 1; k < (Nx - 2)*Ny + Ny - 2 + 1; k++)
 	
 	// Boundary conditions
@@ -387,12 +447,12 @@ void Raschet::Numerical_scheme_time_step_parallel()
 					yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
 				if (border[HEIGHT][type] != FROM_FILE)
 					Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + boundaryForce + 2 * border_C[HEIGHT][type];
+
 				if (TransportProblemFlag)
 				{
 					if (border[CONCENTRATION][type] != FROM_FILE)
 						Ct[n] = border[CONCENTRATION][type] * Ct[k] + 2 * border_C[CONCENTRATION][type];
 				}
-
 			}
 			else
 			{
@@ -482,8 +542,30 @@ void Raschet::Numerical_scheme_time_step_parallel()
 	{
 		addTidesHarmonicsBoundaryConditions();
 	}
+	///
+	/*
+	for (int i = 0; i < Nx; i++)
+	{
+		if (fabs(yUt[i*Ny + Ny - 1] - yUt[i*Ny + Ny - 2]) > 0.0 && Ht[i*Ny + Ny - 1] > eps)//(fabs(Ht[i] - H[i]) > 0.0)
+		{ //(fabs((Ht[i*Ny + Ny -1] + B[i*Ny + Ny - 1]) - (Ht[i*Ny + Ny - 2] + B[i*Ny + Ny - 2])) > 0.0 && Ht[i*Ny + Ny - 1] > eps)//(fabs(Ht[i] - H[i]) > 0.0)
+			Print_info_about_point("Err:", i);
+			system("pause");
+		}
+	}
+	system("pause");*/
+	///
+	/*
+	for (int i = 0; i < Nx*Ny; i++)
+	{
+		if (fabs(xUt[i]) + fabs(yUt[i]) > 0.0)//(fabs(Ht[i] - H[i]) > 0.0)
+		{
+			Print_info_about_point("Err:", i);
+			system("pause");
+		}
+	}
+	system("pause");*/
+	///	
 	
-
 	// set array of epsilons to zero
 	memset(epsilon, 0, Nx*Ny * sizeof(int)); 
 
@@ -579,7 +661,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		}
 		
 	}//êîíåö for (m=0; m<(Ny*Nx); m++)
-
+	
 	// âû÷èñëåíèå tau
 	#pragma omp parallel for
 	for (int m = 0; m < Nx*Ny; m++)

@@ -16,8 +16,8 @@ void Raschet::outputInputs()
 
 		if (binaryOutputFlag)
 		{
-			Save_Data();
 			Save_Grid();
+			Save_Data();			
 		}
 
 		if (Visualization_to_techplot_flag) 
@@ -75,27 +75,31 @@ void Raschet::Save_Grid() {
 	std::ofstream fX(name_X, std::ios::out | std::ios::binary);
 	std::ofstream fY(name_Y, std::ios::out | std::ios::binary);
 	
-	std::ofstream fLon(name_Lon, std::ios::out | std::ios::binary);
-	std::ofstream fLat(name_Lat, std::ios::out | std::ios::binary);
-	
 	std::ofstream fB(name_B, std::ios::out | std::ios::binary);
+
+	std::ofstream fNN(save_path + "/Nx_Ny.dat", std::ios::out);
+	fNN << Nx << " " << Ny;
 
 	fX.write(reinterpret_cast<const char*> (X), sizeof(double) * Nx * Ny);
 	fY.write(reinterpret_cast<const char*> (Y), sizeof(double) * Nx * Ny);
 	
 	if (hlat + hlon > 0)
 	{
+		std::ofstream fLon(name_Lon, std::ios::out | std::ios::binary);
+		std::ofstream fLat(name_Lat, std::ios::out | std::ios::binary);
+
 	    fLon.write(reinterpret_cast<const char*> (Lon), sizeof(double) * Nx * Ny);
 	    fLat.write(reinterpret_cast<const char*> (Lat), sizeof(double) * Nx * Ny);
+
+		fLon.close();
+		fLat.close();
 	}
 	
 	fB.write(reinterpret_cast<const char*> (B), sizeof(double) * Nx * Ny);
 
+	fNN.close();
 	fX.close();
-	fY.close();
-	fLon.close();
-	fLat.close();
-	
+	fY.close();	
 	fB.close();
 	
 	std::ofstream ft(name_t, std::ios::out);
@@ -121,8 +125,8 @@ void Raschet::Save_Data() {
 	std::ofstream fH (name_h, std::ios::out | std::ios::binary);
 	std::ofstream fxU(name_xU, std::ios::out | std::ios::binary);
 	std::ofstream fyU(name_yU, std::ios::out | std::ios::binary);
-	std::ofstream fFx(name_Fx, std::ios::out | std::ios::binary);
-	std::ofstream fFy(name_Fy, std::ios::out | std::ios::binary);
+	//std::ofstream fFx(name_Fx, std::ios::out | std::ios::binary);
+	//std::ofstream fFy(name_Fy, std::ios::out | std::ios::binary);
 	
 	std::ofstream fC;
 	
@@ -133,14 +137,14 @@ void Raschet::Save_Data() {
 	fH.write(reinterpret_cast<const char*> (H), sizeof(double) * Nx * Ny);
 	fxU.write(reinterpret_cast<const char*> (xU), sizeof(double) * Nx * Ny);
 	fyU.write(reinterpret_cast<const char*> (yU), sizeof(double) * Nx * Ny);
-	fFx.write(reinterpret_cast<const char*> (xWind), sizeof(double) * Nx * Ny); //ForceX
-	fFy.write(reinterpret_cast<const char*> (yWind), sizeof(double) * Nx * Ny); //ForceY
+	//fFx.write(reinterpret_cast<const char*> (xWind), sizeof(double) * Nx * Ny); //ForceX
+	//fFy.write(reinterpret_cast<const char*> (yWind), sizeof(double) * Nx * Ny); //ForceY
 
 	fH.close();
 	fxU.close();
 	fyU.close();
-	fFx.close();
-	fFy.close();
+	//fFx.close();
+	//fFy.close();
 	ft.close();
 	
 	if (TransportProblemFlag)
