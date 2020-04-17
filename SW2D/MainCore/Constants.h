@@ -2,16 +2,16 @@
 #include <string>
 //================= Technical Constants and parameters ====================
 // use OpenMP
-const bool parallelOpenMP = false;// false;
+const bool parallelOpenMP = true;// false;
 // include forcing to regularization
 const int F_reg = 0;
 const int Phi_reg = 0;
 
 // mass fluxes correction for dry zone condition 
-const bool massFluxCorrection = false; // flag
-const double epsFlux = 1e-6;
+const bool massFluxCorrection = true; // flag
+const double epsFlux = 1e-4;
 
-const bool ignore_warning = true;// false; // ignote warning of existing case folder
+const bool ignore_warning = false;// false; // ignote warning of existing case folder
 
 const bool COMBINE_FILE_AND_FREE_BOUNDARY_CONDITIONS = false; //true;
 
@@ -23,14 +23,14 @@ const double alpha_c = 1.0;
 // Coefficient of viscosity in the transport equation, basic = 0.0, for special cases = 1.0/gc
 const double NSC = 0.0;
 
-const bool binaryOutputFlag = false; // output to binary flag
+const bool binaryOutputFlag = true; // output to binary flag
 									//=========================================================
 
 									//const float pi = 3.1415926535;
 									//const int Nmax = 1555000; // !? 
 const double gc = 9.81;
 //const double G = 0.0000000000667408; // gravitational constant
-const double CriticalVal = 100000.0;
+const double CriticalVal = 10000.0;
 
 const double SD = 1.2035; // Dudson's constant for Sun
 const double MD = 2.6206; // Dudson's constant for Moon

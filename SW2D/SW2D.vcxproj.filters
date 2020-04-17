@@ -66,7 +66,7 @@
     <ClCompile Include="MainCore\Constants.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\waterColumnBreakup.cpp">
+    <ClCompile Include="Kara_Gate_Tides_MAIN.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
   </ItemGroup>

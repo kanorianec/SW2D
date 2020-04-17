@@ -89,7 +89,7 @@ void Raschet::Prepare_Raschet()
 
 			if (H[i*Ny + j] > Hmax) { Hmax = H[i*Ny + j]; } // поиск максимумов H и B
 			if (B[i*Ny + j] > Bmax) { Bmax = B[i*Ny + j]; } //
-			if (B[i*Ny + j] + Bmin > sea_level) { S[i*Ny + j] = EXCLUDED; }
+			//if (B[i*Ny + j] + Bmin > sea_level) { S[i*Ny + j] = EXCLUDED; }
 		}
 	}
 

@@ -139,24 +139,11 @@ void Raschet::Numerical_scheme_time_step_parallel()
 
 			//xJ //yJ_05T = H_05T*yU_05T - yW_05T; //**APPROVED**//
 			xJ[k] = (dT / hx) * (H_05R*xU_05R - xW_05R);
-			//xJ[k] = (H_05R*xU_05R - xW_05R);
 
-			/*if (fabs((H_05R*xU_05R - xW_05R)) > 0.0)
-			{
-				cout << fabs((dT / hx)*(230.0 - 220.0) - (dT / hx)*230.0 + (dT / hx)*220.0) << endl;
-				cout << fabs(dT / hx - ((hy / hx + 1)*0.5*beta) / sqrt(gc*(Hmax + 10))) << endl;
-				pause();
-			}*/
-			
 			//yJ //yJ_05B = H_05B*yU_05B - yW_05B; //**APPROVED**//
 			yJ[k] = (dT / hy) * (H_05T*yU_05T - yW_05T);
-			//yJ[k] = (H_05T*yU_05T - yW_05T);
 
-			double xJ_05L = xJ[k_L];
-			double yJ_05B = yJ[k_B];
-			xJ_05R = xJ[k];
-			yJ_05T = yJ[k];
-			double M = (xJ_05R - xJ_05L) + (yJ_05T - yJ_05B);
+			double M = (xJ[k] - xJ[k_L]) + (yJ[k] - yJ[k_B]);
 			
 			if (massFluxCorrection)
 			{
@@ -165,25 +152,14 @@ void Raschet::Numerical_scheme_time_step_parallel()
 					double dT_ = dT * ((min(epsFlux, eps/10) - H_c) / M + 1);
 					if (dT_ > 0.0)
 					{
+						#pragma omp atomic
 						xJ[k_L] *= (1 - dT_ / dT);
+						#pragma omp atomic
 						yJ[k_B] *= (1 - dT_ / dT);
+						#pragma omp atomic
 						xJ[k] *= (1 - dT_ / dT);
+						#pragma omp atomic
 						yJ[k] *= (1 - dT_ / dT);
-						//cout << dT_ << endl;
-						//cout << H_c - (1 - dT_ / dT) * ((xJ_05R - xJ_05L) - (yJ_05T - yJ_05B)) << endl;
-						//Ht[k] = eps;
-						//Print_info_about_point("NEGATIVE", k);
-						//pause();
-						if (H_c - (xJ[k] - xJ[k_L]) - (yJ[k] - yJ[k_B]) < 0.0)
-						{
-							Print_info_about_point("WTF?", k);
-							cout << dT_ << endl;
-							cout << xJ[k_L] << " " << (1 - dT_ / dT) *xJ_05L << endl;
-							cout << H_c - (1 - dT_ / dT) * ((xJ_05R - xJ_05L) + (yJ_05T - yJ_05B)) << endl;
-							cout << H_c - (xJ[k] - xJ[k_L]) - (yJ[k] - yJ[k_B]) << endl;
-							cout << "!!!" << endl;
-							pause();
-						}
 					}
 				}
 			}
@@ -348,79 +324,6 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			Ht[k] = H_c - (dT / hx)*(xJ_05R - xJ_05L) - (dT / hy) * (yJ_05T - yJ_05B); //**APPROVED**//
 			if (Ht[k] < 0.0 && massFluxCorrection)
 				Ht[k] = eps / 2;
-			/*if (k == 5483)
-			{
-				if (Time_elapsed >= dT * 1935)
-				{ 
-					cout << (dT / hx)*(xJ_05R - xJ_05L) << " " << (dT / hy) * (yJ_05T - yJ_05B) << endl;
-					Print_info_about_point("Please...", k);
-					pause();
-				}
-			}*/
-			//Ht[k] = H_c - (xJ_05R - xJ_05L) - (yJ_05T - yJ_05B); //**APPROVED**//
-
-			/*
-			if (fabs((dT / hx)*(xJ_05R - xJ_05L) - ((dT / hx)*xJ_05R - (dT / hx)* xJ_05L))>0.0)
-			{
-				Print_info_about_point("alo", k);
-				cout << fabs((dT / hx)*(xJ_05R - xJ_05L) - ((dT / hx)*xJ_05R - (dT / hx)* xJ_05L)) << " " <<(dT / hx)*(xJ_05R - xJ_05L) << " " << (dT / hx)*xJ_05R - (dT / hx)* xJ_05L << endl;
-				pause();
-			}
-			*/
-			
-			/*if (H_c > 0 && H_c < eps && (H_c + B_c > H_1R + B_1R) && fabs(xU_05R) > 0.0 )
-			{
-				//H_c + B_c > H_1R + B_1R || H_c + B_c > H_1L + B_1L || H_c + B_c > H_1T + B_1T || H_c + B_c > H_1B + B_1B))
-				cout << tau_05R << " " <<  H_05R05T * xU_05R05T * yU_05R05T - H_05R05B * xU_05R05B * yU_05R05B << " " << gc * H_05R * ((H_1R + B_1R) - (H_c + B_c)) / hx << endl;
-				Print_info_about_point("FLUX", k);
-				cout << H_c + B_c << endl;
-				cout << B_1R + H_1R << " " << B_1L + H_1L << " " << B_1B + H_1B << " " << B_1T + H_1T << " " << endl;
-				cout << H_1R << " " << H_1L << " " << H_1B << " " << H_1T << " " << endl;
-				cout << B_1R << " " << B_1L << " " << B_1B << " " << B_1T << " " << endl;
-				cout << xJ_05R - xJ_05L << " " << yJ_05T - yJ_05B << endl;
-				cout << "!: " << Ht[k] << endl;
-				Print_info_about_point("right", k_R);
-				pause();
-			}*/
-			/*
-			if (H_c > 0 && H_c < eps && (fabs(xU_05R) + fabs(xU_05L) + fabs(xU_05T) + fabs(xU_05B)  > 0.0))
-			{
-				//H_c + B_c > H_1R + B_1R || H_c + B_c > H_1L + B_1L || H_c + B_c > H_1T + B_1T || H_c + B_c > H_1B + B_1B))
-				cout << tau_05R << " " << H_05R05T * xU_05R05T * yU_05R05T - H_05R05B * xU_05R05B * yU_05R05B << " " << gc * H_05R * ((H_1R + B_1R) - (H_c + B_c)) / hx << endl;
-				Print_info_about_point("FLUX", k);
-				cout << H_c + B_c << endl;
-				cout << B_1R + H_1R << " " << B_1L + H_1L << " " << B_1B + H_1B << " " << B_1T + H_1T << " " << endl;
-				cout << H_1R << " " << H_1L << " " << H_1B << " " << H_1T << " " << endl;
-				cout << B_1R << " " << B_1L << " " << B_1B << " " << B_1T << " " << endl;
-				cout << xJ_05R - xJ_05L << " " << yJ_05T - yJ_05B << endl;
-				cout << "!: " << Ht[k] << endl;
-				Print_info_about_point("right", k_R);
-				pause();
-			}
-			*/
-			/*
-			if (Ht[k] < 0)
-			{
-				//double tempdT = ( (eps - H_c) / ((1 / hx)*(xJ_05R - xJ_05L) - (1 / hy)*(yJ_05T - yJ_05B)) + dT);
-				//cout << tempdT << endl;
-				//cout << H_c - ((dT - tempdT) / hx)*(xJ_05R - xJ_05L) - ((dT - tempdT) / hy)*(yJ_05T - yJ_05B) << endl;
-				//Ht[k] = eps;
-				Print_info_about_point("KARAUL!", k);
-				pause();
-			}*/
-			/*
-			if (H_c > 0 && H_c < eps && ((xJ_05R - xJ_05L) > 0.0 || (yJ_05T - yJ_05B) > 0.0))
-			{
-				Print_info_about_point("Err",k);
-				//cout << H_c << " " << B_c << endl;
-				cout << B_1R + H_1R << " " << B_1L + H_1L << " " << B_1B + H_1B << " " << B_1T + H_1T << " " << endl;
-				cout << H_1R << " " << H_1L << " " << H_1B << " " << H_1T << " " << endl;
-				cout << B_1R << " " << B_1L << " " << B_1B << " " << B_1T << " " << endl;
-				cout << xJ_05R - xJ_05L << " " << yJ_05T - yJ_05B << endl;
-				cout << "!: " << Ht[k] << endl;
-				pause();
-			}
-			*/
 					
 			// Dry-zone condition
 			if (Ht[k]>eps && !epsilon[k])//
@@ -485,7 +388,6 @@ void Raschet::Numerical_scheme_time_step_parallel()
 					- F_reg * ForceY_05B
 					) 
 					- Phi_reg * tau_05B * PhiY_05B; //**APPROVED**//
-
 
 				//RS
 				RS_05R = gc * tau_05R * (
@@ -733,7 +635,6 @@ void Raschet::Numerical_scheme_time_step_parallel()
 						if (border[CONCENTRATION][type] != FROM_FILE)
 							Ct[n] = border[CONCENTRATION][type] * Ct[k] + 2 * border_C[CONCENTRATION][type];
 					}
-
 				}
 				else
 				{
@@ -754,37 +655,13 @@ void Raschet::Numerical_scheme_time_step_parallel()
 	{
 		addTidesHarmonicsBoundaryConditions();
 	}
-	///
-	/*
-	for (int i = 0; i < Nx; i++)
-	{
-		if (fabs(yUt[i*Ny + Ny - 1] - yUt[i*Ny + Ny - 2]) > 0.0 && Ht[i*Ny + Ny - 1] > eps)//(fabs(Ht[i] - H[i]) > 0.0)
-		{ //(fabs((Ht[i*Ny + Ny -1] + B[i*Ny + Ny - 1]) - (Ht[i*Ny + Ny - 2] + B[i*Ny + Ny - 2])) > 0.0 && Ht[i*Ny + Ny - 1] > eps)//(fabs(Ht[i] - H[i]) > 0.0)
-			Print_info_about_point("Err:", i);
-			pause();
-		}
-	}
-	pause();*/
-	///
-	/*
-	for (int i = 0; i < Nx*Ny; i++)
-	{
-		if (fabs(xUt[i]) + fabs(yUt[i]) > 0.0)//(fabs(Ht[i] - H[i]) > 0.0)
-		{
-			Print_info_about_point("Err:", i);
-			pause();
-		}
-	}
-	pause();*/
-	///	
 	
 	// set array of epsilons to zero
 	memset(epsilon, 0, Nx*Ny * sizeof(int)); 
 
 	#pragma omp parallel for
-	for (int m = 0; m<Nx*Ny; m++)
+	for (int m = 0; m < Nx*Ny; m++)
 	{
-
 		int  i = int(m / Ny);
 		int j = m % Ny;
 
@@ -795,81 +672,77 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			C[m] = Ct[m];
 		}
 
-		// çàïîëíåíèå óñëîâèÿ ñóõîãî äíà: ìàññèâà óñëîâèé ÿâëÿåòñÿ ëè òî÷êà "ñóõîé" èëè íåò	
-		// åñëè âåëè÷èíà H ìåíüøå epsilon, òî ÿâëÿåòñÿ, â òàêîì ñëó÷àå ñîîáùàåì ñîñåäíèì òî÷êàì, ÷òî îíè òîæå "ñóõèå"
+		// Dry-wet condition 
+		// if H < eps -> point is dry
+		// if (H+B)_dry > (H+B)_wet -> no mass flux, no momentum flux 
+		// if (H+B)_dry < (H+B)_wet -> only mass flux
+
 		if (H[m] <= eps ) {
+
 			#pragma omp atomic
 			epsilon[m] += 1;
 
-			//if (H[m] <= pow(10, -9)) {
-				if (i != Nx - 1) {
-					#pragma omp atomic
-					epsilon[(i + 1)*Ny + j] += (int)(Ht[(i + 1)*Ny + j] + B[(i + 1)*Ny + j] < B[m] + eps);
-					xUt[(i + 1)*Ny + j] = 0.0;
-					yUt[(i + 1)*Ny + j] = 0.0;
-				}
-				if (i != 0) {
-					#pragma omp atomic
-					epsilon[(i - 1)*Ny + j] += (int)(Ht[(i - 1)*Ny + j] + B[(i - 1)*Ny + j] < B[m] + eps);
-					xUt[(i - 1)*Ny + j] = 0.0;
-					yUt[(i - 1)*Ny + j] = 0.0;
-				}
-				if (j != Ny - 1) {
-					#pragma omp atomic
-					epsilon[i*Ny + j + 1] += (int)(Ht[i*Ny + j + 1] + B[i*Ny + j + 1] < B[m] + eps);
-					xUt[i*Ny + j + 1] = 0.0;
-					yUt[i*Ny + j + 1] = 0.0;
-				}
+			if (i != Nx - 1) {
+				#pragma omp atomic
+				epsilon[(i + 1)*Ny + j] += (int)(Ht[(i + 1)*Ny + j] + B[(i + 1)*Ny + j] < B[m] + eps);
+				//xUt[(i + 1)*Ny + j] = 0.0;
+				//yUt[(i + 1)*Ny + j] = 0.0;
+			}
+			if (i != 0) {
+				#pragma omp atomic
+				epsilon[(i - 1)*Ny + j] += (int)(Ht[(i - 1)*Ny + j] + B[(i - 1)*Ny + j] < B[m] + eps);
+				//xUt[(i - 1)*Ny + j] = 0.0;
+				//yUt[(i - 1)*Ny + j] = 0.0;
+			}
+			if (j != Ny - 1) {
+				#pragma omp atomic
+				epsilon[i*Ny + j + 1] += (int)(Ht[i*Ny + j + 1] + B[i*Ny + j + 1] < B[m] + eps);
+				//xUt[i*Ny + j + 1] = 0.0;
+				//yUt[i*Ny + j + 1] = 0.0;
+			}
 					
-				if (j != 0) {
-					#pragma omp atomic
-					epsilon[i*Ny + j - 1] += (int)(Ht[i*Ny + j - 1] + B[i*Ny + j - 1] < B[m] + eps);
-					xUt[i*Ny + j - 1] = 0.0;
-					yUt[i*Ny + j - 1] = 0.0;
-				}
-				
-				if (i != Nx - 1 && j != Ny - 1) {
-					//#pragma omp atomic
-					//epsilon[(i + 1)*Ny + j + 1] += (int)(Ht[(i + 1)*Ny + j + 1] + B[(i + 1)*Ny + j + 1] < B[m] + eps);
-					//xUt[(i + 1)*Ny + j + 1] = 0.0;
-					//yUt[(i + 1)*Ny + j + 1] = 0.0;
-				}
-					
-				if (i != Nx - 1 && j != 0) {
-					//#pragma omp atomic
-					//epsilon[(i + 1)*Ny + j - 1] += (int)(Ht[(i + 1)*Ny + j - 1] + B[(i + 1)*Ny + j - 1] < B[m] + eps);
-					//xUt[(i + 1)*Ny + j - 1] = 0.0;
-					//yUt[(i + 1)*Ny + j - 1] = 0.0;
-				}
-					
-				if (i != 0 && j != Ny - 1) {
-					//#pragma omp atomic
-					//epsilon[(i - 1)*Ny + j + 1] += (int)(Ht[(i - 1)*Ny + j + 1] + B[(i - 1)*Ny + j + 1] < B[m] + eps);
-					//xUt[(i - 1)*Ny + j + 1] = 0.0;
-					//yUt[(i - 1)*Ny + j + 1] = 0.0;
-				}
-					
-				if (i != 0 && j != 0) {
-					//#pragma omp atomic
-					//epsilon[(i - 1)*Ny + j - 1] += (int)(Ht[(i - 1)*Ny + j - 1] + B[(i - 1)*Ny + j - 1] < B[m] + eps);
-					//xUt[(i - 1)*Ny + j - 1] = 0.0;
-					//yUt[(i - 1)*Ny + j - 1] = 0.0;
-				}
-					
-			//}		
-			
+			if (j != 0) {
+				#pragma omp atomic
+				epsilon[i*Ny + j - 1] += (int)(Ht[i*Ny + j - 1] + B[i*Ny + j - 1] < B[m] + eps);
+				//xUt[i*Ny + j - 1] = 0.0;
+				//yUt[i*Ny + j - 1] = 0.0;
+			}	
+		}
+		else
+		{
+			bool noMomentumFlux = false;
+
+			if (i != Nx - 1) {
+				noMomentumFlux = noMomentumFlux || (Ht[(i + 1)*Ny + j] < eps);
+			}
+			if (i != 0) {
+				noMomentumFlux = noMomentumFlux || (Ht[(i - 1)*Ny + j] < eps);
+			}
+			if (j != Ny - 1) {
+				noMomentumFlux = noMomentumFlux || (Ht[i*Ny + j + 1] < eps);
+			}
+			if (j != 0) {
+				noMomentumFlux = noMomentumFlux || (Ht[i*Ny + j - 1] < eps);
+			}
+
+			if (!noMomentumFlux)
+			{
+				xU[m] = xUt[m];
+				yU[m] = yUt[m];
+			}
+			else
+			{
+				xU[m] = 0.0;
+				yU[m] = 0.0;
+			}
 		}
 		
-	}//êîíåö for (m=0; m<(Ny*Nx); m++)
+	}//end of for (m=0; m<(Ny*Nx); m++)
 	
-	// âû÷èñëåíèå tau
+	// calculation of tau
 	#pragma omp parallel for
 	for (int m = 0; m < Nx*Ny; m++)
-	{ 
-		xU[m] = xUt[m];
-		yU[m] = yUt[m];
-
-		//if (H[m] > eps)
+	{ 		
 		if (!epsilon[m])
 		{
 			tau[m] = alpha*sqrt(hx*hy) / sqrt(gc*H[m]);//alpha*sqrt(hx*hy) / sqrt(gc*H[m]);
@@ -882,7 +755,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			//tau[m] = alpha*sqrt(hx*hy) / sqrt(gc*eps/2);
 		}
 
-		// Åñëè ñõåìà ðàñõîäèòñÿ, òî ïðîãðàììà ñîîáùèò îá ýòîì
+		// checking if slgorithm become unstable
 		double check = fabs(H[m]) + fabs(xU[m]) + fabs(yU[m]) + fabs(tau[m]);
 
 		if (check > CriticalVal || check != check)
@@ -906,13 +779,5 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			//Raschet::Visualization_to_techplot();
 			Stop_Raschet_Flag = 1;
 		}
-		/*
-		if (tau[m]> CriticalVal || tau[m] != tau[m])
-		{
-			//Print_info_about_point("ERROR POINT", m);
-			//pause();
-			//Raschet::Visualization_to_techplot();
-			Stop_Raschet_Flag = 1;
-		}*/
-	}//êîíåö for (m=0; m<(Ny*Nx); m++)
+	}//end of for (m=0; m<(Ny*Nx); m++)
 }
