@@ -153,5 +153,5 @@ void Raschet::Visualization_to_techplot_result()
 	}
 	current_file_sizeMB += Nx*Ny * 9 * 7 / (1024 * 1024);
 	//cout << current_file_sizeMB << endl;
-	//system("pause");
+	//pause();
 }

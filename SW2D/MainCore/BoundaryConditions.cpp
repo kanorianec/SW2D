@@ -14,7 +14,7 @@ void Raschet::SetZeroDerivativeConditions(TypeOfVariable VType, TypeOfPoint PTyp
 			if (VType == CONCENTRATION && !TransportProblemFlag)
 			{
 				cout << "ERROR setting zero derivative conditions for concentration: there is NO TRANSPORT EQUATION in the PROBLEM DEFINITION!" << endl;
-				system("pause");
+				pause();
 			}
 			border[VType][tempType[i]] = 1;
 			border_C[VType][tempType[i]] = 0.0;
@@ -28,7 +28,7 @@ void Raschet::SetFixedBoundaryConditions(TypeOfVariable VType, TypeOfPoint PType
 	if (VType == CONCENTRATION && !TransportProblemFlag)
 	{
 		cout << "ERROR setting fixed boundary conditions for concentration: there is NO TRANSPORT EQUATION in the PROBLEM DEFINITION!" << endl;
-		system("pause");
+		pause();
 	}
 
 	if (PType != EXCLUDED)
@@ -315,7 +315,7 @@ void Raschet::RecalcFileBoundaryConditions()
 	{
 	cout << yUt[k*Ny + 0] << " ";
 	}
-	system("pause");	*/
+	pause();	*/
 }
 
 void Raschet::SetInternalWall(TypeOfPoint PType, int solid_ind, int start_ind, int end_ind)
@@ -395,7 +395,7 @@ void Raschet::SetTidesHarmonicsBoundaryConditions(TypeOfPoint PType1, TypeOfPoin
 					{
 						cout << HRM[h] << " " << PType << " " << tideA[PType][h][o] << endl;
 					}
-					system("pause");
+					pause();
 					*/
 
 					fAmp.close();

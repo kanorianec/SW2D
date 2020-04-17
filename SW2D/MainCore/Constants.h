@@ -2,7 +2,7 @@
 #include <string>
 //================= Technical Constants and parameters ====================
 // use OpenMP
-const bool parallelOpenMP = true;// false;
+const bool parallelOpenMP = false;// false;
 // include forcing to regularization
 const int F_reg = 0;
 const int Phi_reg = 0;

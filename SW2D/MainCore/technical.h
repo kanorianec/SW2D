@@ -9,4 +9,6 @@ std::string to_str(int num);
 std::string to_str(double num);
 bool folderNotExists(std::string folder_path);
 
+void pause();
+
 //int check_dot(Stations *S1, Stations *S2, int i, int j);

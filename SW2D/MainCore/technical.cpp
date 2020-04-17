@@ -387,7 +387,7 @@ std::string GetConditionName(TypeOfVariable VType, int border, double border_C)
 	for (int i = 1; i <= StrLen - CurLen; i++)
 		Name += " ";
 	//cout << Name.length() << endl;
-	//system("pause");
+	//pause();
 	return Name;
 }
 
@@ -407,4 +407,10 @@ std::string to_str(double num)
 std::string to_str(int num)
 {
 	return to_string(num);
+}
+
+void pause()
+{
+	cout << "Pause. Press Enter to continue." << endl;
+	cin.get();
 }

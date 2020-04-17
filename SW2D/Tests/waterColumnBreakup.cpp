@@ -60,7 +60,7 @@ int main() {
 
 	double beta = 0.1; // CFL number (0; 1)
 	double alpha = 0.5; //
-	double eps = 0.01; //
+	double eps = 1e-3; //
 
 	double NS = 1.0; // коээфициент при тензоре Навье-Стокса
 
@@ -113,8 +113,8 @@ int main() {
 			int k = i*Ny + j;
 			double y = y0 + j*(yN - y0) / (Ny - 1);
 			B[k] = 10.0*(x - 50.0)*(x - 50.0) / (50.0*30.0) + 10.0*(y - 50.0)*(y - 50.0) / (50.0*30.0);
-			if (y <= 35 && y >= 30)
-				B[k] += 5;
+			//if (y <= 35 && y >= 30)
+			//	B[k] += 5;
 			H[k] = 5.0 - B[k];
 
 			if ((x - xc)*(x - xc) + (y - yc)*(y - yc) < RR * RR)
@@ -173,7 +173,7 @@ int main() {
 	// LOL
 	//R->SetWallBoundaryConditions(TOP, BOTTOM, RIGHT, LEFT);
 
-	//system("pause");
+	//pause();
 	/*
 	Raschet *R2 = new Raschet(Test_name,
 	Postscript,
@@ -227,6 +227,6 @@ int main() {
 	delete PhiX;
 	delete PhiY;
 
-	system("pause");
+	pause();
 	return 0;
 }

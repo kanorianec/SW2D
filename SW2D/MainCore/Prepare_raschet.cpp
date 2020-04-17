@@ -111,7 +111,7 @@ void Raschet::Prepare_Raschet()
 		for (int j = 0; j<Ny; j++)
 		{
 			int m = i*Ny + j;
-			if (H[m] < eps) {
+			if (H[m] <= eps) {
 				epsilon[m] += 1;
 
 				if (H[m] < 0)

@@ -264,8 +264,8 @@ void Raschet::Perform_Calculations()
 		}
 	}
 
-	if (Stop_Raschet_Flag)
-		outputResults();
+	//if (Stop_Raschet_Flag)
+	//	outputResults();
 
 	double Time_of_work = (omp_get_wtime() - scheme_time); 
 	std::cout << "Time of work = " << Time_of_work << " seconds." << endl;
@@ -396,7 +396,7 @@ void Raschet::Recalc_forces_parallel()
 		ST = rad * Ephemeris::apparentSideralTime(day, month, year, hour, minute, second) * 360 / 24;
 
 		//cout << Ephemeris::apparentSideralTime(day, month, year, hour, minute, second) * 360 / 24 + 62 - pSun.equaCoordinates.ra * 360 / 24 << endl;
-		//system("pause");
+		//pause();
 
 		SDist = pSun.distance;
 		MDist = pMoon.distance;
@@ -418,7 +418,7 @@ void Raschet::Recalc_forces_parallel()
 			//cout << SD / gc << " " << sin(2 * latN * rad) << " " <<sin(2 * Sbeta)/*(cos(ST - Sa + 2 * lonN * rad))*/ << endl;
 			//cout << SD / gc /* (SunAxis / SDist) * (SunAxis / SDist) * (SunAxis / SDist)*/* cos(latN * rad) *cos(latN * rad)*cos(Sbeta)*cos(Sbeta)/*(cos(2 * (ST - Sa + 2 * lonN * rad)))*/ << endl;
 			//cout << MD / gc /* (MoonAxis / MDist) * (MoonAxis / MDist) * (MoonAxis / MDist)*/ * cos(latN * rad)*cos(latN * rad)*cos(Mbeta)*cos(Mbeta) << endl;
-			//system("pause");
+			//pause();
 	}
 	
 	

@@ -11,6 +11,7 @@ File of calculation module, includes difference scheme
 #include "Raschet.h"
 #include "Constants.h"
 #include <omp.h>
+#include "technical.h"
 
 using namespace std;
 
@@ -20,6 +21,169 @@ void Raschet::Numerical_scheme_time_step_parallel()
 	//omp_set_num_threads(4);
 
 	Recalc_forces_parallel(); // forces calculating 
+
+	// mass fluxes xJm, yJm calculation 
+	//#pragma omp parallel for
+	for (int i = 0; i < Nx - 1; i++)
+	{
+		for (int j = 0; j < Ny - 1; j++)
+		{
+			double xW_05R, yW_05T;
+			double xJ_05R, yJ_05T;
+			double B_c, B_1R, B_1T;
+			double H_05R, H_05T, H_c, H_05L05T, H_05R05B, H_05R05T, H_1R, H_1T;
+			double xU_05R, xU_c, xU_05L05T, xU_05R05B, xU_05R05T, xU_1R;
+			double yU_05T, yU_c, yU_05L05T, yU_05R05B, yU_05R05T, yU_1T;
+			double tau_05R, tau_05T;
+			double ForceX_05R;
+			double ForceY_05T;
+			double PhiY_05T;
+			double PhiX_05R;
+
+			int k = i*Ny + j;
+
+			// Calculating indices R - right, L - left, T - top, B - bottom, and corners. 
+			int k_R = k + Ny;
+			int k_L = k - Ny;
+			int k_T = k + 1;
+			int k_B = k - 1;
+			int k_RT = k_R + 1;
+			int k_RB = k_R - 1;
+			int k_LT = k_L + 1;
+
+			if (i == 0)
+			{
+				k_L += Ny;
+				k_LT += Ny;
+			}
+			if (j == 0)
+			{
+				k_B += 1;
+				k_RB += 1;
+			}
+
+			// Values in the cell centers
+			H_05R05T = 0.25*(H[k] + H[k_R] + H[k_T] + H[k_RT]);
+			H_05R05B = 0.25*(H[k] + H[k_R] + H[k_B] + H[k_RB]);
+			H_05L05T = 0.25*(H[k] + H[k_L] + H[k_T] + H[k_LT]);
+
+			// Values on the cell ribs 
+			H_05R = 0.5*(H[k] + H[k_R]);
+			H_05T = 0.5*(H[k] + H[k_T]);
+
+			// Right/Left/Top/Bottom value
+			H_1R = H[k_R];
+			H_1T = H[k_T];
+
+			// Center-value
+			H_c = H[k];
+			
+
+			// Bathymetry B
+			B_c = B[k];
+
+			B_1R = B[k_R];
+			B_1T = B[k_T];
+
+			// Velocity-x Ux
+			xU_c = xU[k];
+
+			xU_05R05T = 0.25*(xU[k] + xU[k_R] + xU[k_T] + xU[k_RT]);
+			xU_05R05B = 0.25*(xU[k] + xU[k_R] + xU[k_B] + xU[k_RB]);
+			xU_05L05T = 0.25*(xU[k] + xU[k_L] + xU[k_T] + xU[k_LT]);
+
+			xU_05R = 0.5*(xU[k] + xU[k_R]);
+
+			xU_1R = xU[k_R];
+
+			// Velosity-y Uy
+			yU_c = yU[k];
+
+			yU_05R05T = 0.25*(yU[k] + yU[k_R] + yU[k_T] + yU[k_RT]);
+			yU_05R05B = 0.25*(yU[k] + yU[k_R] + yU[k_B] + yU[k_RB]);
+			yU_05L05T = 0.25*(yU[k] + yU[k_L] + yU[k_T] + yU[k_LT]);
+
+			yU_05T = 0.5*(yU[k] + yU[k_T]);
+
+			yU_1T = yU[k_T];
+
+			// tau
+			tau_05R = 0.5*(tau[k] + tau[k_R]);
+			tau_05T = 0.5*(tau[k] + tau[k_T]);
+
+
+			ForceX_05R = 0.5*(ForceX[k] + ForceX[k_R]);
+			ForceY_05T = 0.5*(ForceY[k] + ForceY[k_T]);
+
+
+			PhiX_05R = 0.5*(PhiX[k] + PhiX[k_R]);
+			PhiY_05T = 0.5*(PhiY[k] + PhiY[k_T]);
+
+			// W
+			xW_05R = (tau_05R)*(
+				(H_1R * xU_1R * xU_1R - H_c * xU_c * xU_c) / hx
+				+ (H_05R05T * xU_05R05T * yU_05R05T - H_05R05B * xU_05R05B * yU_05R05B) / hy
+				+ gc * H_05R * ((H_1R + B_1R) - (H_c + B_c)) / hx
+				- F_reg * H_05R * ForceX_05R
+				- Phi_reg * PhiX_05R
+				); //**APPROVED**//
+			
+			yW_05T = (tau_05T)*(
+				(H_05R05T * xU_05R05T * yU_05R05T - H_05L05T * xU_05L05T * yU_05L05T) / hx
+				+ (H_1T * yU_1T * yU_1T - H_c * yU_c * yU_c) / hy
+				+ gc * H_05T * ((H_1T + B_1T) - (H_c + B_c)) / hy
+				- F_reg * H_05T * ForceY_05T
+				- Phi_reg * PhiY_05T
+				); //**APPROVED**//
+
+			//xJ //yJ_05T = H_05T*yU_05T - yW_05T; //**APPROVED**//
+			xJ[k] = (dT / hx) * (H_05R*xU_05R - xW_05R);
+			if (fabs((H_05R*xU_05R - xW_05R)) > 0.0)
+			{
+				cout << fabs((dT / hx)*(230.0 - 220.0) - (dT / hx)*230.0 + (dT / hx)*220.0) << endl;
+				cout << fabs(dT / hx - ((hy / hx + 1)*0.5*beta) / sqrt(gc*(Hmax + 10))) << endl;
+				pause();
+			}
+			
+			//yJ //yJ_05B = H_05B*yU_05B - yW_05B; //**APPROVED**//
+			yJ[k] = (dT / hy) * (H_05T*yU_05T - yW_05T);
+
+			double xJ_05L = xJ[k_L];
+			double yJ_05B = yJ[k_B];
+			xJ_05R = xJ[k];
+			yJ_05T = yJ[k];
+			double M = (xJ_05R - xJ_05L) + (yJ_05T - yJ_05B);
+			/*
+			if (i > 0 && j > 0 && (H_c - M) < 0.0)
+			{
+				double dT_ = dT * ((eps - H_c) / M + 1);
+				if (dT_ > 0.0)
+				{
+					xJ[k_L] *= (1 - dT_ / dT);
+					yJ[k_B] *= (1 - dT_ / dT);
+					xJ[k] *= (1 - dT_ / dT);
+					yJ[k] *= (1 - dT_ / dT);
+					//cout << dT_ << endl;
+					//cout << H_c - (1 - dT_ / dT) * ((xJ_05R - xJ_05L) - (yJ_05T - yJ_05B)) << endl;
+					//Ht[k] = eps;
+					//Print_info_about_point("NEGATIVE", k);
+					//pause();
+				}		
+				if (H_c - (xJ[k] - xJ[k_L]) - (yJ[k] - yJ[k_B]) < 0.0)
+				{
+					Print_info_about_point("WTF?", k);
+					cout << dT_ << endl;
+					cout << xJ[k_L] << " " << (1 - dT_ / dT) *xJ_05L << endl;
+					cout << H_c - (1 - dT_ / dT) * ((xJ_05R - xJ_05L) + (yJ_05T - yJ_05B)) << endl;
+					cout << H_c - (xJ[k] - xJ[k_L]) - (yJ[k] - yJ[k_B]) << endl;
+					cout << "!!!" << endl;
+					pause();
+				}
+			}
+			*/
+			
+		}
+	}
 	
 	// calculate internal points
 	#pragma omp parallel for
@@ -34,7 +198,6 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			double yWS_05R, yWS_05L, yWS_05B, yWS_05T;
 			double RS_05R, RS_05L, RS_05B, RS_05T;
 			double xxPT_05R, xxPT_05L, xyPT_05R, xyPT_05L, yxPT_05T, yxPT_05B, yyPT_05T, yyPT_05B;
-			double xW_05R, xW_05L, yW_05B, yW_05T;
 			double xJ_05R, xJ_05L, yJ_05B, yJ_05T;
 			double B_05R, B_05L, B_05B, B_05T, B_c, B_05L05B, B_05L05T, B_05R05B, B_05R05T, B_1R, B_1L, B_1B, B_1T;
 			double H_05R, H_05L, H_05B, H_05T, H_c, H_05L05B, H_05L05T, H_05R05B, H_05R05T, H_1R, H_1L, H_1B, H_1T;
@@ -165,53 +328,80 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			tau_05R = 0.5*(tau[k] + tau[k_R]);
 			tau_05L = 0.5*(tau[k_L] + tau[k]);
 			tau_05T = 0.5*(tau[k] + tau[k_T]);
-			tau_05B = 0.5*(tau[k_B] + tau[k]);
-
-			// W
-			xW_05R = (tau_05R)*(
-				(H_1R * xU_1R * xU_1R - H_c * xU_c * xU_c) / hx
-				+ (H_05R05T * xU_05R05T * yU_05R05T - H_05R05B * xU_05R05B * yU_05R05B) / hy
-				+ gc * H_05R * ((H_1R + B_1R) - (H_c + B_c)) / hx
-				- F_reg * H_05R * ForceX_05R
-				- Phi_reg * PhiX_05R
-				); //**APPROVED**//
-			xW_05L = (tau_05L)*(
-				(H_c * xU_c * xU_c - H_1L * xU_1L * xU_1L) / hx
-				+ (H_05L05T * xU_05L05T * yU_05L05T - H_05L05B * xU_05L05B * yU_05L05B) / hy
-				+ gc * H_05L * ((H_c + B_c) - (H_1L + B_1L)) / hx 
-				- F_reg * H_05L * ForceX_05L
-				- Phi_reg * PhiX_05L
-				); //**APPROVED**//
-			yW_05T = (tau_05T)*(
-				(H_05R05T * xU_05R05T * yU_05R05T - H_05L05T * xU_05L05T * yU_05L05T) / hx
-				+ (H_1T * yU_1T * yU_1T - H_c * yU_c * yU_c) / hy
-				+ gc * H_05T * ((H_1T + B_1T) - (H_c + B_c)) / hy 
-				- F_reg * H_05T * ForceY_05T
-				- Phi_reg * PhiY_05T
-				); //**APPROVED**//
-			yW_05B = (tau_05B)*(
-				(H_05R05B * xU_05R05B * yU_05R05B - H_05L05B * xU_05L05B * yU_05L05B) / hx
-				+ (H_c * yU_c * yU_c - H_1B * yU_1B * yU_1B) / hy
-				+ gc * H_05B * ((H_c + B_c) - (H_1B + B_1B)) / hy 
-				- F_reg * H_05B * ForceY_05B
-				- Phi_reg * PhiY_05B
-				); //**APPROVED**//
-				
+			tau_05B = 0.5*(tau[k_B] + tau[k]);				
 
 			//xJ
-			xJ_05R = H_05R*xU_05R - xW_05R; //**APPROVED**//
-			xJ_05L = H_05L*xU_05L - xW_05L; //**APPROVED**//
+			xJ_05R = xJ[k]; //H_05R*xU_05R - xW_05R; //**APPROVED**//
+			xJ_05L = xJ[k_L]; ////H_05L*xU_05L - xW_05L; //**APPROVED**//
 
 			//yJ
-			yJ_05T = H_05T*yU_05T - yW_05T; //**APPROVED**//
-			yJ_05B = H_05B*yU_05B - yW_05B; //**APPROVED**//
+			yJ_05T = yJ[k];// H_05T*yU_05T - yW_05T; //**APPROVED**//
+			yJ_05B = yJ[k_B]; // H_05B*yU_05B - yW_05B; //**APPROVED**//
 
 			// Next time-step H
 
-			Ht[k] = H_c - (dT / hx)*(xJ_05R - xJ_05L) - (dT / hy)*(yJ_05T - yJ_05B); //**APPROVED**//
+			//Ht[k] = H_c - (dT / hx)*(xJ_05R - xJ_05L) - (dT / hy)*(yJ_05T - yJ_05B); //**APPROVED**//
+			Ht[k] = H_c - (xJ_05R - xJ_05L) - (yJ_05T - yJ_05B); //**APPROVED**//
+			/*
+			if (fabs((dT / hx)*(xJ_05R - xJ_05L) - ((dT / hx)*xJ_05R - (dT / hx)* xJ_05L))>0.0)
+			{
+				cout << fabs((dT / hx)*(xJ_05R - xJ_05L) - ((dT / hx)*xJ_05R - (dT / hx)* xJ_05L)) << " " <<(dT / hx)*(xJ_05R - xJ_05L) << " " << (dT / hx)*xJ_05R - (dT / hx)* xJ_05L << endl;
+				pause();
+			}*/
+			
+
+			if (H_c > 0 && H_c < eps && (H_c + B_c > H_1R + B_1R) && fabs(xJ_05R) > 0.0 )
+			{
+				//H_c + B_c > H_1R + B_1R || H_c + B_c > H_1L + B_1L || H_c + B_c > H_1T + B_1T || H_c + B_c > H_1B + B_1B))
+				cout << tau_05R << " " <<  H_05R05T * xU_05R05T * yU_05R05T - H_05R05B * xU_05R05B * yU_05R05B << " " << gc * H_05R * ((H_1R + B_1R) - (H_c + B_c)) / hx << endl;
+				Print_info_about_point("FLUX", k);
+				cout << H_c + B_c << endl;
+				cout << B_1R + H_1R << " " << B_1L + H_1L << " " << B_1B + H_1B << " " << B_1T + H_1T << " " << endl;
+				cout << H_1R << " " << H_1L << " " << H_1B << " " << H_1T << " " << endl;
+				cout << B_1R << " " << B_1L << " " << B_1B << " " << B_1T << " " << endl;
+				cout << xJ_05R - xJ_05L << " " << yJ_05T - yJ_05B << endl;
+				cout << "!: " << Ht[k] << endl;
+				Print_info_about_point("right", k_R);
+				pause();
+			}
+			/*
+			if (Ht[k] < 0)
+			{
+				//double tempdT = ( (eps - H_c) / ((1 / hx)*(xJ_05R - xJ_05L) - (1 / hy)*(yJ_05T - yJ_05B)) + dT);
+				//cout << tempdT << endl;
+				//cout << H_c - ((dT - tempdT) / hx)*(xJ_05R - xJ_05L) - ((dT - tempdT) / hy)*(yJ_05T - yJ_05B) << endl;
+				//Ht[k] = eps;
+				Print_info_about_point("KARAUL!", k);
+				pause();
+			}*/
+			/*
+			if (H_c > 0 && H_c < eps && ((xJ_05R - xJ_05L) > 0.0 || (yJ_05T - yJ_05B) > 0.0))
+			{
+				Print_info_about_point("Err",k);
+				//cout << H_c << " " << B_c << endl;
+				cout << B_1R + H_1R << " " << B_1L + H_1L << " " << B_1B + H_1B << " " << B_1T + H_1T << " " << endl;
+				cout << H_1R << " " << H_1L << " " << H_1B << " " << H_1T << " " << endl;
+				cout << B_1R << " " << B_1L << " " << B_1B << " " << B_1T << " " << endl;
+				cout << xJ_05R - xJ_05L << " " << yJ_05T - yJ_05B << endl;
+				cout << "!: " << Ht[k] << endl;
+				pause();
+			}
+			*/
+			/*
+			if (H_c < eps && fabs(xJ_05R) + fabs(xJ_05L) + fabs(yJ_05T) + fabs(yJ_05B)> 0.0)
+			{
+				cout << H_c << " " << B_c << endl;
+				cout << B_1R + H_1R << " " << B_1L + H_1L << " " << B_1B + H_1B << " " << B_1T + H_1T << " " << endl;
+				cout << H_1R << " " << H_1L << " " << H_1B << " " << H_1T << " " << endl;
+				cout << B_1R << " " << B_1L << " " << B_1B << " " << B_1T << " " << endl;
+				cout << xJ_05R - xJ_05L << " " << yJ_05T - yJ_05B << endl;
+				cout << "!: " << Ht[k] << endl;
+				pause();
+			}
+			*/
 					
 			// Dry-zone condition
-			if ( Ht[k]>eps && !epsilon[k])
+			if (Ht[k]>eps && !epsilon[k])//
 			{
 				
 				//xWS
@@ -348,6 +538,21 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				xUt[k] = 0.0;
 				yUt[k] = 0.0;
 			}	
+			/*
+			if (H_c > 0 && H_c < eps && (H_c + B_c < H_1R + B_1R) && xU)
+			{
+				//H_c + B_c > H_1R + B_1R || H_c + B_c > H_1L + B_1L || H_c + B_c > H_1T + B_1T || H_c + B_c > H_1B + B_1B))
+				cout << tau_05R << " " << H_05R05T * xU_05R05T * yU_05R05T - H_05R05B * xU_05R05B * yU_05R05B << " " << gc * H_05R * ((H_1R + B_1R) - (H_c + B_c)) / hx << endl;
+				Print_info_about_point("FLUX", k);
+				cout << H_c + B_c << endl;
+				cout << B_1R + H_1R << " " << B_1L + H_1L << " " << B_1B + H_1B << " " << B_1T + H_1T << " " << endl;
+				cout << H_1R << " " << H_1L << " " << H_1B << " " << H_1T << " " << endl;
+				cout << B_1R << " " << B_1L << " " << B_1B << " " << B_1T << " " << endl;
+				cout << xJ_05R - xJ_05L << " " << yJ_05T - yJ_05B << endl;
+				cout << "!: " << Ht[k] << endl;
+				Print_info_about_point("right", k_R);
+				pause();
+			}*/
 				
 			if (TransportProblemFlag)
 			{
@@ -549,10 +754,10 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		if (fabs(yUt[i*Ny + Ny - 1] - yUt[i*Ny + Ny - 2]) > 0.0 && Ht[i*Ny + Ny - 1] > eps)//(fabs(Ht[i] - H[i]) > 0.0)
 		{ //(fabs((Ht[i*Ny + Ny -1] + B[i*Ny + Ny - 1]) - (Ht[i*Ny + Ny - 2] + B[i*Ny + Ny - 2])) > 0.0 && Ht[i*Ny + Ny - 1] > eps)//(fabs(Ht[i] - H[i]) > 0.0)
 			Print_info_about_point("Err:", i);
-			system("pause");
+			pause();
 		}
 	}
-	system("pause");*/
+	pause();*/
 	///
 	/*
 	for (int i = 0; i < Nx*Ny; i++)
@@ -560,10 +765,10 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		if (fabs(xUt[i]) + fabs(yUt[i]) > 0.0)//(fabs(Ht[i] - H[i]) > 0.0)
 		{
 			Print_info_about_point("Err:", i);
-			system("pause");
+			pause();
 		}
 	}
-	system("pause");*/
+	pause();*/
 	///	
 	
 	// set array of epsilons to zero
@@ -596,7 +801,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			Print_info_about_point("LD:ERROR POINT", (i - 1)*Ny + j - 1);
 			*/
 			//Visualization_to_techplot_fstream();
-			//system("pause");
+			//pause();
 			//Raschet::Visualization_to_techplot();
 			Stop_Raschet_Flag = 1;
 		}
@@ -613,47 +818,47 @@ void Raschet::Numerical_scheme_time_step_parallel()
 
 		// çàïîëíåíèå óñëîâèÿ ñóõîãî äíà: ìàññèâà óñëîâèé ÿâëÿåòñÿ ëè òî÷êà "ñóõîé" èëè íåò	
 		// åñëè âåëè÷èíà H ìåíüøå epsilon, òî ÿâëÿåòñÿ, â òàêîì ñëó÷àå ñîîáùàåì ñîñåäíèì òî÷êàì, ÷òî îíè òîæå "ñóõèå"
-		if (H[m] < eps ) {
+		if (H[m] <= eps ) {
 			#pragma omp atomic
 			epsilon[m] += 1;
 
 			//if (H[m] <= pow(10, -9)) {
 				if (i != Nx - 1) {
 					#pragma omp atomic
-					epsilon[(i + 1)*Ny + j] += (int)(Ht[(i + 1)*Ny + j] + B[(i + 1)*Ny + j] < B[m]);
+					epsilon[(i + 1)*Ny + j] += (int)(Ht[(i + 1)*Ny + j] + B[(i + 1)*Ny + j] < B[m] + eps);
 				}
 				if (i != 0) {
 					#pragma omp atomic
-					epsilon[(i - 1)*Ny + j] += (int)(Ht[(i - 1)*Ny + j] + B[(i - 1)*Ny + j] < B[m]);
+					epsilon[(i - 1)*Ny + j] += (int)(Ht[(i - 1)*Ny + j] + B[(i - 1)*Ny + j] < B[m] + eps);
 				}
 				if (j != Ny - 1) {
 					#pragma omp atomic
-					epsilon[i*Ny + j + 1] += (int)(Ht[i*Ny + j + 1] + B[i*Ny + j + 1] < B[m]);
+					epsilon[i*Ny + j + 1] += (int)(Ht[i*Ny + j + 1] + B[i*Ny + j + 1] < B[m] + eps);
 				}
 					
 				if (j != 0) {
 					#pragma omp atomic
-					epsilon[i*Ny + j - 1] += (int)(Ht[i*Ny + j - 1] + B[i*Ny + j - 1] < B[m]);
+					epsilon[i*Ny + j - 1] += (int)(Ht[i*Ny + j - 1] + B[i*Ny + j - 1] < B[m] + eps);
 				}
 				
 				if (i != Nx - 1 && j != Ny - 1) {
 					#pragma omp atomic
-					epsilon[(i + 1)*Ny + j + 1] += (int)(Ht[(i + 1)*Ny + j + 1] + B[(i + 1)*Ny + j + 1] < B[m]);
+					epsilon[(i + 1)*Ny + j + 1] += (int)(Ht[(i + 1)*Ny + j + 1] + B[(i + 1)*Ny + j + 1] < B[m] + eps);
 				}
 					
 				if (i != Nx - 1 && j != 0) {
 					#pragma omp atomic
-					epsilon[(i + 1)*Ny + j - 1] += (int)(Ht[(i + 1)*Ny + j - 1] + B[(i + 1)*Ny + j - 1] < B[m]);
+					epsilon[(i + 1)*Ny + j - 1] += (int)(Ht[(i + 1)*Ny + j - 1] + B[(i + 1)*Ny + j - 1] < B[m] + eps);
 				}
 					
 				if (i != 0 && j != Ny - 1) {
 					#pragma omp atomic
-					epsilon[(i - 1)*Ny + j + 1] += (int)(Ht[(i - 1)*Ny + j + 1] + B[(i - 1)*Ny + j + 1] < B[m]);
+					epsilon[(i - 1)*Ny + j + 1] += (int)(Ht[(i - 1)*Ny + j + 1] + B[(i - 1)*Ny + j + 1] < B[m] + eps);
 				}
 					
 				if (i != 0 && j != 0) {
 					#pragma omp atomic
-					epsilon[(i - 1)*Ny + j - 1] += (int)(Ht[(i - 1)*Ny + j - 1] + B[(i - 1)*Ny + j - 1] < B[m]);
+					epsilon[(i - 1)*Ny + j - 1] += (int)(Ht[(i - 1)*Ny + j - 1] + B[(i - 1)*Ny + j - 1] < B[m] + eps);
 				}
 					
 			//}		
@@ -675,16 +880,17 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		else
 		{
 			tau[m] = 0.0;
+			xU[m] = 0.0;
+			yU[m] = 0.0;
 			//tau[m] = alpha*sqrt(hx*hy) / sqrt(gc*eps/2);
 		}
 
 		if (tau[m]> CriticalVal || tau[m] != tau[m])
 		{
 			//Print_info_about_point("ERROR POINT", m);
-			//system("pause");
+			//pause();
 			//Raschet::Visualization_to_techplot();
 			Stop_Raschet_Flag = 1;
 		}
 	}//êîíåö for (m=0; m<(Ny*Nx); m++)
-
 }

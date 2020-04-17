@@ -55,6 +55,8 @@ Problem_Definition::Problem_Definition(
 	Problem_Definition::ForceY = new double[Nx*Ny];
 	Problem_Definition::PhiX = new double[Nx*Ny];
 	Problem_Definition::PhiY = new double[Nx*Ny];
+	Problem_Definition::xJ = new long double[Nx*Ny]();
+	Problem_Definition::yJ = new long double[Nx*Ny]();
 
 	#pragma omp parallel
 	{
@@ -94,6 +96,9 @@ Problem_Definition::~Problem_Definition()
 	delete[] ForceY;
 	delete[] PhiX;
 	delete[] PhiY;
+
+	delete[] xJ;
+	delete[] yJ;
 }
 
 // !!! функция считывания данных из текстового файла
