@@ -50,13 +50,13 @@ int main() {
 	double lat0 = 68.0083;
 	double latN = 71.8;
 
-	double mu = 0.0026; // bottom friction coffitient
+	double mu = 0.0;// 0026; // bottom friction coffitient
 	int fc = 0; // use Coriolis force (1) or not (0) 
 
 
 	double beta = 0.1; // CFL number (0; 1)
 	double alpha = 0.5; //
-	double eps = 1; //
+	double eps = 0.1; //
 
 	double NS = 1.0;//1.0; //
 	
@@ -76,7 +76,7 @@ int main() {
 	
 	//omp_set_num_threads(2);
 
-	string Test_name = "KaraGate_tidesHarm_wind_DEBUG11"; //_noForce";  _OMP_" + to_str(threadsNumber)
+	string Test_name = "KaraGate_tidesHarm_wind_DEBUG12"; //_noForce";  _OMP_" + to_str(threadsNumber)
 	string Postscript = "_" + to_str((T_end - T_begin)/3600) + "h_" + to_string(Nx) + "x" + to_string(Ny); 
 
 	//double t_graph_export = T_begin;  

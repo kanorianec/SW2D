@@ -21,8 +21,9 @@ public:
 	double* PhiY; // external surface forces in x direction
 
 	// mass fluxes
-	long double* xJ;
-	long double* yJ;
+	double* xJ;
+	double* yJ;
+	//double* dT_;
 
 	// Additional variables
 	double* C; // concentration of pollutant in transport equation

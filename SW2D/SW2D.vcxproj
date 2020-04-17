@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ephemeris\Ephemeris.h" />
+    <ClInclude Include="ephemeris\Ephemeris.hpp" />
     <ClInclude Include="MainCore\Constants.h" />
     <ClInclude Include="MainCore\Problem_Definition.h" />
     <ClInclude Include="MainCore\Raschet.h" />

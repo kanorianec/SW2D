@@ -86,5 +86,8 @@
     <ClInclude Include="MainCore\Problem_Definition.h">
       <Filter>Заголовочные файлы\MainCore</Filter>
     </ClInclude>
+    <ClInclude Include="ephemeris\Ephemeris.hpp">
+      <Filter>Заголовочные файлы\Ephemeris</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

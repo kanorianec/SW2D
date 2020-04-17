@@ -7,6 +7,10 @@ const bool parallelOpenMP = false;// false;
 const int F_reg = 0;
 const int Phi_reg = 0;
 
+// mass fluxes correction for dry zone condition 
+const bool massFluxCorrection = false; // flag
+const double epsFlux = 1e-6;
+
 const bool ignore_warning = true;// false; // ignote warning of existing case folder
 
 const bool COMBINE_FILE_AND_FREE_BOUNDARY_CONDITIONS = false; //true;
@@ -26,7 +30,7 @@ const bool binaryOutputFlag = false; // output to binary flag
 									//const int Nmax = 1555000; // !? 
 const double gc = 9.81;
 //const double G = 0.0000000000667408; // gravitational constant
-const double CriticalVal = 10000.0;
+const double CriticalVal = 100000.0;
 
 const double SD = 1.2035; // Dudson's constant for Sun
 const double MD = 2.6206; // Dudson's constant for Moon
