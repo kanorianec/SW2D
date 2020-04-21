@@ -50,8 +50,8 @@ int main() {
 	double lat0 = 68.0083;
 	double latN = 71.8;
 
-	double mu = 0.0;// 0026; // bottom friction coffitient
-	int fc = 0; // use Coriolis force (1) or not (0) 
+	double mu = 0.0026; // bottom friction coffitient
+	int fc = 1; // use Coriolis force (1) or not (0) 
 
 
 	double beta = 0.1; // CFL number (0; 1)
@@ -76,7 +76,7 @@ int main() {
 	
 	//omp_set_num_threads(2);
 
-	string Test_name = "KaraGate_tidesHarm_wind_DEBUG13"; //_noForce";  _OMP_" + to_str(threadsNumber)
+	string Test_name = "KaraGate_tidesHarm_wind_try0"; //_noForce";  _OMP_" + to_str(threadsNumber)
 	string Postscript = "_" + to_str((T_end - T_begin)/3600) + "h_" + to_string(Nx) + "x" + to_string(Ny); 
 
 	//double t_graph_export = T_begin;  
@@ -98,7 +98,7 @@ int main() {
 	//int sea_points = 0;  //
 	//int level_points = 0;  //
 
-	/* === ÈÍÈÖÈÀËÈÇÀÖÈß ÄÀÍÍÛÕ ===  GEBCO_2019_30.0_70.0_45.0_63.0_ESRIASCII.asc*/
+	/* === Preparing initial data === */
 
 	FILE *F = fopen("bathymetry/Kara_Gate_extend_715x456.dat", "r");
 	if (F == NULL)
@@ -117,7 +117,7 @@ int main() {
 			int k = i*Ny + j;
 
 			fscanf(F, "%lf ", &B[k]);
-			//fscanf(FH, "%lf ", &H[k]);
+			fscanf(FH, "%lf ", &H[k]);
 			fscanf(FU, "%lf ", &xU[k]);
 			fscanf(FV, "%lf ", &yU[k]);
 
@@ -188,9 +188,9 @@ int main() {
 	//R->SetFileBoundaryConditions(VELOCITY_X, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 	//R->SetFileBoundaryConditions(VELOCITY_Y, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 
-	//R->SetWindSpeed(0.0, 3600);// 3600);
-	//R->SetTidesHarmonicsBoundaryConditions(LEFT, TOP);
-	//R->SetFileBoundaryConditions(HEIGHT, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
+	R->SetWindSpeed(0.0, 3600);// 3600);
+	R->SetTidesHarmonicsBoundaryConditions(LEFT, TOP);
+	R->SetFileBoundaryConditions(HEIGHT, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 	/*
 	R->SetFileBoundaryConditions(VELOCITY_X, LEFT);//, TOP, BOTTOM);
 	R->SetFileBoundaryConditions(VELOCITY_Y, LEFT);
@@ -211,6 +211,5 @@ int main() {
 	delete[] PhiX;
 	delete[] PhiY;
 	
-	system("pause");
 	return 0;
 }
