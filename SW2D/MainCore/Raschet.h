@@ -82,7 +82,7 @@ public:
 
 	bool tidesHarmonics; // include tides calculation in boundary conditions
 	double* tideA[4][tideNum];
-	double* tidePh[4][tideNum];
+	double* tidePh[4][tideNum]; // in radian!!!
 
 	// ephemeris for tides calculation
 	double Sbeta; // declination of Sun in rad

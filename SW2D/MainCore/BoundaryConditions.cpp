@@ -542,7 +542,7 @@ void Raschet::addTidesHarmonicsBoundaryConditions()
 					{
 						for (int it = 0; it < tideNum; it++)
 						{
-							Ht[Na*k + Nb] += f[it] * 0.01 * tideA[PType][it][k] * (cos(t*qTide[it] + v0[it] + u[it] - tidePh[PType][it][k] * rad));
+							Ht[Na*k + Nb] += f[it] * 0.01 * tideA[PType][it][k] * (cos(t*qTide[it] + v0[it] + u[it] - tidePh[PType][it][k]));
 						}
 					}
 					

@@ -76,7 +76,7 @@ int main() {
 	
 	//omp_set_num_threads(2);
 
-	string Test_name = "KaraGate_tidesHarm_wind_try0"; //_noForce";  _OMP_" + to_str(threadsNumber)
+	string Test_name = "KaraGate_tidesHarm_wind_try1"; //_noForce";  _OMP_" + to_str(threadsNumber)
 	string Postscript = "_" + to_str((T_end - T_begin)/3600) + "h_" + to_string(Nx) + "x" + to_string(Ny); 
 
 	//double t_graph_export = T_begin;  
