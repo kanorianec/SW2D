@@ -150,17 +150,14 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				if (i > 0 && j > 0 && (H_c - M) < 0.0 && !epsilon[k])
 				{
 					double dT0 = (min(epsFlux, eps/10) - H_c) / M;
-					if (dT0 < 1.0)
-					{
-						#pragma omp atomic
-						xJ[k_L] *= dT0;
-						#pragma omp atomic
-						yJ[k_B] *= dT0;
-						#pragma omp atomic
-						xJ[k] *= dT0;
-						#pragma omp atomic
-						yJ[k] *= dT0;
-					}
+					#pragma omp atomic
+					xJ[k_L] *= dT0;
+					#pragma omp atomic
+					yJ[k_B] *= dT0;
+					#pragma omp atomic
+					xJ[k] *= dT0;
+					#pragma omp atomic
+					yJ[k] *= dT0;
 				}
 			}
 		}
