@@ -21,7 +21,7 @@ const int F_bound = 0;
 // type of transport equation regularization: alpha_c = 1 - normal, alpha_c = 0 - simplified, also could be between (0,1).
 const double alpha_c = 1.0;
 // Coefficient of viscosity in the transport equation, basic = 0.0, for special cases = 1.0/gc
-const double NSC = 0.0;
+const double NSC = 0.1;
 
 const bool binaryOutputFlag = true; // output to binary flag
 									//=========================================================
@@ -108,3 +108,12 @@ extern const double qTide[tideNum];
 
 //char *name_of_boundary_condition[] = {"Open border", "Wall", "Fixed boundary" };
 //const float normirovka = 1000.0000000000; // 
+
+enum forceType {
+	NO_FORCE = 0,
+	REAL_FORCE = 1,
+	CONST_FORCE = 2,	
+};
+
+// costil indication
+// COSTIL! COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  

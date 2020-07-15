@@ -564,6 +564,15 @@ void Raschet::Numerical_scheme_time_step_parallel()
 					if (border[CONCENTRATION][type] != FROM_FILE)
 						Ct[n] = border[CONCENTRATION][type] * Ct[k] + 2 * border_C[CONCENTRATION][type];
 				}
+				// COSTIL! COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL! 
+
+				if (type == TOP)
+				{
+					yUt[n] = (-2.0) * sin(pi * (Time_elapsed + dT) / (3600.0 * 6.0)) - yUt[k];
+					Ct[n] = 2.0 * (1.0 - exp(-(Time_elapsed + dT) / 300.0)) - Ct[k];
+				}
+
+				// COSTIL! COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL! 
 			}
 			else
 			{

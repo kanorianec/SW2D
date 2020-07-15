@@ -30,12 +30,21 @@ public:
 	
 	// Forcing:
 	double mu; // bottom friction coefficient
-	double windFrictionCoef; // wind friction coefficient
+
 	int fc; // use Coriolis force (1) or not (0)
+	
+	forceType windForcing;
+	double windFrictionCoef; // wind friction coefficient
+	std::ifstream FWindX; // xU arrray of pointers to wind speed file ONLY FOR REAL_FORCE
+	std::ifstream FWindY; // yU arrray of pointers to wind speed file ONLY FOR REAL_FORCE
+	double timeWind;      // ONLY FOR REAL_FORCE
+	double timeWindPeriod;// ONLY FOR REAL_FORCE
+	double* xWind;		 
+	double* yWind;		  
+
 
 	// Transport problem:
-	double D; // Diffusion coefficient
-	
+	double D; // Diffusion coefficient	
 
 	double Hmax; // maximal depth
 	double Bmax; // maximal value of bathymetry
@@ -54,9 +63,6 @@ public:
 	//double* PhiXt;
 	//double* PhiYt;
 
-	double* xWind;
-	double* yWind;
-
 	double* Ct;
 	bool TransportProblemFlag;
 
@@ -73,12 +79,6 @@ public:
 	double t2_bound;
 	FILE* FV[3][4]; // 3 vars x 4 walls: arrray of pointers to boundary conditions file 
 	FILE* FT; // arrray of pointers to time shifts file
-
-	bool windForcing;
-	std::ifstream FWindX; // xU arrray of pointers to wind speed file
-	std::ifstream FWindY; // yU arrray of pointers to wind speed file
-	double timeWind;
-	double timeWindPeriod;
 
 	bool tidesHarmonics; // include tides calculation in boundary conditions
 	double* tideA[4][tideNum];
@@ -241,7 +241,7 @@ public:
 	void addTidesHarmonicsBoundaryConditions();
 
 	// Setting wind speed to initialize wind friction force
-	void SetWindSpeed(double WindFrictionCoefficient, double period);
+	void SetWindSpeed(forceType fT, double WindFrictionCoefficient, double period, double xWindConst = 0.0, double yWindConst = 0.0);
 
 	void Recalc_forces_parallel(); // Forces recalculation with OpenMP
 
