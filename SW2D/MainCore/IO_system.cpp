@@ -208,3 +208,102 @@ void Raschet::Restart_from_time_moment(double Time_moment) {
 	}
 			
 };
+
+/*
+// функция сохранения текущих данных
+void Raschet::Save_Data(double Time_of_work) {
+string save_path = path + "/" + to_string((int)T_begin) + "-" + to_string((int)T_end); // путь папки сохраненных данных
+
+Prepare_Folder(save_path);
+
+string name_h = save_path + "/H.dat";
+string name_xU = save_path + "/xU.dat";
+string name_yU = save_path + "/yU.dat";
+string name_C = save_path + "/C.dat";
+
+FILE *fH = fopen(name_h.c_str(), "w");
+FILE *fxU = fopen(name_xU.c_str(), "w");
+FILE *fyU = fopen(name_yU.c_str(), "w");
+FILE *fC;
+
+if (TransportProblemFlag)
+{
+fC = fopen(name_C.c_str(), "w");
+}
+
+for (int i = 0; i<Nx; i++)
+{
+for (int j = 0; j<Ny; j++)
+{
+int k = i*Ny + j;
+fprintf(fH, "%lf ", H[k]);
+fprintf(fxU, "%lf ", xU[k]);
+fprintf(fyU, "%lf ", yU[k]);
+if (TransportProblemFlag)
+{
+fprintf(fC, "%lf ", C[k]);
+}
+}
+}
+
+fclose(fH);
+fclose(fxU);
+fclose(fyU);
+if (TransportProblemFlag)
+{
+fclose(fC);
+}
+
+//write_extra_inf_to_file(Time_of_work);
+}
+
+// функция загрузки величин из файла
+void Raschet::Read_Data_from_file(string path_name) {
+
+string load_path = "Data/" + path_name;
+
+string name_h = load_path + "/H.dat";
+string name_xU = load_path + "/xU.dat";
+string name_yU = load_path + "/yU.dat";
+string name_C = load_path + "/C.dat";
+
+FILE *fH = fopen(name_h.c_str(), "r");
+FILE *fxU = fopen(name_xU.c_str(), "r");
+FILE *fyU = fopen(name_yU.c_str(), "r");
+FILE *fC;
+
+if (TransportProblemFlag)
+{
+fC = fopen(name_C.c_str(), "r");
+}
+
+if (fH && fxU && fyU)
+{
+for (int i = 0; i<Nx; i++)
+{
+for (int j = 0; j<Ny; j++)
+{
+int k = i*Ny + j;
+fscanf(fH, "%lf", &H[k]);
+fscanf(fxU, "%lf", &xU[k]);
+fscanf(fyU, "%lf", &yU[k]);
+if (TransportProblemFlag)
+{
+fscanf(fC, "%lf ", &C[k]);
+}
+}
+}
+}
+else {
+cout << "FILE " << path_name << " is not found!" << endl;
+}
+
+fclose(fH);
+fclose(fxU);
+fclose(fyU);
+if (TransportProblemFlag)
+{
+fclose(fC);
+}
+};
+*/

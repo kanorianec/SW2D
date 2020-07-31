@@ -30,7 +30,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		for (int j = 0; j < Ny - 1; j++)
 		{
 			double xW_05R, yW_05T;
-			double xJ_05R, yJ_05T;
+			//double xJ_05R, yJ_05T;
 			double B_c, B_1R, B_1T;
 			double H_05R, H_05T, H_c, H_05L05T, H_05R05B, H_05R05T, H_1R, H_1T;
 			double xU_05R, xU_c, xU_05L05T, xU_05R05B, xU_05R05T, xU_1R;
@@ -571,7 +571,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 					yUt[n] = (-2.0) * sin(pi * (Time_elapsed + dT) / (3600.0 * 6.0)) - yUt[k];
 					Ct[n] = 2.0 * (1.0 - exp(-(Time_elapsed + dT) / 300.0)) - Ct[k];
 				}
-
+				
 				// COSTIL! COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL! 
 			}
 			else

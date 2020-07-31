@@ -1,0 +1,20 @@
+#comment
+
+# use OpenMP (bool), only true(1) or false(0)
+parallelOpenMP = 1 
+
+# include forcing to regularization (int) only true(1) or false(0)
+F_reg = 0
+Phi_reg = 0
+
+# mass fluxes correction for dry zone condition 
+massFluxCorrection = 1  # (bool), only true(1) or false(0)
+epsFlux = 1e-4	 	# (double)
+
+# ignore warning of existing case folder (bool), only true(1) or false(0)
+ignore_warning = 1 
+
+# type of transport equation regularization (double): alpha_c = 1 - normal, alpha_c = 0 - simplified, also could be between (0,1).
+alpha_c = 1.0
+# Coefficient of viscosity in the transport equation (double), basic = 0.0, for special cases = 1.0/gc = 0.1
+NSC = 0.1

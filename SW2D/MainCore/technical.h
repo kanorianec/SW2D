@@ -10,5 +10,7 @@ std::string to_str(double num);
 bool folderNotExists(std::string folder_path);
 
 void pause();
+void checkSymmetry(double* A, int Nx, int Ny, std::string name = "noname");
+bool checkEquality(double* A1, double* A2, int Nx, int Ny);
 
 //int check_dot(Stations *S1, Stations *S2, int i, int j);

@@ -219,6 +219,14 @@ Raschet::Raschet(string Test_name,
 
 void Raschet::Exec_Raschet()
 {
+	if (!parallelOpenMP)
+	{
+		omp_set_num_threads(1);
+	}
+	#pragma omp parallel
+	{
+		Raschet::OMP_THREADS_NUMBER = omp_get_num_threads();
+	}
 	Raschet::Prepare_Folder("Data"); // Checking and creating "Data" folder
 
 	Raschet::Prepare_Folder(path, ignore_warning || restart); // Creating Test_name folder

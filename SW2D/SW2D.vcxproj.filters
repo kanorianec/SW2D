@@ -66,11 +66,11 @@
     <ClCompile Include="MainCore\Constants.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
     </ClCompile>
-    <ClCompile Include="Vallunden.cpp">
-      <Filter>Файлы ресурсов</Filter>
-    </ClCompile>
     <ClCompile Include="MainCore\Force.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Vallunden.cpp">
+      <Filter>Файлы ресурсов</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

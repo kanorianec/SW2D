@@ -58,7 +58,10 @@ Problem_Definition::Problem_Definition(
 	Problem_Definition::xJ = new double[Nx*Ny]();
 	Problem_Definition::yJ = new double[Nx*Ny]();
 	//Problem_Definition::dT_ = new double[Nx*Ny]();
-
+	if (!parallelOpenMP)
+	{
+		omp_set_num_threads(1);
+	}
 	#pragma omp parallel
 	{
 		Problem_Definition::OMP_THREADS_NUMBER = omp_get_num_threads();

@@ -21,12 +21,14 @@ using namespace std;
 double Bmin;
 
 int main() {	
+	initConfiguration("testConfig.txt");
+	//system("pause");
 
 	/* === PROBLEM STATEMENT === */
  
 	// T_begin, T_end - start and end time respectively, in seconds х 
 	double T_begin = 0;
-	double T_end = T_begin + 24 * 3600;
+	double T_end = 0.03;
 
 	// start date and time of current problem (UTC)
 
@@ -39,18 +41,18 @@ int main() {
 
 	// boundary values of rectangle area
 	double x0 = 0;
-	double xN = 1000;
+	double xN = 10;
 	double y0 = 0;
-	double yN = 1250;
+	double yN = 10;
 
 	double lon0 = 0.0;
 	double lonN = 0.0;
-	double lat0 = 77.866667;
-	double latN = 77.866667;
+	double lat0 = 0.0;// 77.866667;
+	double latN = 0.0;// 77.866667;
 
 	// physical parameters 
 	double mu = 0; // 0.0026; // bottom friction coefficient 
-	int fc = 1;    // use Coriolis force (1) or not (0)
+	int fc = 0;    // use Coriolis force (1) or not (0)
 
 	double D = 0.0; // diffusion
 
@@ -62,31 +64,8 @@ int main() {
 
 	double NS = 1.0; // coefficient for the Navier-Stokes tensor
 
-	int Nx = 247; // 
-	int Ny = 234; // 
-
-	if (!parallelOpenMP)
-	{
-		omp_set_num_threads(1);
-	}
-
-	int threadsNumber;
-	#pragma omp parallel
-	{
-		threadsNumber = omp_get_num_threads();
-	}
-
-	/* === TECHNICAL PARAMETERS === */
-
-	// folder name in \Data looks like: Test_namePostscript
-	string Test_name = "Vallunden_Pritok"; // Test name
-	string Postscript = "_" + to_str((T_end - T_begin) / 3600) + "h_NSC_01_" + to_string(Nx) + "x" + to_string(Ny); // short test description
-
-																			  // параметры отрисовки
-	int Visualization_to_techplot_flag = 1; // вывод результатов дл€ визуализации в Tecplot
-	double t_step = 3600; // (T_end - T_begin) / 24; // интервал вывода данных в файл 
-
-	double sea_level = 10000;  // высота берега, котора€ входит в расчЄт (бќльшие высоты программа игнорирует и не считает)
+	int Nx = 10; // 
+	int Ny = 10; // 
 
 	// выделение пам€ти дл€ массивов данных
 	double* B = new double[Nx*Ny](); // дно
@@ -100,13 +79,44 @@ int main() {
 	double* PhiX = new double[Nx*Ny]();// !!! сила ветра по x
 	double* PhiY = new double[Nx*Ny]();// !!! сила ветра по y
 
-	//int sea_points = 0;  //! что это? 
-	//int level_points = 0;  //! что это? 
-	//double sea_level = 1000;  // высота берега, котора€ входит в расчЄт 
+	/* === TECHNICAL PARAMETERS === */
+
+	// folder name in \Data looks like: Test_namePostscript
+	string Test_name; // Test name
+	string Postscript; // short test description
+
+	// параметры отрисовки
+	int Visualization_to_techplot_flag = 0; // вывод результатов дл€ визуализации в Tecplot
+	double t_step = (T_end - T_begin) / 20; // интервал вывода данных в файл 
+
+	double sea_level = 10000;  // высота берега, котора€ входит в расчЄт (бќльшие высоты программа игнорирует и не считает)
+	
+	/* ### SYMMETRY TEST ### */
+
+	Test_name = "TEST_SYMMETRY"; // Test name
+	Postscript = "_" + to_str((T_end - T_begin) / 3600) + "h_NSC_01_" + to_string(Nx) + "x" + to_string(Ny); // short test description
+
+	for (int i = 0; i < Nx; i++)
+	{
+		//double x = x0 + i*(xN - x0) / (Nx - 1);
+		for (int j = 0; j < Ny; j++)
+		{
+			int k = i*Ny + j;
+			H[k] = 1.0;
+			C[k] = 0.1;
+			//double y = y0 + j*(yN - y0) / (Ny - 1);
+			if ((i == 4 || i == 5) && (j == 4 || j == 5))
+			{
+				H[k] = 2.0;
+				C[k] = 1.0;
+			}				
+		}
+	}
+	//checkSymmetry(H, Nx, Ny, "H0");
 	
 	/* === INITIALIZATION === */
-	
-	FILE *F = fopen("bathymetry/LakeValunden_247x234_pritok.dat", "r");
+	/*
+	FILE *F = fopen("bathymetry/LakeValunden_247x234.dat", "r");
 	if (F == NULL)
 		cout << "Can't open bathymetry file!" << endl;
 
@@ -127,14 +137,14 @@ int main() {
 			C[k] = 0.0;
 			if (B[k] < height)
 				H[k] = height - B[k];
-			/*
-			if (H[k] < 2.0 && H[k] > eps)
-			xU[k] = 1.0;*/
+			
+			//if (H[k] < 2.0 && H[k] > eps)
+			//xU[k] = 1.0;
 		}
 	}
 
-	fclose(F);
-	
+	fclose(F);*/
+	parallelOpenMP = true;
 	Raschet *R1 = new Raschet(Test_name,
 		Postscript, 
 		x0,
@@ -175,6 +185,43 @@ int main() {
 	
 
 	R1->Exec_Raschet(); // выполнение расчЄта
+
+	checkSymmetry(R1->H, Nx, Ny, "H");
+	checkSymmetry(R1->xU, Nx, Ny, "xU");
+	checkSymmetry(R1->yU, Nx, Ny, "yU");
+	checkSymmetry(R1->C, Nx, Ny, "C");
+
+	/*Raschet* R2(R1);
+	
+	parallelOpenMP = false;
+	R2->Exec_Raschet();
+
+	if (checkEquality(R1->H, R2->H, Nx, Ny))
+		cout << "OpenMP for H is good!" << endl;
+	else
+		cout << "OpenMP for H has errors!" << endl;
+
+	if (checkEquality(R1->xU, R2->xU, Nx, Ny))
+		cout << "OpenMP for xU is good!" << endl;
+	else
+		cout << "OpenMP for xU has errors!" << endl;
+
+	if (checkEquality(R1->yU, R2->yU, Nx, Ny))
+		cout << "OpenMP for yU is good!" << endl;
+	else
+		cout << "OpenMP for yU has errors!" << endl;
+
+	if (checkEquality(R1->C, R2->C, Nx, Ny))
+		cout << "OpenMP for C is good!" << endl;
+	else
+		cout << "OpenMP for C has errors!" << endl;
+
+	checkSymmetry(R2->H, Nx, Ny, "H");
+	checkSymmetry(R2->xU, Nx, Ny, "xU");
+	checkSymmetry(R2->yU, Nx, Ny, "yU");
+	checkSymmetry(R2->C, Nx, Ny, "C");
+	*/
+	system("pause");
 	//R1->Visualization_to_techplot();
 
 	// очистка выделенной пам€ти

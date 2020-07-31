@@ -28,6 +28,7 @@ using namespace std;
 #include "Constants.h"
 #include "technical.h"
 #include "Raschet.h"
+#include <omp.h>
 
 //#include <stdio.h>
 //#include <stdlib.h>
@@ -84,104 +85,7 @@ void Raschet::Prepare_Folder(string folder_path, bool ignore_warning)
 		}
 	}
 }
-/*
-// функция сохранения текущих данных
-void Raschet::Save_Data(double Time_of_work) {
-	string save_path = path + "/" + to_string((int)T_begin) + "-" + to_string((int)T_end); // путь папки сохраненных данных
 
-	Prepare_Folder(save_path);
-
-	string name_h = save_path + "/H.dat";
-	string name_xU = save_path + "/xU.dat";
-	string name_yU = save_path + "/yU.dat";
-	string name_C = save_path + "/C.dat";
-
-	FILE *fH = fopen(name_h.c_str(), "w");
-	FILE *fxU = fopen(name_xU.c_str(), "w");
-	FILE *fyU = fopen(name_yU.c_str(), "w");
-	FILE *fC;
-
-	if (TransportProblemFlag)
-	{
-		fC = fopen(name_C.c_str(), "w");
-	}
-
-	for (int i = 0; i<Nx; i++)
-	{
-		for (int j = 0; j<Ny; j++)
-		{
-			int k = i*Ny + j;
-			fprintf(fH, "%lf ", H[k]);
-			fprintf(fxU, "%lf ", xU[k]);
-			fprintf(fyU, "%lf ", yU[k]);
-			if (TransportProblemFlag)
-			{
-				fprintf(fC, "%lf ", C[k]);
-			}
-		}
-	}
-
-	fclose(fH);
-	fclose(fxU);
-	fclose(fyU);
-	if (TransportProblemFlag)
-	{
-		fclose(fC);
-	}
-
-	//write_extra_inf_to_file(Time_of_work);
-}
-
-// функция загрузки величин из файла
-void Raschet::Read_Data_from_file(string path_name) {
-
-	string load_path = "Data/" + path_name;
-
-	string name_h = load_path + "/H.dat";
-	string name_xU = load_path + "/xU.dat";
-	string name_yU = load_path + "/yU.dat";
-	string name_C = load_path + "/C.dat";
-
-	FILE *fH = fopen(name_h.c_str(), "r");
-	FILE *fxU = fopen(name_xU.c_str(), "r");
-	FILE *fyU = fopen(name_yU.c_str(), "r");
-	FILE *fC;
-
-	if (TransportProblemFlag)
-	{
-		fC = fopen(name_C.c_str(), "r");
-	}
-
-	if (fH && fxU && fyU)
-	{
-		for (int i = 0; i<Nx; i++)
-		{
-			for (int j = 0; j<Ny; j++)
-			{
-				int k = i*Ny + j;
-				fscanf(fH, "%lf", &H[k]);
-				fscanf(fxU, "%lf", &xU[k]);
-				fscanf(fyU, "%lf", &yU[k]);
-				if (TransportProblemFlag)
-				{
-					fscanf(fC, "%lf ", &C[k]);
-				}
-			}
-		}
-	}
-	else {
-		cout << "FILE " << path_name << " is not found!" << endl;
-	}
-
-	fclose(fH);
-	fclose(fxU);
-	fclose(fyU);
-	if (TransportProblemFlag)
-	{
-		fclose(fC);
-	}
-};
-*/
 // 
 void Raschet::Print_info_about_point(string name, int index) {
 	int  i = int(index / Ny);
@@ -307,10 +211,16 @@ void Raschet::write_extra_inf(ostream &out, double Time_of_work /*, double tt*/)
 	if (TransportProblemFlag) out << GetConditionName(CONCENTRATION, border[CONCENTRATION][LB_CORNER], border_C[CONCENTRATION][LB_CORNER]) << GetConditionName(CONCENTRATION, border[CONCENTRATION][BOTTOM], border_C[CONCENTRATION][BOTTOM]) << GetConditionName(CONCENTRATION, border[CONCENTRATION][RB_CORNER], border_C[CONCENTRATION][RB_CORNER]) << endl;
 
 	out << endl << "======== TECHNICAL ========" << endl;
-	if (OMP_THREADS_NUMBER == 1)
+	out << "massFluxCorrection flag = " << massFluxCorrection << endl;
+	int thrnum = 0;
+	#pragma omp parallel
+	{
+		thrnum = omp_get_num_threads();
+	}
+	if (thrnum == 1)
 		out << "OpenMP is off. " << endl;
 	else
-		out << "OpenMP is on. Program uses " << OMP_THREADS_NUMBER << " threads." << endl;
+		out << "OpenMP is on. Program uses " << thrnum << " threads." << endl;
 	if (Time_of_work > 0.0)
 	    out << "Time of work = " << Time_of_work << " seconds;" << endl;
 	out << "include forcing to regularization: F_reg = " << F_reg << "; Phi_reg = " << Phi_reg << endl;
@@ -413,4 +323,83 @@ void pause()
 {
 	cout << "Pause. Press Enter to continue." << endl;
 	cin.get();
+}
+
+void checkSymmetry(double* A, int Nx, int Ny, string name)
+{
+	// horizontal symmetry
+	bool hSym = true;
+	bool ahSym = true;
+	bool vSym = true;
+	bool avSym = true;
+
+	cout << " == Array \"" << name << "\": ==" << endl;
+	cout.precision(10);
+
+	double difZero = 0;// 1e-16;
+
+	for (int j = 0; j < Ny; j++)
+	{
+		for (int i = 0; i < Nx; i++)
+		{		
+			if (i <= Nx / 2)
+			{
+				hSym = hSym && (fabs(A[i*Ny + j] - A[(Nx - i - 1)*Ny + j]) <= difZero); //(A[i*Ny + j] == A[(Nx - i - 1)*Ny + j]);
+				ahSym = ahSym && (fabs(A[i*Ny + j] + A[(Nx - i - 1)*Ny + j]) <= difZero); //(A[i*Ny + j] == - A[(Nx - i - 1)*Ny + j]);
+				if (!(hSym || ahSym))
+				{
+					cout << "h";
+					//DEBUG
+					//cout << fabs(A[i*Ny + j] - A[(Nx - i - 1)*Ny + j]) << " " << fabs(A[i*Ny + j] + A[(Nx - i - 1)*Ny + j]) << endl;
+					//system("pause");
+				}
+					
+			}
+				
+			if (j <= Ny / 2)
+			{
+				vSym = vSym && (fabs(A[i*Ny + j] - A[i*Ny + Ny - j - 1]) <= difZero); //(A[i*Ny + j] == A[i*Ny + Ny - j - 1]);
+				avSym = avSym && (fabs(A[i*Ny + j] + A[i*Ny + Ny - j - 1]) <= difZero); //(A[i*Ny + j] == - A[i*Ny + Ny - j - 1]);
+				if (!(vSym || avSym))
+				{
+					cout << "v";
+					//DEBUG
+					//cout << fabs(A[i*Ny + j] - A[i*Ny + Ny - j - 1]) << " " << fabs(A[i*Ny + j] + A[i*Ny + Ny - j - 1]) << endl;
+					//system("pause");
+				}
+					
+			}
+			cout << A[i*Ny + j] << " ";
+		}
+		cout << endl;
+	}
+
+	cout << "== ==" << endl;
+
+	if (hSym)
+		cout << "Array \"" << name << "\" is symmetrical horizontally: >-<" << endl;
+	else if (ahSym)
+		cout << "Array \"" << name << "\" is symmetrical horizontally up to a sign: +>-<-" << endl;
+	else
+		cout << "Array \"" << name << "\" is NOT symmetrical horizontally!" << endl;
+	if (vSym)
+		cout << "Array \"" << name << "\" is symmetrical vertically: >|< " << endl;
+	else if (avSym)
+		cout << "Array \"" << name << "\" is symmetrical vertically up to a sign: +>|<- " << endl;
+	else
+		cout << "Array \"" << name << "\" is NOT symmetrical vertically!" << endl;
+}
+bool checkEquality(double* A1, double* A2, int Nx, int Ny)
+{
+	bool eq = true;
+	for (int i = 0; i < Nx; i++)
+	{
+		for (int j = 0; j < Ny; j++)
+		{
+			eq = eq && (A1[i*Ny + j] == A2[i*Ny + j]);
+			if (!eq)
+				cout << "Equality error in (" << i << ", " << j << ");" << endl;
+		}
+	}
+	return eq;
 }
