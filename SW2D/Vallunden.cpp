@@ -21,12 +21,13 @@ using namespace std;
 double Bmin;
 
 int main() {	
+	initConfiguration("VallundenConfig.txt");
 
 	/* === PROBLEM STATEMENT === */
  
 	// T_begin, T_end - start and end time respectively, in seconds х 
-	double T_begin = 0;
-	double T_end = T_begin + 24 * 3600;
+	double T_begin = 0;// 24 * 3600;
+	double T_end = T_begin + 48 * 3600;
 
 	// start date and time of current problem (UTC)
 
@@ -71,18 +72,21 @@ int main() {
 	}
 
 	int threadsNumber;
+	//omp_set_num_threads(4);
 	#pragma omp parallel
 	{
 		threadsNumber = omp_get_num_threads();
 	}
-
+	//system("pause");
+	
 	/* === TECHNICAL PARAMETERS === */
 
 	// folder name in \Data looks like: Test_namePostscript
 	string Test_name = "Vallunden_Pritok"; // Test name
 	string Postscript = "_" + to_str((T_end - T_begin) / 3600) + "h_NSC_01_" + to_string(Nx) + "x" + to_string(Ny); // short test description
+	Postscript = "_24h_NSC_01_247x234";
 
-																			  // параметры отрисовки
+	// параметры отрисовки
 	int Visualization_to_techplot_flag = 1; // вывод результатов для визуализации в Tecplot
 	double t_step = 3600; // (T_end - T_begin) / 24; // интервал вывода данных в файл 
 
@@ -170,10 +174,10 @@ int main() {
 	);
 	R1->Initialize_Transport_Problem(C, D);
 	R1->SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
-
+	
 	//R1->Read_Data_from_file("21600-64800");
 	
-
+	R1->Restart_from_time_moment(151200.117281);
 	R1->Exec_Raschet(); // выполнение расчёта
 	//R1->Visualization_to_techplot();
 

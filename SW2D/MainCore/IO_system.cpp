@@ -26,6 +26,13 @@ void Raschet::outputInputs()
 			Visualization_to_techplot_result();
 		}
 	}
+	else
+	{
+		cout << "Restarting from time moment " << T_begin << "; " << GetTimeStamp();
+		std::ofstream fLog(path + "/timeLog.dat", std::ios::out | std::ios::app);
+		fLog << "Restarting from time moment " << T_begin << "; " << GetTimeStamp();
+		fLog.close();
+	}
 	t_graph_export = t_graph_export + t_step;
 }
 
@@ -160,7 +167,7 @@ void Raschet::Save_Data() {
 // Reastart: reading all variables from time moment "Time_moment"
 void Raschet::Restart_from_time_moment(double Time_moment) {
 
-	string load_path = path + "/Data/" + to_str(Time_moment);
+	string load_path = path + "/" + to_str(Time_moment);
 
 	cout << "Restarting from time moment " << Time_moment << endl;
 

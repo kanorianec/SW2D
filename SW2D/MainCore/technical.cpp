@@ -301,17 +301,27 @@ std::string GetConditionName(TypeOfVariable VType, int border, double border_C)
 	return Name;
 }
 
-std::string to_str(double num)
+std::string to_str(double num, int p)
 {
-	std::string res = to_string(num);
-
-	while (res.back() == '0' && res != "0")
+	if (p < 0)
 	{
-		res.pop_back();
+		std::string res = to_string(num);
+
+		while (res.back() == '0' && res != "0")
+		{
+			res.pop_back();
+		}
+		if (res.back() == '.')
+			res.pop_back();
+		return res;
 	}
-	if (res.back() == '.')
-		res.pop_back();
-	return res;
+	else
+	{
+		std::ostringstream out;
+		out.precision(p);
+		out << std::fixed << num;
+		return out.str();
+	}
 }
 
 std::string to_str(int num)

@@ -80,6 +80,10 @@ void Raschet::Visualization_to_techplot_input()
 
 void Raschet::Visualization_to_techplot_result()
 {
+	double timeStr;
+	if (T_begin > 3600.0)
+		timeStr = T_begin / 3600.0;
+
 	if (current_file_sizeMB > outputMaxSizeMB)
 	{
 		output_per_file_counter++;
@@ -88,7 +92,7 @@ void Raschet::Visualization_to_techplot_result()
 	}
 	if (first_visualization) // a condition for outputting first part of output data, it is necessary to write a header once
 	{
-		string RaschetFileName = path + "/Result_d" + to_string(output_per_file_counter) + ".dat";
+		string RaschetFileName = path + "/Result_t" + to_str(timeStr, 2) + "(" + to_string(output_per_file_counter) + ").dat"; //to_string(output_per_file_counter)
 		FILE *F = fopen(RaschetFileName.c_str(), "w");
 		
 		//cout << "Visualization to techplot time moment = " << t_graph_export << "; time =  "<<Time_elapsed << "; " << RaschetFileName << "; " << GetTimeStamp();
@@ -125,7 +129,7 @@ void Raschet::Visualization_to_techplot_result()
 	}
 	else
 	{
-		string RaschetFileName = path + "/Result_d" + to_string(output_per_file_counter) + ".dat";
+		string RaschetFileName = path + "/Result_t" + to_str(timeStr, 2) + "(" + to_string(output_per_file_counter) + ").dat"; //to_string(output_per_file_counter)
 
 		FILE *F = fopen(RaschetFileName.c_str(), "ab");
 

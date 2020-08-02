@@ -65,7 +65,7 @@ void initConfiguration(std::string configFileName)
 				auto delimiterPos = line.find("=");
 				auto name = line.substr(0, delimiterPos);
 				auto value = line.substr(delimiterPos + 1);
-				std::cout << name << ":" << std::stod(value) << std::endl;
+				std::cout << name << " = " << std::stod(value) << std::endl;
 				double dvalue = std::stod(value);
 				if (name == "F_reg")
 				{
