@@ -27,7 +27,7 @@ int main() {
  
 	// T_begin, T_end - start and end time respectively, in seconds х 
 	double T_begin = 0;// 24 * 3600;
-	double T_end = T_begin + 48 * 3600;
+	double T_end = T_begin + 4*24 * 3600;
 
 	// start date and time of current problem (UTC)
 
@@ -82,12 +82,12 @@ int main() {
 	/* === TECHNICAL PARAMETERS === */
 
 	// folder name in \Data looks like: Test_namePostscript
-	string Test_name = "Vallunden_Pritok"; // Test name
+	string Test_name = "Vallunden_Pritok_U"; // Test name
 	string Postscript = "_" + to_str((T_end - T_begin) / 3600) + "h_NSC_01_" + to_string(Nx) + "x" + to_string(Ny); // short test description
 	Postscript = "_24h_NSC_01_247x234";
 
 	// параметры отрисовки
-	int Visualization_to_techplot_flag = 1; // вывод результатов дл€ визуализации в Tecplot
+	int Visualization_to_techplot_flag = 0; // вывод результатов дл€ визуализации в Tecplot
 	double t_step = 3600; // (T_end - T_begin) / 24; // интервал вывода данных в файл 
 
 	double sea_level = 10000;  // высота берега, котора€ входит в расчЄт (бќльшие высоты программа игнорирует и не считает)
@@ -109,7 +109,7 @@ int main() {
 	//double sea_level = 1000;  // высота берега, котора€ входит в расчЄт 
 	
 	/* === INITIALIZATION === */
-	
+	/*
 	FILE *F = fopen("bathymetry/LakeValunden_247x234_pritok.dat", "r");
 	if (F == NULL)
 		cout << "Can't open bathymetry file!" << endl;
@@ -131,13 +131,22 @@ int main() {
 			C[k] = 0.0;
 			if (B[k] < height)
 				H[k] = height - B[k];
-			/*
-			if (H[k] < 2.0 && H[k] > eps)
-			xU[k] = 1.0;*/
+			
+			//if (H[k] < 2.0 && H[k] > eps)
+			//xU[k] = 1.0;
 		}
 	}
 
-	fclose(F);
+	fclose(F);*/
+
+	string name_B = "bathymetry/B.dat";
+
+	std::ifstream fB(name_B, std::ios::binary);
+
+	fB.read(reinterpret_cast<char*> (B), sizeof(double) * Nx * Ny);
+
+	fB.close();
+
 	
 	Raschet *R1 = new Raschet(Test_name,
 		Postscript, 
@@ -177,7 +186,7 @@ int main() {
 	
 	//R1->Read_Data_from_file("21600-64800");
 	
-	R1->Restart_from_time_moment(151200.117281);
+	R1->Restart_from_time_moment(0);
 	R1->Exec_Raschet(); // выполнение расчЄта
 	//R1->Visualization_to_techplot();
 

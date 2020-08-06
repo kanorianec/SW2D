@@ -567,7 +567,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 
 				if (type == TOP)
 				{
-					yUt[n] = (-2.0) * sin(pi * (Time_elapsed + dT) / (3600.0 * 6.0)) - yUt[k];
+					yUt[n] = (2.0) * sin(pi * (Time_elapsed + dT) / (3600.0 * 6.0)) * (1.0 - exp(-(Time_elapsed + dT) / (6*3600.0) )) - yUt[k];
 					Ct[n] = 2.0 * (1.0 - exp(-(Time_elapsed + dT) / 300.0)) - Ct[k];
 				}
 				
