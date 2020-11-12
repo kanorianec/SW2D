@@ -28,7 +28,7 @@ int main() {
  
 	// T_begin, T_end - start and end time respectively, in seconds х 
 	double T_begin = 0;
-	double T_end = 0.03;
+	double T_end = 10;// 0.03;
 
 	// start date and time of current problem (UTC)
 
@@ -112,6 +112,14 @@ int main() {
 			}				
 		}
 	}
+	
+	B[2 * Ny + 3] = 1;
+	B[2 * Ny + 6] = 1;
+	B[7 * Ny + 3] = 1;
+	B[7 * Ny + 6] = 1;
+	printArray(B, Nx, Ny, "B");
+	printArray(B, Nx, Ny, "H");
+	pause();
 	//checkSymmetry(H, Nx, Ny, "H0");
 	
 	/* === INITIALIZATION === */
@@ -191,7 +199,9 @@ int main() {
 	checkSymmetry(R1->yU, Nx, Ny, "yU");
 	checkSymmetry(R1->C, Nx, Ny, "C");
 
-	/*Raschet* R2(R1);
+	/*
+	Raschet* R2(R1);
+	R2->Time_elapsed = 0;
 	
 	parallelOpenMP = false;
 	R2->Exec_Raschet();
@@ -221,6 +231,77 @@ int main() {
 	checkSymmetry(R2->yU, Nx, Ny, "yU");
 	checkSymmetry(R2->C, Nx, Ny, "C");
 	*/
+	
+	Raschet* R3(R1);
+	R3->Time_elapsed = 0;
+
+	R3->SetOpenBoundaryConditions(LEFT, RIGHT, TOP, BOTTOM);
+	for (int i = 0; i < Nx; i++)
+	{
+		R3->H[i*Ny + 1] = 3.0;
+		R3->H[i*Ny + Ny - 2] = 3.0;
+	}
+	for (int j = 0; j < Ny; j++)
+	{
+		R3->H[1*Ny + j] = 3.0;
+		R3->H[(Nx - 2)*Ny + j] = 3.0;
+	}
+	
+	R3->B[0 * Ny + (int)Ny / 2] = 4.0;
+	R3->B[(Nx - 1) * Ny + (int)Ny / 2] = 4.0;
+	R3->B[((int)Nx / 2) * Ny + 0] = 4.0;
+	R3->B[((int)Nx / 2) * Ny + Ny - 1] = 4.0;
+	//R3->B[(5) * Ny + 4] = 4.0;
+	
+	for (int i = 0; i < Nx; i++)
+		for (int j = 0; j < Ny; j++)
+		{
+			if (R3->H[i*Ny + j] < R3->B[i*Ny + j])
+				R3->H[i*Ny + j] = 0.0;
+		}
+	printArray(R3->H, Nx, Ny, "H");
+	printArray(R3->B, Nx, Ny, "B");
+	//R3->Numerical_scheme_time_step_parallel();
+	R3->Exec_Raschet(); // выполнение расчёта
+	int leftOpen = 0;
+	int rightOpen = 0; 
+	int topOpen = 0;
+	int botOpen = 0;	
+
+	for (int i = 0; i < Nx; i++)
+	{
+		int k = i*Ny + 0;
+		int k1 = i*Ny + 1;
+		botOpen += (R3->H[k] != R3->H[k1]) + (R3->xU[k] != R3->xU[k1]) + (R3->yU[k] != R3->yU[k1]);
+		k = i*Ny + Ny - 1;
+		k1 = i*Ny + Ny - 2;
+		topOpen += (R3->H[k] != R3->H[k1]) + (R3->xU[k] != R3->xU[k1]) + (R3->yU[k] != R3->yU[k1]);
+	}
+	for (int j = 0; j < Ny; j++)
+	{
+		int k = 0 * Ny + j;
+		int k1 = 1 * Ny + j;
+		leftOpen += (R3->H[k] != R3->H[k1]) + (R3->xU[k] != R3->xU[k1]) + (R3->yU[k] != R3->yU[k1]);
+		k = (Nx - 1)*Ny + j;
+		k1 = (Nx - 2)*Ny + j;
+		rightOpen += (R3->H[k] != R3->H[k1]) + (R3->xU[k] != R3->xU[k1]) + (R3->yU[k] != R3->yU[k1]);
+	}
+
+	cout << "botOpen = " << botOpen << endl;
+	cout << "topOpen = " << topOpen << endl;
+	cout << "leftOpen = " << leftOpen << endl;
+	cout << "rightOpen = " << rightOpen << endl;
+
+	//printArray(R3->H, Nx, Ny, "H");
+	//printArray(R3->xU, Nx, Ny, "xU");
+	//printArray(R3->yU, Nx, Ny, "yU");
+	//printArray(R3->epsilon, Nx, Ny, "epsilon");
+	//printArray(R3->xJ, Nx, Ny, "xJ");
+	//printArray(R3->yJ, Nx, Ny, "yJ");
+	//printFlux(R3->xJ, R3->yJ, Nx, Ny, "J");
+	//printFlux(R3->dryFacesX, R3->dryFacesY, Nx, Ny, "dryFaces");
+	//printArray(R3->tau, Nx, Ny, "tau");
+
 	system("pause");
 	//R1->Visualization_to_techplot();
 

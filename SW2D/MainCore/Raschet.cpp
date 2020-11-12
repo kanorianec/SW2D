@@ -256,6 +256,30 @@ void Raschet::Perform_Calculations()
 	while (T_end>Time_elapsed && !Stop_Raschet_Flag)
 	{
 		Numerical_scheme_time_step_parallel();
+		//int Sym = 1;
+		//Sym *= (int)checkSymmetry(H, Nx, Ny, "H");
+		//Sym *= (int)checkSymmetry(xU, Nx, Ny, "xU");
+		//Sym *= (int)checkSymmetry(yU, Nx, Ny, "yU");
+		////printFlux(xJ, yJ, Nx, Ny, "J");
+		////printFlux(dryFacesX, dryFacesY, Nx, Ny, "dryFaces");
+		//if (!Sym)
+		//{
+		//	printArray(H, Nx, Ny, "H");
+		//	printArray(xU, Nx, Ny, "xU");
+		//	printArray(yU, Nx, Ny, "yU");
+		//	//printFlux(xJ, yJ, Nx, Ny, "J");
+		//	//printFlux(dryFacesX, dryFacesY, Nx, Ny, "dryFaces");
+		//	printArray(epsilon, Nx, Ny, "epsilon");
+		//	pause();
+		//}
+			
+		//printArray(H, Nx, Ny, "H");
+		//printArray(xU, Nx, Ny, "xU");
+		//printArray(yU, Nx, Ny, "yU");
+		//printFlux(xJ, yJ, Nx, Ny, "J");
+		//printFlux(dryFacesX, dryFacesY, Nx, Ny, "dryFaces");
+		//printArray(epsilon, Nx, Ny, "epsilon");
+		//pause();
 		Time_elapsed = Time_elapsed + dT;
 
 		if (est_time)

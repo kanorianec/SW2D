@@ -25,6 +25,10 @@ public:
 	double* yJ;
 	//double* dT_;
 
+	// flags for dry faces 
+	int* dryFacesX; // along x axis
+	int* dryFacesY; // along y axis
+
 	// Additional variables
 	double* C; // concentration of pollutant in transport equation
 
