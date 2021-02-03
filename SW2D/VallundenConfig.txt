@@ -17,4 +17,4 @@ ignore_warning = 0
 # type of transport equation regularization (double): alpha_c = 1 - normal, alpha_c = 0 - simplified, also could be between (0,1).
 alpha_c = 1.0
 # Coefficient of viscosity in the transport equation (double), basic = 0.0, for special cases = 1.0/gc = 0.1
-NSC = 0
+NSC = 0.1

@@ -53,19 +53,19 @@ int main() {
 	double lonN = 0;// 36.0002;
 
 	// физические параметры 
-	double mu = 0.0; // bottom friction coffitient
+	double mu = 0.002; // bottom friction coffitient
 	int fc = 0; // use Coriolis force (1) or not (0) 
 
 	/* === ПОДБИРАЕМЫЕ КОЭФФИЦИЕНТЫ ЧИСЛЕННОГО РЕШЕНИЯ === */
 
 	double beta = 0.1; // CFL number (0; 1)
 	double alpha = 0.5; //
-	double eps = 1e-3; //
+	double eps = 1e-4; //
 
 	double NS = 1.0; // коээфициент при тензоре Навье-Стокса
 
-	int Nx = 100; // 
-	int Ny = 100; //
+	int Nx = 201; // 
+	int Ny = 201; //
 
 	if (!parallelOpenMP)
 	{
@@ -213,6 +213,8 @@ int main() {
 
 	//R1->Read_Data_from_file("21600-64800");
 
+	//checkSymmetry(H, Nx, Ny, "H");
+	//printArray(H, Nx, Ny, "H");
 
 	R->Exec_Raschet(); // выполнение расчёта
 
