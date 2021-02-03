@@ -142,6 +142,17 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			//yJ //yJ_05B = H_05B*yU_05B - yW_05B; //**APPROVED**//
 			yJ[k] = (dT / hy) * (H_05T*yU_05T - yW_05T);
 
+			if (j == 1)
+			{
+				cout.precision(15);
+				//cout << i << " " << H_05R*xU_05R - xW_05R << " " << H_05R*xU_05R  << " " << xW_05R << endl;
+				//cout << i << " " << (H_1R * xU_1R * xU_1R - H_c * xU_c * xU_c) / hx << endl;
+				//cout << i << " " << H_05R << " " << H_05L << " " << (H_05R*H_05R - H_05L*H_05L)/hx << endl;
+				//cout << i << " " << tau[k] << " " << tau_05R << " " << H[k] << " " << H_05R << endl;
+				//cout << i << " " << Ht[k] << " " << xUt[k] << endl;
+				//cout << i << " " << H_05R << " " << xU_05R << " " << xJ_05R << endl;
+			}
+
 			double M = (xJ[k] - xJ[k_L]) + (yJ[k] - yJ[k_B]);
 			
 			if (massFluxCorrection)
@@ -412,7 +423,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				xxPT_05L = xU_05L * xWS_05L + RS_05L + NS * 2 * gc * tau_05L * H_05L * H_05L * 0.5 * (xU_c - xU_1L) / hx; //**APPROVED**//
 
 				////yyPT
-				yyPT_05T = yU_05T * yWS_05T + RS_05T + NS * 2 * gc * tau_05T * H_05T * H_05T * 0.5 * (yU_1T - yU_c) / hy; //**APPROVED**//
+				yyPT_05T = yU_05T * yWS_05T + RS_05T + NS * 2 * gc *	tau_05T * H_05T * H_05T * 0.5 * (yU_1T - yU_c) / hy; //**APPROVED**//
 				yyPT_05B = yU_05B * yWS_05B + RS_05B + NS * 2 * gc * tau_05B * H_05B * H_05B * 0.5 * (yU_c - yU_1B) / hy; //**APPROVED**//
 
 				////yxPT
@@ -422,7 +433,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				////xyPT
 				xyPT_05R = xU_05R * yWS_05R + NS * gc * tau_05R * H_05R * H_05R * 0.5 * ((xU_05R05T - xU_05R05B) / hy + (yU_1R - yU_c) / hx); //**APPROVED**//
 				xyPT_05L = xU_05L * yWS_05L + NS * gc * tau_05L * H_05L * H_05L * 0.5 * ((xU_05L05T - xU_05L05B) / hy + (yU_c - yU_1L) / hx); //**APPROVED**//
-								
+						
 				////xUt	
 				//// Well balanced: H[k] _c 0.5*(H2y2+H2y1)
 				xUt[k] = (H_c * xU_c
@@ -452,6 +463,18 @@ void Raschet::Numerical_scheme_time_step_parallel()
 						+ (H_05T * yU_05T - H_05B * yU_05B) / hy
 						) * (ForceY_c - gc * (B_05T - B_05B) / hy)
 					) / Ht[k]; //**APPROVED**//
+
+				int  i = int(k / Ny);
+				int j = k % Ny;
+				if (j == 1)
+				{
+					cout.precision(15);
+					//cout << i << " " << xU_05R * H_05R * xU_05R  << " " << *(xU_1R - xU_c) / hx << endl;
+					//cout << i << " " << H_05R << " " << H_05L << " " << (H_05R*H_05R - H_05L*H_05L)/hx << endl;
+					//cout << i << " " << tau[k] << " " << tau_05R << " " << H[k] << " " << H_05R << endl;
+					//cout << i << " " << X[k] << " "  << Ht[k] << " " << xUt[k] << endl;
+					//cout << i << " " << H_05R << " " << xU_05R << " " << xJ_05R << endl;
+				}
 			}
 			else
 			{
@@ -550,27 +573,52 @@ void Raschet::Numerical_scheme_time_step_parallel()
 
 			if (Ht[k]  > eps && !epsilon[n])
 			{
-
-				if (border[VELOCITY_X][type] != FROM_FILE)
-					xUt[n] = border[VELOCITY_X][type] * xUt[k] + 2 * border_C[VELOCITY_X][type];
-				if (border[VELOCITY_Y][type] != FROM_FILE)
-					yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
-				if (border[HEIGHT][type] != FROM_FILE)
-					Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + boundaryForce + 2 * border_C[HEIGHT][type];
-
+				if (border[FLOW][type] == -1)
+				{
+					if (border[HEIGHT][type] != FROM_FILE)
+						Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + 2 * border_C[HEIGHT][type];
+					if (type == BOTTOM || type == TOP)
+					{
+						if (border[VELOCITY_X][type] != FROM_FILE)
+							xUt[n] = border[VELOCITY_X][type] * xUt[k] + 2 * border_C[VELOCITY_X][type];
+						if (border[VELOCITY_Y][type] != FROM_FILE)
+							yUt[n] = (border[FLOW][type] * Ht[k] * yUt[k] + 2 * border_C[FLOW][type]) / Ht[n];
+					}
+					if (type == LEFT || type == RIGHT)
+					{
+						if (border[VELOCITY_X][type] != FROM_FILE)
+							xUt[n] = (border[FLOW][type] * Ht[k] * xUt[k] + 2 * border_C[FLOW][type]) / Ht[n];
+						if (border[VELOCITY_Y][type] != FROM_FILE)
+							yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
+					}
+				}
+				else
+				{
+					if (border[VELOCITY_X][type] != FROM_FILE)
+						xUt[n] = border[VELOCITY_X][type] * xUt[k] + 2 * border_C[VELOCITY_X][type];
+					if (border[VELOCITY_Y][type] != FROM_FILE)
+						yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
+					if (border[HEIGHT][type] != FROM_FILE)
+						Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + 2 * border_C[HEIGHT][type];
+				}
+				if (TransportProblemFlag)
+				{
+					if (border[CONCENTRATION][type] != FROM_FILE)
+						Ct[n] = border[CONCENTRATION][type] * Ct[k] + 2 * border_C[CONCENTRATION][type];
+				}
 				if (TransportProblemFlag)
 				{
 					if (border[CONCENTRATION][type] != FROM_FILE)
 						Ct[n] = border[CONCENTRATION][type] * Ct[k] + 2 * border_C[CONCENTRATION][type];
 				}
 				// COSTIL! COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL! 
-
+				/*
 				if (type == TOP)
 				{
 					yUt[n] = (2.0) * sin(pi * (Time_elapsed + dT) / (3600.0 * 6.0)) * (1.0 - exp(-(Time_elapsed + dT) / (6*3600.0) )) - yUt[k];
 					Ct[n] = 2.0 * (1.0 - exp(-(Time_elapsed + dT) / 300.0)) - Ct[k];
 				}
-				
+				*/
 				// COSTIL! COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL! 
 			}
 			else
@@ -629,12 +677,35 @@ void Raschet::Numerical_scheme_time_step_parallel()
 
 				if (Ht[k]  > eps/* && !epsilon[k]*/)
 				{
-					if (border[VELOCITY_X][type] != FROM_FILE)
-						xUt[n] = border[VELOCITY_X][type] * xUt[k] + 2 * border_C[VELOCITY_X][type];
-					if (border[VELOCITY_Y][type] != FROM_FILE)
-						yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
-					if (border[HEIGHT][type] != FROM_FILE)
-						Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + 2 * border_C[HEIGHT][type];
+					if (border[FLOW][type] == -1)
+					{
+						cout << type << endl;
+						if (border[HEIGHT][type] != FROM_FILE)
+							Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + 2 * border_C[HEIGHT][type];
+						if (type == BOTTOM || type == TOP)
+						{
+							if (border[VELOCITY_X][type] != FROM_FILE)
+								xUt[n] = border[VELOCITY_X][type] * xUt[k] + 2 * border_C[VELOCITY_X][type];
+							if (border[VELOCITY_Y][type] != FROM_FILE)
+								yUt[n] = (border[FLOW][type] * Ht[k] * yUt[k] + 2 * border_C[FLOW][type]) / Ht[n];
+						}
+						if (type == LEFT || type == RIGHT)
+						{
+							if (border[VELOCITY_X][type] != FROM_FILE)
+								xUt[n] = (border[FLOW][type] * Ht[k] * xUt[k] + 2 * border_C[FLOW][type]) / Ht[n];
+							if (border[VELOCITY_Y][type] != FROM_FILE)
+								yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
+						}
+					}
+					else
+					{
+						if (border[VELOCITY_X][type] != FROM_FILE)
+							xUt[n] = border[VELOCITY_X][type] * xUt[k] + 2 * border_C[VELOCITY_X][type];
+						if (border[VELOCITY_Y][type] != FROM_FILE)
+							yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
+						if (border[HEIGHT][type] != FROM_FILE)
+							Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + 2 * border_C[HEIGHT][type];
+					}					
 					if (TransportProblemFlag)
 					{
 						if (border[CONCENTRATION][type] != FROM_FILE)
@@ -785,4 +856,6 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			Stop_Raschet_Flag = 1;
 		}
 	}//end of for (m=0; m<(Ny*Nx); m++)
+
+	//pause();
 }

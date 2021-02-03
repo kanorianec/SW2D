@@ -21,13 +21,14 @@ using namespace std;
 double Bmin;
 
 int main() {	
-	initConfiguration("VallundenConfig.txt");
+	//initConfiguration("testConfig.txt");
+	//system("pause");
 
 	/* === PROBLEM STATEMENT === */
  
 	// T_begin, T_end - start and end time respectively, in seconds х 
-	double T_begin = 0;// 24 * 3600;
-	double T_end = T_begin + 4*24 * 3600;
+	double T_begin = 0;
+	double T_end = 100;
 
 	// start date and time of current problem (UTC)
 
@@ -39,58 +40,32 @@ int main() {
 	int second = 0; // [0, 59] 
 
 	// boundary values of rectangle area
-	double x0 = 0;
-	double xN = 1000;
+	double x0 = 0.5;
+	double xN = 27.5;
 	double y0 = 0;
-	double yN = 1250;
+	double yN = 2;
 
 	double lon0 = 0.0;
 	double lonN = 0.0;
-	double lat0 = 77.866667;
-	double latN = 77.866667;
+	double lat0 = 0.0;// 77.866667;
+	double latN = 0.0;// 77.866667;
 
 	// physical parameters 
 	double mu = 0; // 0.0026; // bottom friction coefficient 
-	int fc = 1;    // use Coriolis force (1) or not (0)
+	int fc = 0;    // use Coriolis force (1) or not (0)
 
 	double D = 0.0; // diffusion
 
 	/* === COEFFICIENTS FOR NUMERICAL SOLUTION  === */
 
-	double beta = 0.2; // CFL number (0; 1)
-	double alpha = 0.3; // tuning parameter
+	double beta = 0.1; // CFL number (0; 1)
+	double alpha = 0.5; // tuning parameter
 	double eps = 0.01; // dry zone parameter
 
-	double NS = 1.0; // coefficient for the Navier-Stokes tensor
+	double NS = 0.0; // coefficient for the Navier-Stokes tensor
 
-	int Nx = 247; // 
-	int Ny = 234; // 
-
-	if (!parallelOpenMP)
-	{
-		omp_set_num_threads(1);
-	}
-
-	int threadsNumber;
-	//omp_set_num_threads(4);
-	#pragma omp parallel
-	{
-		threadsNumber = omp_get_num_threads();
-	}
-	//system("pause");
-	
-	/* === TECHNICAL PARAMETERS === */
-
-	// folder name in \Data looks like: Test_namePostscript
-	string Test_name = "Vallunden_Pritok2_U_EXP"; // Test name
-	string Postscript = "_" + to_str((T_end - T_begin) / 3600) + "h_NSC_01_" + to_string(Nx) + "x" + to_string(Ny); // short test description
-	Postscript = "_24h_NSC_01_247x234";
-
-	// параметры отрисовки
-	int Visualization_to_techplot_flag = 0; // вывод результатов дл€ визуализации в Tecplot
-	double t_step = 3600; // (T_end - T_begin) / 24; // интервал вывода данных в файл 
-
-	double sea_level = 10000;  // высота берега, котора€ входит в расчЄт (бќльшие высоты программа игнорирует и не считает)
+	int Nx = 28; // 
+	int Ny = 3; // 
 
 	// выделение пам€ти дл€ массивов данных
 	double* B = new double[Nx*Ny](); // дно
@@ -104,13 +79,58 @@ int main() {
 	double* PhiX = new double[Nx*Ny]();// !!! сила ветра по x
 	double* PhiY = new double[Nx*Ny]();// !!! сила ветра по y
 
-	//int sea_points = 0;  //! что это? 
-	//int level_points = 0;  //! что это? 
-	//double sea_level = 1000;  // высота берега, котора€ входит в расчЄт 
+	/* === TECHNICAL PARAMETERS === */
+
+	// folder name in \Data looks like: Test_namePostscript
+	string Test_name; // Test name
+	string Postscript; // short test description
+
+	// параметры отрисовки
+	int Visualization_to_techplot_flag = 0; // вывод результатов дл€ визуализации в Tecplot
+	double t_step = 2.0; // (T_end - T_begin) / 20; // интервал вывода данных в файл 
+
+	double sea_level = 10000;  // высота берега, котора€ входит в расчЄт (бќльшие высоты программа игнорирует и не считает)
+	
+	/* ### SYMMETRY TEST ### */
+
+	Test_name = "1D_criticFlow"; // Test name
+	Postscript = "_" + to_string(Nx) + "x" + to_string(Ny); // short test description
+
+	// damBreak
+	/*
+	for (int i = 0; i < Nx; i++)
+	{
+		double x = x0 + i*(xN - x0) / (Nx - 1);
+		for (int j = 0; j < Ny; j++)
+		{
+			int k = i*Ny + j;
+			H[k] = 0.1;
+			if (x <= 1000.0)
+			{
+				H[k] = 10.0;
+			}				
+		}
+	}
+	*/
+	for (int i = 0; i < Nx; i++)
+	{
+		double x = x0 + (i - 1)*(xN - x0) / (Nx - 1);
+		for (int j = 0; j < Ny; j++)
+		{
+			int k = i*Ny + j;
+			if (x > 8.0 && x < 12.0)
+			{
+				B[k] = 0.2 - 0.05*(x - 10.0)*(x - 10.0);
+			}
+			H[k] = 0.33 - B[k];
+		}
+		cout << i << " " << x << " " << B[i*Ny + 1] << " " << H[i*Ny + 1] << endl;
+	}
+
 	
 	/* === INITIALIZATION === */
-	
-	FILE *F = fopen("bathymetry/LakeValunden_247x234_pritok2.dat", "r");
+	/*
+	FILE *F = fopen("bathymetry/LakeValunden_247x234.dat", "r");
 	if (F == NULL)
 		cout << "Can't open bathymetry file!" << endl;
 
@@ -137,17 +157,7 @@ int main() {
 		}
 	}
 
-	fclose(F);
-	/*
-	string name_B = "bathymetry/B.dat";
-
-	std::ifstream fB(name_B, std::ios::binary);
-
-	fB.read(reinterpret_cast<char*> (B), sizeof(double) * Nx * Ny);
-
-	fB.close();
-	*/
-	
+	fclose(F);*/
 	Raschet *R1 = new Raschet(Test_name,
 		Postscript, 
 		x0,
@@ -181,14 +191,14 @@ int main() {
 		Visualization_to_techplot_flag,
 		sea_level
 	);
-	R1->Initialize_Transport_Problem(C, D);
+	//R1->Initialize_Transport_Problem(C, D);
+	R1->SetFixedBoundaryConditions(FLOW, LEFT, 0.18);
+	R1->SetFixedBoundaryConditions(HEIGHT, RIGHT, 0.33);
 	R1->SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
-	
 	//R1->Read_Data_from_file("21600-64800");
 	
-	//R1->Restart_from_time_moment(0);
+
 	R1->Exec_Raschet(); // выполнение расчЄта
-	//R1->Visualization_to_techplot();
 
 	// очистка выделенной пам€ти
 	delete[] B;

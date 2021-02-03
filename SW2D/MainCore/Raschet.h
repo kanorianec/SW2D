@@ -67,8 +67,8 @@ public:
 	bool TransportProblemFlag;
 
 	// type of border conditions, coeff: 1 (free), -1 (wall or constant), 0 (from_file); coef_c - constant value, only with
-	int border[4][8];
-	double border_C[4][8];
+	int border[5][8];
+	double border_C[5][8];
 
 	// boundary conditions from file
 	bool BoundaryConditionsFromFile;
@@ -212,6 +212,9 @@ public:
 	void Save_Data(); // Save all variable at time moment "Time_elapsed"
 	void Restart_from_time_moment(double Time_moment); // Reastart: reading all variables from time moment "Time_moment"
 	void Save_Grid(); // function for saving grid data: B, X, Y, ...
+	void Save_DataTXT(); // Save all variable at time moment "Time_elapsed"
+	void Save_GridTXT(); // function for saving grid data: B, X, Y, ...
+	void Array2FileText(std::ofstream& File, double* A, int Nx, int Ny);
 
 	void Print_info_about_point(std::string name, int index); // вывод информации о расчетной точке
 	void Write_point_to_file(int index, double X_cord, double Y_Cord, std::string file_name); // вывод информации о точке в файл, ЛУЧШЕ ОПТИМИЗИРОВАТЬ: ВЫНЕСТИ УСЛОВИЕ В БЛОК ПРОГРАММЫ

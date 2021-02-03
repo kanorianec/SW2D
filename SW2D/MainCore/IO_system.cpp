@@ -59,6 +59,8 @@ void Raschet::outputResults()
 
 	if (binaryOutputFlag)
 		Save_Data();
+	if (TXToutputFlag)
+		Save_DataTXT();
 
 	if (Visualization_to_techplot_flag)
 		Visualization_to_techplot_result();
@@ -78,6 +80,8 @@ void Raschet::Save_Grid() {
 	
 	string name_B = save_path + "/B.dat";
 	string name_t = save_path + "/t.dat";
+
+	
 
 	std::ofstream fX(name_X, std::ios::out | std::ios::binary);
 	std::ofstream fY(name_Y, std::ios::out | std::ios::binary);
@@ -162,6 +166,47 @@ void Raschet::Save_Data() {
 	}
 }
 
+void Raschet::Save_DataTXT() {
+	string save_path = path + "/" + to_str(Time_elapsed); // full path name to the preparing folder
+
+	Prepare_Folder(save_path);
+
+	string name_h = save_path + "/Htxt.dat";
+	string name_xU = save_path + "/xUtxt.dat";
+	string name_yU = save_path + "/yUtxt.dat";
+	string name_C = save_path + "/Ctxt.dat";
+
+	string name_Fx = save_path + "/ForceXtxt.dat";
+	string name_Fy = save_path + "/ForceYtxt.dat";
+
+	string name_t = path + "/Grid/t.dat";
+
+	std::ofstream fH(name_h, std::ios::out);
+	std::ofstream fxU(name_xU, std::ios::out);
+	std::ofstream fyU(name_yU, std::ios::out);
+
+	std::ofstream fC;
+
+	std::ofstream ft(name_t, std::ios::out | std::ios::app);
+
+	ft << to_str(Time_elapsed) << " ";
+
+	Array2FileText(fH, H, Nx, Ny);
+	Array2FileText(fxU, xU, Nx, Ny);
+	Array2FileText(fyU, yU, Nx, Ny);
+
+	fH.close();
+	fxU.close();
+	fyU.close();
+	ft.close();
+
+	if (TransportProblemFlag)
+	{
+		fC.open(name_C, std::ios::out | std::ios::binary);
+		fC.write(reinterpret_cast<const char*> (C), sizeof(double) * Nx * Ny);
+		fC.close();
+	}
+}
 
 
 // Reastart: reading all variables from time moment "Time_moment"
@@ -215,6 +260,21 @@ void Raschet::Restart_from_time_moment(double Time_moment) {
 	}
 			
 };
+
+void Raschet::Array2FileText(ofstream& File, double* A, int Nx, int Ny) {
+	File.precision(12);
+	for (int i = 0; i < Nx; i++)
+	{
+		for (int j = 0; j < Ny; j++)
+		{
+			int k = i*Ny + j;
+			File << A[k] << " ";
+			//File << to_str(A[k], 7) <<" ";
+		}
+		File << endl;
+	}
+		
+}
 
 /*
 // функция сохранения текущих данных
