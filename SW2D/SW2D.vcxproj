@@ -146,7 +146,6 @@
   <ItemGroup>
     <ClCompile Include="ephemeris\Calendar.cpp" />
     <ClCompile Include="ephemeris\Ephemeris.cpp" />
-    <ClCompile Include="Kara_Gate_Tides_MAIN.cpp" />
     <ClCompile Include="MainCore\BoundaryConditions.cpp" />
     <ClCompile Include="MainCore\Constants.cpp" />
     <ClCompile Include="MainCore\Force.cpp" />
@@ -159,6 +158,7 @@
     <ClCompile Include="MainCore\Time_control.cpp" />
     <ClCompile Include="MainCore\Transport_Problem.cpp" />
     <ClCompile Include="MainCore\Work_With_Techplot.cpp" />
+    <ClCompile Include="Vallunden.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ephemeris\Ephemeris.h" />

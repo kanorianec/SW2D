@@ -48,7 +48,7 @@ extern double NSC;
 
 const bool binaryOutputFlag = true; // output to binary flag
 
-const double CriticalVal = 10000.0;
+const double CriticalVal = 1000.0;
 
 const int TideForcing = 0; //
 

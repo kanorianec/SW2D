@@ -36,7 +36,7 @@ int F_reg = 0;
 int Phi_reg = 0;
 
 // mass fluxes correction for dry zone condition 
-bool massFluxCorrection = false; // flag
+bool massFluxCorrection = true; // flag
 double epsFlux = 1e-4;
 
 bool ignore_warning = false; // ignore warning of existing case folder

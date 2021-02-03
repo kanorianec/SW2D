@@ -111,46 +111,47 @@ void Raschet::Prepare_Raschet()
 		for (int j = 0; j<Ny; j++)
 		{
 			int m = i*Ny + j;
-			if (H[m] <= eps)
+			if (H[m] <= eps) {
 				epsilon[m] += 1;
 
-			if (i != Nx - 1) {
-				if (H[m] < eps)
-					dryFacesX[m] += (int)(H[(i + 1)*Ny + j] + B[(i + 1)*Ny + j] < B[m] + eps || H[(i + 1)*Ny + j] < eps);
-				else if (H[(i + 1)*Ny + j] < eps)
-					dryFacesX[m] += (int)(eps + B[(i + 1)*Ny + j] > B[m] + H[m]);
+				if (H[m] < 0)
+					H[m] = 10e-9;
 
-				epsilon[m] += (int)(H[(i + 1)*Ny + j] < eps);
-			}
-			if (i != 0) {
-				epsilon[m] += (int)(H[(i - 1)*Ny + j] < eps);
-			}
-			if (j != Ny - 1) {
-				if (H[m] < eps)
-					dryFacesY[m] += (int)(H[i*Ny + j + 1] + B[i*Ny + j + 1] < B[m] + eps || H[i*Ny + j + 1] < eps);
-				else if (H[i*Ny + j + 1] < eps)
-					dryFacesY[m] += (int)(eps + B[i*Ny + j + 1] > B[m] + H[m]);
+				//if (H[m] <= pow(10, -9)) {
+				if (i != Nx - 1) {
+					epsilon[(i + 1)*Ny + j] += (int)(H[(i + 1)*Ny + j] + B[(i + 1)*Ny + j] < B[m]);
+				}
+				if (i != 0) {
+					epsilon[(i - 1)*Ny + j] += (int)(H[(i - 1)*Ny + j] + B[(i - 1)*Ny + j] < B[m]);
+				}
+				if (j != Ny - 1) {
+					epsilon[i*Ny + j + 1] += (int)(H[i*Ny + j + 1] + B[i*Ny + j + 1] < B[m]);
+				}
 
-				epsilon[m] += (int)(H[i*Ny + j + 1] < eps);
-			}
+				if (j != 0) {
+					epsilon[i*Ny + j - 1] += (int)(H[i*Ny + j - 1] + B[i*Ny + j - 1] < B[m]);
+				}
 
-			if (j != 0) {
-				epsilon[m] += (int)(H[i*Ny + j - 1] < eps);
+				if (i != Nx - 1 && j != Ny - 1) {
+					epsilon[(i + 1)*Ny + j + 1] += (int)(H[(i + 1)*Ny + j + 1] + B[(i + 1)*Ny + j + 1] < B[m]);
+				}
+
+				if (i != Nx - 1 && j != 0) {
+					epsilon[(i + 1)*Ny + j - 1] += (int)(H[(i + 1)*Ny + j - 1] + B[(i + 1)*Ny + j - 1] < B[m]);
+				}
+
+				if (i != 0 && j != Ny - 1) {
+					epsilon[(i - 1)*Ny + j + 1] += (int)(H[(i - 1)*Ny + j + 1] + B[(i - 1)*Ny + j + 1] < B[m]);
+				}
+
+				if (i != 0 && j != 0) {
+					epsilon[(i - 1)*Ny + j - 1] += (int)(H[(i - 1)*Ny + j - 1] + B[(i - 1)*Ny + j - 1] < B[m]);
+				}
+
+
+				//}		
+
 			}
-			/*
-			if (i != Nx - 1) {
-				if (H[m] < eps)
-					dryFacesX[m] += (int)(H[(i + 1)*Ny + j] + B[(i + 1)*Ny + j] < B[m] + eps);
-				if (H[(i + 1)*Ny + j] < eps)
-					dryFacesX[m] += (int)(eps + B[(i + 1)*Ny + j] > B[m] + H[m]);
-			}
-			if (j != Ny - 1) {
-				if (H[m] < eps)
-					dryFacesY[m] += (int)(H[i*Ny + j + 1] + B[i*Ny + j + 1] < B[m] + eps);
-				if (H[i*Ny + j + 1] < eps)
-					dryFacesY[m] += (int)(eps + B[i*Ny + j + 1] > B[m] + H[m]);
-			}
-			*/
 		}
 	}
 
@@ -158,7 +159,7 @@ void Raschet::Prepare_Raschet()
 	{
 		for (int j = 0; j<Ny; j++)
 		{
-			if (H[i*Ny + j] > eps)
+			if (!epsilon[i*Ny + j])
 			{
 				tau[i*Ny + j] = alpha*sqrt(hx*hy) / sqrt(gc*H[i*Ny + j]);
 			}

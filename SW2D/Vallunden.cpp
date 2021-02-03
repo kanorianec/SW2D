@@ -82,7 +82,7 @@ int main() {
 	/* === TECHNICAL PARAMETERS === */
 
 	// folder name in \Data looks like: Test_namePostscript
-	string Test_name = "Vallunden_Pritok2_U"; // Test name
+	string Test_name = "Vallunden_Pritok_U"; // Test name
 	string Postscript = "_" + to_str((T_end - T_begin) / 3600) + "h_NSC_01_" + to_string(Nx) + "x" + to_string(Ny); // short test description
 	Postscript = "_24h_NSC_01_247x234";
 
@@ -109,8 +109,8 @@ int main() {
 	//double sea_level = 1000;  // высота берега, которая входит в расчёт 
 	
 	/* === INITIALIZATION === */
-	
-	FILE *F = fopen("bathymetry/LakeValunden_247x234_pritok2.dat", "r");
+	/*
+	FILE *F = fopen("bathymetry/LakeValunden_247x234_pritok.dat", "r");
 	if (F == NULL)
 		cout << "Can't open bathymetry file!" << endl;
 
@@ -137,8 +137,8 @@ int main() {
 		}
 	}
 
-	fclose(F);
-	/*
+	fclose(F);*/
+
 	string name_B = "bathymetry/B.dat";
 
 	std::ifstream fB(name_B, std::ios::binary);
@@ -146,7 +146,7 @@ int main() {
 	fB.read(reinterpret_cast<char*> (B), sizeof(double) * Nx * Ny);
 
 	fB.close();
-	*/
+
 	
 	Raschet *R1 = new Raschet(Test_name,
 		Postscript, 
@@ -186,7 +186,7 @@ int main() {
 	
 	//R1->Read_Data_from_file("21600-64800");
 	
-	//R1->Restart_from_time_moment(0);
+	R1->Restart_from_time_moment(0);
 	R1->Exec_Raschet(); // выполнение расчёта
 	//R1->Visualization_to_techplot();
 
