@@ -33,8 +33,8 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			//double xJ_05R, yJ_05T;
 			double B_c, B_1R, B_1T;
 			double H_05R, H_05T, H_c, H_05L05T, H_05R05B, H_05R05T, H_1R, H_1T;
-			double xU_05R(0), xU_c(0), xU_05L05T(0), xU_05R05B(0), xU_05R05T(0), xU_1R(0);
-			double yU_05T(0), yU_c(0), yU_05L05T(0), yU_05R05B(0), yU_05R05T(0), yU_1T(0);
+			double xU_05R, xU_c, xU_05L05T, xU_05R05B, xU_05R05T, xU_1R;
+			double yU_05T, yU_c, yU_05L05T, yU_05R05B, yU_05R05T, yU_1T;
 			double tau_05R, tau_05T;
 			double ForceX_05R;
 			double ForceY_05T;
@@ -137,16 +137,21 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				); //**APPROVED**//
 
 			//xJ //yJ_05T = H_05T*yU_05T - yW_05T; //**APPROVED**//
-			if (!dryFacesX[k])
-				xJ[k] = (dT / hx) * (H_05R*xU_05R - xW_05R);
-			else
-				xJ[k] = 0.0;
+			xJ[k] = (dT / hx) * (H_05R*xU_05R - xW_05R);
 
 			//yJ //yJ_05B = H_05B*yU_05B - yW_05B; //**APPROVED**//
-			if (!dryFacesY[k])
-				yJ[k] = (dT / hy) * (H_05T*yU_05T - yW_05T);
-			else
-				yJ[k] = 0.0;	
+			yJ[k] = (dT / hy) * (H_05T*yU_05T - yW_05T);
+
+			if (j == 1)
+			{
+				cout.precision(15);
+				//cout << i << " " << H_05R*xU_05R - xW_05R << " " << H_05R*xU_05R  << " " << xW_05R << endl;
+				//cout << i << " " << (H_1R * xU_1R * xU_1R - H_c * xU_c * xU_c) / hx << endl;
+				//cout << i << " " << H_05R << " " << H_05L << " " << (H_05R*H_05R - H_05L*H_05L)/hx << endl;
+				//cout << i << " " << tau[k] << " " << tau_05R << " " << H[k] << " " << H_05R << endl;
+				//cout << i << " " << Ht[k] << " " << xUt[k] << endl;
+				//cout << i << " " << H_05R << " " << xU_05R << " " << xJ_05R << endl;
+			}
 
 			double M = (xJ[k] - xJ[k_L]) + (yJ[k] - yJ[k_B]);
 			
@@ -184,8 +189,8 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			double xJ_05R, xJ_05L, yJ_05B, yJ_05T;
 			double B_05R, B_05L, B_05B, B_05T, B_c, B_05L05B, B_05L05T, B_05R05B, B_05R05T, B_1R, B_1L, B_1B, B_1T;
 			double H_05R, H_05L, H_05B, H_05T, H_c, H_05L05B, H_05L05T, H_05R05B, H_05R05T, H_1R, H_1L, H_1B, H_1T;
-			double xU_05R(0), xU_05L(0), xU_05B(0), xU_05T(0), xU_c(0), xU_05L05B(0), xU_05L05T(0), xU_05R05B(0), xU_05R05T(0), xU_1R(0), xU_1L(0), xU_1B(0), xU_1T(0);
-			double yU_05R(0), yU_05L(0), yU_05B(0), yU_05T(0), yU_c(0), yU_05L05B(0), yU_05L05T(0), yU_05R05B(0), yU_05R05T(0), yU_1R(0), yU_1L(0), yU_1B(0), yU_1T(0);
+			double xU_05R, xU_05L, xU_05B, xU_05T, xU_c, xU_05L05B, xU_05L05T, xU_05R05B, xU_05R05T, xU_1R, xU_1L, xU_1B, xU_1T;
+			double yU_05R, yU_05L, yU_05B, yU_05T, yU_c, yU_05L05B, yU_05L05T, yU_05R05B, yU_05R05T, yU_1R, yU_1L, yU_1B, yU_1T;
 
 			double ForceX_05R, ForceX_05L, ForceX_05B, ForceX_05T, ForceX_c; 
 			double ForceY_05R, ForceY_05L, ForceY_05B, ForceY_05T, ForceY_c; 
@@ -244,16 +249,15 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			// Velocity-x Ux
 			xU_c = xU[k];
 
-			xU_05R = 0.5*(xU[k] + xU[k_R]);
-			xU_05L = 0.5*(xU[k_L] + xU[k]);
-			xU_05T = 0.5*(xU[k] + xU[k_T]);
-			xU_05B = 0.5*(xU[k_B] + xU[k]);
-			
 			xU_05R05T = 0.25*(xU[k] + xU[k_R] + xU[k_T] + xU[k_RT]);
 			xU_05R05B = 0.25*(xU[k] + xU[k_R] + xU[k_B] + xU[k_RB]);
 			xU_05L05T = 0.25*(xU[k] + xU[k_L] + xU[k_T] + xU[k_LT]);
 			xU_05L05B = 0.25*(xU[k] + xU[k_L] + xU[k_B] + xU[k_LB]);
-			
+
+			xU_05R = 0.5*(xU[k] + xU[k_R]);
+			xU_05L = 0.5*(xU[k_L] + xU[k]);
+			xU_05T = 0.5*(xU[k] + xU[k_T]);
+			xU_05B = 0.5*(xU[k_B] + xU[k]);
 
 			xU_1R = xU[k_R];
 			xU_1L = xU[k_L];
@@ -261,18 +265,17 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			xU_1B = xU[k_B];
 
 			// Velosity-y Uy
-			yU_c = yU[k];			
+			yU_c = yU[k];
+
+			yU_05R05T = 0.25*(yU[k] + yU[k_R] + yU[k_T] + yU[k_RT]);
+			yU_05R05B = 0.25*(yU[k] + yU[k_R] + yU[k_B] + yU[k_RB]);
+			yU_05L05T = 0.25*(yU[k] + yU[k_L] + yU[k_T] + yU[k_LT]);
+			yU_05L05B = 0.25*(yU[k] + yU[k_L] + yU[k_B] + yU[k_LB]);
 
 			yU_05R = 0.5*(yU[k] + yU[k_R]);
 			yU_05L = 0.5*(yU[k_L] + yU[k]);
 			yU_05T = 0.5*(yU[k] + yU[k_T]);
 			yU_05B = 0.5*(yU[k_B] + yU[k]);
-			
-			yU_05R05T = 0.25*(yU[k] + yU[k_R] + yU[k_T] + yU[k_RT]);
-			yU_05R05B = 0.25*(yU[k] + yU[k_R] + yU[k_B] + yU[k_RB]);
-			yU_05L05T = 0.25*(yU[k] + yU[k_L] + yU[k_T] + yU[k_LT]);
-			yU_05L05B = 0.25*(yU[k] + yU[k_L] + yU[k_B] + yU[k_LB]);
-			
 
 			yU_1R = yU[k_R];
 			yU_1L = yU[k_L];
@@ -309,12 +312,12 @@ void Raschet::Numerical_scheme_time_step_parallel()
 
 			// tau
 			tau_c = tau[k];
-			
+
 			tau_05R = 0.5*(tau[k] + tau[k_R]);
 			tau_05L = 0.5*(tau[k_L] + tau[k]);
 			tau_05T = 0.5*(tau[k] + tau[k_T]);
-			tau_05B = 0.5*(tau[k_B] + tau[k]);
-			
+			tau_05B = 0.5*(tau[k_B] + tau[k]);				
+
 			//xJ
 			xJ_05R = (hx / dT) * xJ[k]; //H_05R*xU_05R - xW_05R; //**APPROVED**//
 			xJ_05L = (hx / dT) *xJ[k_L]; ////H_05L*xU_05L - xW_05L; //**APPROVED**//
@@ -332,6 +335,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			// Dry-zone condition
 			if (Ht[k]>eps && !epsilon[k])//
 			{
+				
 				//xWS
 				xWS_05R = tau_05R * H_05R * (
 					xU_05R *(xU_1R - xU_c) / hx 
@@ -419,7 +423,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				xxPT_05L = xU_05L * xWS_05L + RS_05L + NS * 2 * gc * tau_05L * H_05L * H_05L * 0.5 * (xU_c - xU_1L) / hx; //**APPROVED**//
 
 				////yyPT
-				yyPT_05T = yU_05T * yWS_05T + RS_05T + NS * 2 * gc * tau_05T * H_05T * H_05T * 0.5 * (yU_1T - yU_c) / hy; //**APPROVED**//
+				yyPT_05T = yU_05T * yWS_05T + RS_05T + NS * 2 * gc *	tau_05T * H_05T * H_05T * 0.5 * (yU_1T - yU_c) / hy; //**APPROVED**//
 				yyPT_05B = yU_05B * yWS_05B + RS_05B + NS * 2 * gc * tau_05B * H_05B * H_05B * 0.5 * (yU_c - yU_1B) / hy; //**APPROVED**//
 
 				////yxPT
@@ -429,7 +433,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				////xyPT
 				xyPT_05R = xU_05R * yWS_05R + NS * gc * tau_05R * H_05R * H_05R * 0.5 * ((xU_05R05T - xU_05R05B) / hy + (yU_1R - yU_c) / hx); //**APPROVED**//
 				xyPT_05L = xU_05L * yWS_05L + NS * gc * tau_05L * H_05L * H_05L * 0.5 * ((xU_05L05T - xU_05L05B) / hy + (yU_c - yU_1L) / hx); //**APPROVED**//
-								
+						
 				////xUt	
 				//// Well balanced: H[k] _c 0.5*(H2y2+H2y1)
 				xUt[k] = (H_c * xU_c
@@ -459,6 +463,18 @@ void Raschet::Numerical_scheme_time_step_parallel()
 						+ (H_05T * yU_05T - H_05B * yU_05B) / hy
 						) * (ForceY_c - gc * (B_05T - B_05B) / hy)
 					) / Ht[k]; //**APPROVED**//
+
+				int  i = int(k / Ny);
+				int j = k % Ny;
+				if (j == 1)
+				{
+					cout.precision(15);
+					//cout << i << " " << xU_05R * H_05R * xU_05R  << " " << *(xU_1R - xU_c) / hx << endl;
+					//cout << i << " " << H_05R << " " << H_05L << " " << (H_05R*H_05R - H_05L*H_05L)/hx << endl;
+					//cout << i << " " << tau[k] << " " << tau_05R << " " << H[k] << " " << H_05R << endl;
+					//cout << i << " " << X[k] << " "  << Ht[k] << " " << xUt[k] << endl;
+					//cout << i << " " << H_05R << " " << xU_05R << " " << xJ_05R << endl;
+				}
 			}
 			else
 			{
@@ -555,36 +571,54 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				+ (type == RIGHT) * 0.5 * (ForceY[n] + ForceY[k]) * hy / gc;
 			}
 
-
-			///if (Ht[k]  > eps /*&& !epsilon[n]*/)
-			int dryFace = dryFacesX[n] * (type == LEFT || type == LB_CORNER || type == LT_CORNER) 
-							+ dryFacesX[k] *(type == RIGHT || type == RB_CORNER || type == RT_CORNER)
-							+ dryFacesY[n] * (type == BOTTOM || type == LB_CORNER || type == RB_CORNER)
-							+ dryFacesY[k]* (type == TOP || type == LT_CORNER || type == RT_CORNER);
-			
-			if (dryFace == 0 && Ht[k] + B[k] > B[n])
+			if (Ht[k]  > eps && !epsilon[n])
 			{
-				if (border[VELOCITY_X][type] != FROM_FILE)
-					xUt[n] = border[VELOCITY_X][type] * xUt[k] + 2 * border_C[VELOCITY_X][type];
-				if (border[VELOCITY_Y][type] != FROM_FILE)
-					yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
-				if (border[HEIGHT][type] != FROM_FILE)
-					Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + boundaryForce + 2 * border_C[HEIGHT][type];
-
+				if (border[FLOW][type] == -1)
+				{
+					if (border[HEIGHT][type] != FROM_FILE)
+						Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + 2 * border_C[HEIGHT][type];
+					if (type == BOTTOM || type == TOP)
+					{
+						if (border[VELOCITY_X][type] != FROM_FILE)
+							xUt[n] = border[VELOCITY_X][type] * xUt[k] + 2 * border_C[VELOCITY_X][type];
+						if (border[VELOCITY_Y][type] != FROM_FILE)
+							yUt[n] = (border[FLOW][type] * Ht[k] * yUt[k] + 2 * border_C[FLOW][type]) / Ht[n];
+					}
+					if (type == LEFT || type == RIGHT)
+					{
+						if (border[VELOCITY_X][type] != FROM_FILE)
+							xUt[n] = (border[FLOW][type] * Ht[k] * xUt[k] + 2 * border_C[FLOW][type]) / Ht[n];
+						if (border[VELOCITY_Y][type] != FROM_FILE)
+							yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
+					}
+				}
+				else
+				{
+					if (border[VELOCITY_X][type] != FROM_FILE)
+						xUt[n] = border[VELOCITY_X][type] * xUt[k] + 2 * border_C[VELOCITY_X][type];
+					if (border[VELOCITY_Y][type] != FROM_FILE)
+						yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
+					if (border[HEIGHT][type] != FROM_FILE)
+						Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + 2 * border_C[HEIGHT][type];
+				}
 				if (TransportProblemFlag)
 				{
 					if (border[CONCENTRATION][type] != FROM_FILE)
 						Ct[n] = border[CONCENTRATION][type] * Ct[k] + 2 * border_C[CONCENTRATION][type];
 				}
-
+				if (TransportProblemFlag)
+				{
+					if (border[CONCENTRATION][type] != FROM_FILE)
+						Ct[n] = border[CONCENTRATION][type] * Ct[k] + 2 * border_C[CONCENTRATION][type];
+				}
 				// COSTIL! COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL! 
-
-				//if (type == TOP)
-				//{
-				//	yUt[n] = (-2.0) * sin(pi * (Time_elapsed + dT) / (3600.0 * 6.0)) * (1.0 - exp(-(Time_elapsed + dT) / (6*3600.0) )) - yUt[k];
-				//	Ct[n] = 2.0 * (1.0 - exp(-(Time_elapsed + dT) / 300.0)) - Ct[k];
-				//}
-				
+				/*
+				if (type == TOP)
+				{
+					yUt[n] = (2.0) * sin(pi * (Time_elapsed + dT) / (3600.0 * 6.0)) * (1.0 - exp(-(Time_elapsed + dT) / (6*3600.0) )) - yUt[k];
+					Ct[n] = 2.0 * (1.0 - exp(-(Time_elapsed + dT) / 300.0)) - Ct[k];
+				}
+				*/
 				// COSTIL! COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL!  COSTIL! 
 			}
 			else
@@ -598,9 +632,6 @@ void Raschet::Numerical_scheme_time_step_parallel()
 					Ct[n] = C[n];
 				}
 			}
-			//if (type == TOP)
-			//	cout << i << "), Ht[k]:" << Ht[k] << ", B[k]:" << B[k] << ", H[n]:" << H[n] << ", B[n]:" << B[n] << ", yU[k]:" << yU[k] <<", yU[n]:" << yU[n] << ", tau[k]:" << tau[k] << ", tau[n]:" << tau[n] << endl;
-
 		}
 	}
 	else
@@ -644,15 +675,37 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				
 				k = n + 1 * (type == BOTTOM) - Ny*(type == RIGHT) - 1 * (type == TOP) + Ny*(type == LEFT) + (Ny + 1)*(type == LB_CORNER) + (1 - Ny)*(type == RB_CORNER) + (-Ny - 1)*(type == RT_CORNER) + (Ny - 1)*(type == LT_CORNER);
 
-				///if (Ht[k]  > eps/* && !epsilon[k]*/)
-				if (dryFacesX[n] + dryFacesY[n] == 0)
+				if (Ht[k]  > eps/* && !epsilon[k]*/)
 				{
-					if (border[VELOCITY_X][type] != FROM_FILE)
-						xUt[n] = border[VELOCITY_X][type] * xUt[k] + 2 * border_C[VELOCITY_X][type];
-					if (border[VELOCITY_Y][type] != FROM_FILE)
-						yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
-					if (border[HEIGHT][type] != FROM_FILE)
-						Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + 2 * border_C[HEIGHT][type];
+					if (border[FLOW][type] == -1)
+					{
+						cout << type << endl;
+						if (border[HEIGHT][type] != FROM_FILE)
+							Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + 2 * border_C[HEIGHT][type];
+						if (type == BOTTOM || type == TOP)
+						{
+							if (border[VELOCITY_X][type] != FROM_FILE)
+								xUt[n] = border[VELOCITY_X][type] * xUt[k] + 2 * border_C[VELOCITY_X][type];
+							if (border[VELOCITY_Y][type] != FROM_FILE)
+								yUt[n] = (border[FLOW][type] * Ht[k] * yUt[k] + 2 * border_C[FLOW][type]) / Ht[n];
+						}
+						if (type == LEFT || type == RIGHT)
+						{
+							if (border[VELOCITY_X][type] != FROM_FILE)
+								xUt[n] = (border[FLOW][type] * Ht[k] * xUt[k] + 2 * border_C[FLOW][type]) / Ht[n];
+							if (border[VELOCITY_Y][type] != FROM_FILE)
+								yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
+						}
+					}
+					else
+					{
+						if (border[VELOCITY_X][type] != FROM_FILE)
+							xUt[n] = border[VELOCITY_X][type] * xUt[k] + 2 * border_C[VELOCITY_X][type];
+						if (border[VELOCITY_Y][type] != FROM_FILE)
+							yUt[n] = border[VELOCITY_Y][type] * yUt[k] + 2 * border_C[VELOCITY_Y][type];
+						if (border[HEIGHT][type] != FROM_FILE)
+							Ht[n] = border[HEIGHT][type] * (Ht[k] + B[k]) - B[n] + 2 * border_C[HEIGHT][type];
+					}					
 					if (TransportProblemFlag)
 					{
 						if (border[CONCENTRATION][type] != FROM_FILE)
@@ -663,6 +716,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				{
 					xUt[n] = 0;
 					yUt[n] = 0;
+
 					Ht[n] = H[n];// Ht[k];
 					if (TransportProblemFlag)
 					{
@@ -680,8 +734,6 @@ void Raschet::Numerical_scheme_time_step_parallel()
 	
 	// set array of epsilons to zero
 	memset(epsilon, 0, Nx*Ny * sizeof(int)); 
-	memset(dryFacesX, 0, Nx*Ny * sizeof(int));
-	memset(dryFacesY, 0, Nx*Ny * sizeof(int));
 
 	#pragma omp parallel for
 	for (int m = 0; m < Nx*Ny; m++)
@@ -689,9 +741,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		int  i = int(m / Ny);
 		int j = m % Ny;
 
-		H[m] = Ht[m]; 
-		xU[m] = xUt[m];
-		yU[m] = yUt[m];
+		H[m] = Ht[m];
 
 		if (TransportProblemFlag)
 		{
@@ -703,90 +753,45 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		// if (H+B)_dry > (H+B)_wet -> no mass flux, no momentum flux 
 		// if (H+B)_dry < (H+B)_wet -> only mass flux
 
-		if (Ht[m] <= eps) {
+		if (H[m] <= eps ) {
 
-			//#pragma omp atomic
+			#pragma omp atomic
 			epsilon[m] += 1;
-		}
 
 			if (i != Nx - 1) {
-				if (Ht[m] < eps)
-					dryFacesX[m] += (int)(Ht[(i + 1)*Ny + j] + B[(i + 1)*Ny + j] < B[m] + eps || Ht[(i + 1)*Ny + j] < eps);
-				else if (Ht[(i + 1)*Ny + j] < eps)
-					dryFacesX[m] += (int)(eps + B[(i + 1)*Ny + j] > B[m] + Ht[m]);
-				
-				epsilon[m] += (int)(Ht[(i + 1)*Ny + j] < eps);
-
-				//#pragma omp atomic
-				//epsilon[(i + 1)*Ny + j] += (int)(Ht[(i + 1)*Ny + j] + B[(i + 1)*Ny + j] < B[m] + eps);
-				
+				#pragma omp atomic
+				epsilon[(i + 1)*Ny + j] += (int)(Ht[(i + 1)*Ny + j] + B[(i + 1)*Ny + j] < B[m] + eps);
 				//xUt[(i + 1)*Ny + j] = 0.0;
 				//yUt[(i + 1)*Ny + j] = 0.0;
 			}
 			if (i != 0) {
-				epsilon[m] += (int)(Ht[(i - 1)*Ny + j] < eps);
-
-				//#pragma omp atomic
-				//epsilon[(i - 1)*Ny + j] += (int)(Ht[(i - 1)*Ny + j] + B[(i - 1)*Ny + j] < B[m] + eps);
+				#pragma omp atomic
+				epsilon[(i - 1)*Ny + j] += (int)(Ht[(i - 1)*Ny + j] + B[(i - 1)*Ny + j] < B[m] + eps);
 				//xUt[(i - 1)*Ny + j] = 0.0;
 				//yUt[(i - 1)*Ny + j] = 0.0;
 			}
 			if (j != Ny - 1) {
-				if (Ht[m] < eps)
-					dryFacesY[m] += (int)(Ht[i*Ny + j + 1] + B[i*Ny + j + 1] < B[m] + eps || Ht[i*Ny + j + 1] < eps);
-				else if (Ht[i*Ny + j + 1] < eps)
-					dryFacesY[m] += (int)(eps + B[i*Ny + j + 1] > B[m] + Ht[m]);
-
-				epsilon[m] += (int)(Ht[i*Ny + j + 1] < eps);
-				//#pragma omp atomic
-				//epsilon[i*Ny + j + 1] += (int)(Ht[i*Ny + j + 1] + B[i*Ny + j + 1] < B[m] + eps);
+				#pragma omp atomic
+				epsilon[i*Ny + j + 1] += (int)(Ht[i*Ny + j + 1] + B[i*Ny + j + 1] < B[m] + eps);
 				//xUt[i*Ny + j + 1] = 0.0;
 				//yUt[i*Ny + j + 1] = 0.0;
 			}
 					
 			if (j != 0) {
-				epsilon[m] += (int)(Ht[i*Ny + j - 1] < eps);
-
-				//#pragma omp atomic		
-				//epsilon[i*Ny + j - 1] += (int)(Ht[i*Ny + j - 1] + B[i*Ny + j - 1] < B[m] + eps);
+				#pragma omp atomic
+				epsilon[i*Ny + j - 1] += (int)(Ht[i*Ny + j - 1] + B[i*Ny + j - 1] < B[m] + eps);
 				//xUt[i*Ny + j - 1] = 0.0;
 				//yUt[i*Ny + j - 1] = 0.0;
 			}	
-			/*
-			if (j != 0)
-			{
-				if (i != 0)
-					epsilon[m] += (int)(Ht[(i - 1)*Ny + j - 1] < eps);
-				if (i != Nx -1)
-					epsilon[m] += (int)(Ht[(i + 1)*Ny + j - 1] < eps);
-			}
-			if (j != Ny - 1)
-			{
-				if (i != 0)
-					epsilon[m] += (int)(Ht[(i - 1)*Ny + j + 1] < eps);
-				if (i != Nx - 1)
-					epsilon[m] += (int)(Ht[(i + 1)*Ny + j + 1] < eps);
-			}
-			*/
-		//}
-		//else
-		/*else 
+		}
+		else
 		{
 			bool noMomentumFlux = false;
 
-			if (i != 0 && i != Nx - 1 && j != Ny - 1 && j != 0)
-			{
-				noMomentumFlux = noMomentumFlux || (Ht[(i + 1)*Ny + j] < eps);
-				noMomentumFlux = noMomentumFlux || (Ht[(i - 1)*Ny + j] < eps);
-				noMomentumFlux = noMomentumFlux || (Ht[i*Ny + j + 1] < eps);
-				noMomentumFlux = noMomentumFlux || (Ht[i*Ny + j - 1] < eps);
-			}
-			*/
-			/*
 			if (i != Nx - 1) {
 				noMomentumFlux = noMomentumFlux || (Ht[(i + 1)*Ny + j] < eps);
 			}
-			if (i != 0 ) {
+			if (i != 0) {
 				noMomentumFlux = noMomentumFlux || (Ht[(i - 1)*Ny + j] < eps);
 			}
 			if (j != Ny - 1) {
@@ -795,8 +800,8 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			if (j != 0) {
 				noMomentumFlux = noMomentumFlux || (Ht[i*Ny + j - 1] < eps);
 			}
-			*/
-			/*if (!noMomentumFlux)
+
+			if (!noMomentumFlux)
 			{
 				xU[m] = xUt[m];
 				yU[m] = yUt[m];
@@ -806,7 +811,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				xU[m] = 0.0;
 				yU[m] = 0.0;
 			}
-		}*/
+		}
 		
 	}//end of for (m=0; m<(Ny*Nx); m++)
 	
@@ -814,15 +819,15 @@ void Raschet::Numerical_scheme_time_step_parallel()
 	#pragma omp parallel for
 	for (int m = 0; m < Nx*Ny; m++)
 	{ 		
-		if (H[m] > eps) /// (!epsilon[m])
+		if (!epsilon[m])
 		{
 			tau[m] = alpha*sqrt(hx*hy) / sqrt(gc*H[m]);//alpha*sqrt(hx*hy) / sqrt(gc*H[m]);
 		}
 		else
 		{
 			tau[m] = 0.0;
-			//xU[m] = 0.0;
-			//yU[m] = 0.0;
+			xU[m] = 0.0;
+			yU[m] = 0.0;
 			//tau[m] = alpha*sqrt(hx*hy) / sqrt(gc*eps/2);
 		}
 
@@ -851,4 +856,6 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			Stop_Raschet_Flag = 1;
 		}
 	}//end of for (m=0; m<(Ny*Nx); m++)
+
+	//pause();
 }

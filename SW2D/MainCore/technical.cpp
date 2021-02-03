@@ -12,25 +12,23 @@
 #include <sstream>
 #include <time.h>
 #include <string>
-#include <iomanip>
 
 #ifdef __linux__
-#include <sys/types.h>
-#include <sys/stat.h>
+	#include <sys/types.h>
+	#include <sys/stat.h>
 #endif // linux
 
 #if defined(_WIN64) || defined(_WIN32)
-#include <direct.h>
-#define mkdir(dir, mode) _mkdir(dir)
+	#include <direct.h>
+	#define mkdir(dir, mode) _mkdir(dir)
 #endif // _WIN64) || defined(_WIN32)
 
 using namespace std;
 
 #include "Constants.h"
+#include "technical.h"
 #include "Raschet.h"
 #include <omp.h>
-#include "technical.h"
-
 
 //#include <stdio.h>
 //#include <stdlib.h>
@@ -337,9 +335,8 @@ void pause()
 	cin.get();
 }
 
-bool checkSymmetry(double* A, int Nx, int Ny, string name)
+void checkSymmetry(double* A, int Nx, int Ny, string name)
 {
-	bool Sym = true;
 	// horizontal symmetry
 	bool hSym = true;
 	bool ahSym = true;
@@ -401,8 +398,6 @@ bool checkSymmetry(double* A, int Nx, int Ny, string name)
 		cout << "Array \"" << name << "\" is symmetrical vertically up to a sign: +>|<- " << endl;
 	else
 		cout << "Array \"" << name << "\" is NOT symmetrical vertically!" << endl;
-	Sym = Sym && (hSym || ahSym) && (vSym || avSym);
-	return Sym;
 }
 bool checkEquality(double* A1, double* A2, int Nx, int Ny)
 {
@@ -417,127 +412,4 @@ bool checkEquality(double* A1, double* A2, int Nx, int Ny)
 		}
 	}
 	return eq;
-}
-
-void printArray(double* A, int Nx, int Ny, string name)
-{
-	printTArray(A, Nx, Ny, name);
-}
-void printArray(int* A, int Nx, int Ny, string name)
-{
-	printTArray(A, Nx, Ny, name);
-}
-
-template <typename Temp>
-void printTArray(Temp* A, int Nx, int Ny, string name)
-{
-	cout << " == Array \"" << name << "\": ==" << endl;
-	cout.precision(4);
-	for (int j = 0; j < Ny; j++)
-	{
-		if (j == 0)
-		{
-			cout << left << setw(10) << " /";
-			for (int i = 0; i < Nx; i++)
-			{
-				if (j != Ny - 1)
-					cout << setfill('-');
-				cout << left << setw(10)  << to_str(i) + " " << setfill(' ');
-			}
-			cout << endl << endl;
-			setfill(' ');
-		}
-
-		for (int i = 0; i < Nx; i++)
-		{
-			if (i == 0)
-				cout << left << setw(10) << " " + to_str(j);
-			cout << left << setw(10) << to_str(A[i*Ny + j]);
-		}
-
-		cout << endl << endl;
-	}
-	cout << endl;
-}
-
-
-template <typename Temp>
-void printTFlux(Temp* Ax, Temp* Ay, int Nx, int Ny, string name)
-{
-	cout << " == Flux \"" << name << "\": ==" << endl;
-
-	int p = 4;
-	//int interval = 5;
-
-	for (int j = 0; j < Ny; j++)
-	{
-		for (int i = 0; i < Nx; i++)
-		{
-			//cout << left << setw(10) << A[i*Ny + j] << " ";
-			string Xdirection = " ";
-			double xAval = 0.0; 
-
-			if (j!=0)
-				xAval = Ax[(i - 1)*Ny + j];
-
-			string Axstr = to_str(fabs(xAval), p);
-
-			if (xAval == 0.0)
-				Axstr = string((p + 2) / 2-1, ' ') + "o" + string((p + 2) / 2, ' ');
-			if (xAval < 0)
-				Xdirection = "<";
-			else if (xAval > 0)
-				Xdirection = ">";
-			
-			if (i != 0 && j != 0 && j != Ny - 1)
-				cout << string((p + 2) / 2 + 1, ' ') << Xdirection + Axstr << string((p + 2) / 2 + 1, ' ') + "x";
-			else if (i == 0)
-				cout << "  " + to_str(j);
-			else
-				cout << " " + string(2 * (p + 3) - 1, '-') + " " + to_str(i);			
-		}
-		cout << endl << endl;
-		if (j != Ny - 1)
-			for (int i = 0; i < Nx; i++)
-			{
-				string Ydirection = " ";
-				double yAval = 0.0;
-
-				if (i != 0)
-					yAval = Ay[i*Ny + j];
-
-				string Aystr = to_str(fabs(yAval), p);
-
-				if (yAval == 0.0)
-					Aystr = string((p + 2) / 2 - 1, ' ') + "o" + string((p + 2) / 2, ' ');
-				if (yAval < 0)
-					Ydirection = "^";
-				else if (yAval > 0)
-					Ydirection = "v";
-				//if (j == 0)
-				//	cout << left << setw(interval * 2) << " |";
-				//else
-				//	cout << internal << setw(interval * 2) << "  |  ";
-
-				if (i != Nx - 1 && i != 0)
-					cout << string((p + 2) / 2 + 1, ' ') << "+" << string((p + 2) / 2 + 1, ' ') + Ydirection + Aystr;
-				//cout << string((p + 2) / 2, ' ') + "x" + string((p + 2) / 2, ' ') << Ydirection + Aystr;			
-				else if (i == Nx - 1)
-					cout << string((p + 2) / 2 + 1, ' ') << "+" << string((p + 2) + 1, ' ') + "|";
-				else if (i == 0)
-					cout << "  " + (string)"|" + string((p + 2) / 2, ' ');
-			}
-		cout << endl << endl;
-	}
-	cout << endl;
-}
-
-void printFlux(double* Ax, double* Ay, int Nx, int Ny, string name)
-{
-	printTFlux(Ax, Ay, Nx, Ny, name);
-}
-
-void printFlux(int* Ax, int* Ay, int Nx, int Ny, string name)
-{
-	printTFlux(Ax, Ay, Nx, Ny, name);
 }

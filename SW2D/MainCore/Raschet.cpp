@@ -238,8 +238,8 @@ void Raschet::Exec_Raschet()
 void Raschet::Perform_Calculations()
 {		
 	HourMark = ((int)T_begin / 3600);
-	dT = ((hx + hy)*0.5*beta) / sqrt(gc*(Hmax + 10));
-	
+	dT = ((hx + hy)*0.5*beta) / sqrt(gc*(Hmax)); // + 10
+	//dT = 0.05;
 	write_extra_inf(cout,0); // output metadata to the screen
 	
 	write_extra_inf_to_file(0); // output metadata to the special file extra_inf.txt
@@ -253,33 +253,9 @@ void Raschet::Perform_Calculations()
 	int est_time = 1;
 	double estimation_time = omp_get_wtime();
 
-	while (T_end>Time_elapsed && !Stop_Raschet_Flag)
+	while (T_end>=Time_elapsed && !Stop_Raschet_Flag)
 	{
 		Numerical_scheme_time_step_parallel();
-		//int Sym = 1;
-		//Sym *= (int)checkSymmetry(H, Nx, Ny, "H");
-		//Sym *= (int)checkSymmetry(xU, Nx, Ny, "xU");
-		//Sym *= (int)checkSymmetry(yU, Nx, Ny, "yU");
-		////printFlux(xJ, yJ, Nx, Ny, "J");
-		////printFlux(dryFacesX, dryFacesY, Nx, Ny, "dryFaces");
-		//if (!Sym)
-		//{
-		//	printArray(H, Nx, Ny, "H");
-		//	printArray(xU, Nx, Ny, "xU");
-		//	printArray(yU, Nx, Ny, "yU");
-		//	//printFlux(xJ, yJ, Nx, Ny, "J");
-		//	//printFlux(dryFacesX, dryFacesY, Nx, Ny, "dryFaces");
-		//	printArray(epsilon, Nx, Ny, "epsilon");
-		//	pause();
-		//}
-			
-		//printArray(H, Nx, Ny, "H");
-		//printArray(xU, Nx, Ny, "xU");
-		//printArray(yU, Nx, Ny, "yU");
-		//printFlux(xJ, yJ, Nx, Ny, "J");
-		//printFlux(dryFacesX, dryFacesY, Nx, Ny, "dryFaces");
-		//printArray(epsilon, Nx, Ny, "epsilon");
-		//pause();
 		Time_elapsed = Time_elapsed + dT;
 
 		if (est_time)
@@ -297,6 +273,11 @@ void Raschet::Perform_Calculations()
 			t_graph_export = t_graph_export + t_step;
 		}
 	}
+	/*
+	for (int i = 0; i < Nx; i++)
+	{
+		cout << i << " " << Ht[i*Ny + 1] << endl;
+	}*/
 
 	//if (Stop_Raschet_Flag)
 	//	outputResults();

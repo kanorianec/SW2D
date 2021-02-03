@@ -30,16 +30,16 @@ extern const double qTide[tideNum] = {rad*15.041069,
 // === DEFAULT VALUES OF TECHNICAL PARAMETERS ===
 
 // use OpenMP
-bool parallelOpenMP = true;
+bool parallelOpenMP = false; // true;
 // include forcing to regularization
 int F_reg = 0;
 int Phi_reg = 0;
 
 // mass fluxes correction for dry zone condition 
-bool massFluxCorrection = false; // flag
+bool massFluxCorrection = true; // flag
 double epsFlux = 1e-4;
 
-bool ignore_warning = false; // ignore warning of existing case folder
+bool ignore_warning = true; // false; // ignore warning of existing case folder
 
 // type of transport equation regularization: alpha_c = 1 - normal, alpha_c = 0 - simplified, also could be between (0,1).
 double alpha_c = 1.0;

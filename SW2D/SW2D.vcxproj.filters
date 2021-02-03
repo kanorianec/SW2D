@@ -39,6 +39,9 @@
     <ClCompile Include="MainCore\Raschet.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
     </ClCompile>
+    <ClCompile Include="MainCore\technical.cpp">
+      <Filter>Файлы исходного кода\MainCore</Filter>
+    </ClCompile>
     <ClCompile Include="MainCore\Time_control.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
     </ClCompile>
@@ -66,10 +69,7 @@
     <ClCompile Include="MainCore\Force.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
     </ClCompile>
-    <ClCompile Include="MainCore\technical.cpp">
-      <Filter>Файлы исходного кода\MainCore</Filter>
-    </ClCompile>
-    <ClCompile Include="Kara_Gate_Tides_MAIN.cpp">
+    <ClCompile Include="1D\1DDamBreak.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
   </ItemGroup>
