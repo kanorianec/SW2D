@@ -56,7 +56,7 @@ int main() {
 
 	double beta = 0.1; // CFL number (0; 1)
 	double alpha = 0.5; //
-	double eps = 0.1; //
+	double eps = 0.01; //
 
 	double NS = 1.0;//1.0; //
 	
@@ -76,7 +76,7 @@ int main() {
 	
 	//omp_set_num_threads(2);
 
-	string Test_name = "KaraGate_tidesHarm_wind_try1"; //_noForce";  _OMP_" + to_str(threadsNumber)
+	string Test_name = "KaraGate_tidesHarm_ONLYWIND"; //_noForce";  _OMP_" + to_str(threadsNumber)
 	string Postscript = "_" + to_str((T_end - T_begin)/3600) + "h_" + to_string(Nx) + "x" + to_string(Ny); 
 
 	//double t_graph_export = T_begin;  
@@ -117,9 +117,9 @@ int main() {
 			int k = i*Ny + j;
 
 			fscanf(F, "%lf ", &B[k]);
-			fscanf(FH, "%lf ", &H[k]);
-			fscanf(FU, "%lf ", &xU[k]);
-			fscanf(FV, "%lf ", &yU[k]);
+			//fscanf(FH, "%lf ", &H[k]);
+			//fscanf(FU, "%lf ", &xU[k]);
+			//fscanf(FV, "%lf ", &yU[k]);
 
 			if (B[k] < Bmin)
 				Bmin = B[k];
@@ -148,6 +148,12 @@ int main() {
 				yU[k] = 0.0;
 			}			
 		}
+	}
+
+	for (int i = 0; i < Nx; i++)
+	{
+		B[i*Ny + Ny - 1] = B[i*Ny + Ny - 2];
+		H[i*Ny + Ny - 1] = H[i*Ny + Ny - 2];
 	}
 
 	Raschet *R = new Raschet(Test_name,
@@ -187,10 +193,10 @@ int main() {
 	
 	//R->SetFileBoundaryConditions(VELOCITY_X, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 	//R->SetFileBoundaryConditions(VELOCITY_Y, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
-
-	R->SetWindSpeed(0.0, 3600);// 3600);
-	R->SetTidesHarmonicsBoundaryConditions(LEFT, TOP);
-	R->SetFileBoundaryConditions(HEIGHT, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
+	//R->SetWindSpeed(0.0, 3600);// 3600);
+	R->SetWindSpeed(CONST_FORCE, 1.0, 3600, 0.0, 15.0);// 3600);
+	//R->SetTidesHarmonicsBoundaryConditions(LEFT, TOP);
+	//R->SetFileBoundaryConditions(HEIGHT, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 	/*
 	R->SetFileBoundaryConditions(VELOCITY_X, LEFT);//, TOP, BOTTOM);
 	R->SetFileBoundaryConditions(VELOCITY_Y, LEFT);
@@ -201,6 +207,7 @@ int main() {
 	//R->SetFixedBoundaryConditions(VELOCITY_X, RIGHT, -0.01);
 
 	R->Exec_Raschet();
+	pause();
 
 	delete[] B;
 	delete[] H;

@@ -57,6 +57,8 @@ Problem_Definition::Problem_Definition(
 	Problem_Definition::PhiY = new double[Nx*Ny];
 	Problem_Definition::xJ = new double[Nx*Ny]();
 	Problem_Definition::yJ = new double[Nx*Ny]();
+	Problem_Definition::dryFacesX = new int[Nx*Ny]();
+	Problem_Definition::dryFacesY = new int[Nx*Ny]();
 	//Problem_Definition::dT_ = new double[Nx*Ny]();
 	if (!parallelOpenMP)
 	{
@@ -65,9 +67,7 @@ Problem_Definition::Problem_Definition(
 	#pragma omp parallel
 	{
 		Problem_Definition::OMP_THREADS_NUMBER = omp_get_num_threads();
-	}
-	
-	
+	}	
 
 	for (int i = 0; i<Nx; i++)
 	{
@@ -103,6 +103,9 @@ Problem_Definition::~Problem_Definition()
 
 	delete[] xJ;
 	delete[] yJ;
+
+	delete[] dryFacesX;
+	delete[] dryFacesY;
 	//delete[] dT_;
 }
 
