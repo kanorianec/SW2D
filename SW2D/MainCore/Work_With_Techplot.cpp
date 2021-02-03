@@ -40,7 +40,6 @@ void Raschet::SetVisualizationProperties(double Vis_T_start, double Vis_T_end, i
 	Raschet::first_visualization = true;
 	Raschet::output_per_file_counter = 0;
 	Raschet::current_file_sizeMB = 0.0;
-
 }
 
 void Raschet::Visualization_to_techplot_input()

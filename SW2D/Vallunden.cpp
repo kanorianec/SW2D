@@ -82,7 +82,7 @@ int main() {
 	/* === TECHNICAL PARAMETERS === */
 
 	// folder name in \Data looks like: Test_namePostscript
-	string Test_name = "Vallunden_Pritok2_U_EXP"; // Test name
+	string Test_name = "Vallunden_Pritok2_U"; // Test name
 	string Postscript = "_" + to_str((T_end - T_begin) / 3600) + "h_NSC_01_" + to_string(Nx) + "x" + to_string(Ny); // short test description
 	Postscript = "_24h_NSC_01_247x234";
 

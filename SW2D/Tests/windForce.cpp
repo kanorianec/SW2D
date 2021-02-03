@@ -64,8 +64,8 @@ int main() {
 
 	double NS = 1.0; // коээфициент при тензоре Навье-Стокса
 
-	int Nx = 201; // 
-	int Ny = 201; //
+	int Nx = 11; // 
+	int Ny = 11; //
 
 	if (!parallelOpenMP)
 	{
@@ -79,7 +79,7 @@ int main() {
 	}
 
 	// название папки в \Data формируется как: Test_namePostscript
-	string Test_name = "Dry_Zone_Problem"; // название теста 
+	string Test_name = "windForce"; // название теста 
 	string Postscript = "_v0_" + to_string(Nx) + "x" + to_string(Ny); // Чем уникален тест, для отличия от остальных
 
 
@@ -112,15 +112,17 @@ int main() {
 		{
 			int k = i*Ny + j;
 			double y = y0 + j*(yN - y0) / (Ny - 1);
-			B[k] = 10.0*(x - 50.0)*(x - 50.0) / (50.0*30.0) + 10.0*(y - 50.0)*(y - 50.0) / (50.0*30.0);
+			B[k] = 0.5*(10.0*(x - 50.0)*(x - 50.0) / (50.0*30.0) + 10.0*(y - 50.0)*(y - 50.0) / (50.0*30.0) );
 			//if (y <= 35 && y >= 30)
 			//	B[k] += 5;
-			H[k] = 5.0 - B[k];
-
+			
+			H[k] = 20.0 - B[k];
+			/*
 			if ((x - xc)*(x - xc) + (y - yc)*(y - yc) < RR * RR)
-				H[k] = HGT;
+				H[k] = HGT;*/
 			if (H[k] < 0)
 				H[k] = 0.0;
+
 			//H[k] = 5.0;
 		}
 	}
@@ -163,6 +165,7 @@ int main() {
 	
 	R->SetStartTime(year, month, day, hour, minute, second);
 	R->SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
+	R->SetWindSpeed(CONST_FORCE, 1.0, 3600, 0.0, 5.0);// 3600);
 	
 	//R->SetFixedBoundaryConditions(VELOCITY_X, RIGHT, -5);
 	//R->SetWallBoundaryConditions(TOP, BOTTOM);
@@ -218,7 +221,10 @@ int main() {
 
 	R->Exec_Raschet(); // выполнение расчёта
 
-					   /* === ОЧИСТКА ПАМЯТИ === */
+	checkSymmetry(R->H, Nx, Ny, "H");
+	pause();
+
+	/* === ОЧИСТКА ПАМЯТИ === */
 
 	delete B;
 	delete H;
