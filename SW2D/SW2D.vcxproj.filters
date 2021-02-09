@@ -69,7 +69,7 @@
     <ClCompile Include="MainCore\Force.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
     </ClCompile>
-    <ClCompile Include="1D\1DDamBreak.cpp">
+    <ClCompile Include="1D\1DcriticalFlow.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
   </ItemGroup>

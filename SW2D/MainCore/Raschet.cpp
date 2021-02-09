@@ -239,7 +239,7 @@ void Raschet::Perform_Calculations()
 {		
 	HourMark = ((int)T_begin / 3600);
 	dT = ((hx + hy)*0.5*beta) / sqrt(gc*(Hmax)); // + 10
-	//dT = 0.05;
+	dT = 0.005;
 	write_extra_inf(cout,0); // output metadata to the screen
 	
 	write_extra_inf_to_file(0); // output metadata to the special file extra_inf.txt
@@ -291,7 +291,7 @@ void Raschet::Perform_Calculations()
 		if (Time_elapsed > 3600 * (HourMark + 1))
 			HourMark++;
 
-		if (Time_elapsed >= t_graph_export || Stop_Raschet_Flag)
+		if (Time_elapsed >= t_graph_export || Time_elapsed + dT > t_graph_export || Stop_Raschet_Flag)
 		{
 			outputResults();
 			t_graph_export = t_graph_export + t_step;

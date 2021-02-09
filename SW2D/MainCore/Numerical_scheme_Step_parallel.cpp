@@ -423,7 +423,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				xxPT_05L = xU_05L * xWS_05L + RS_05L + NS * 2 * gc * tau_05L * H_05L * H_05L * 0.5 * (xU_c - xU_1L) / hx; //**APPROVED**//
 
 				////yyPT
-				yyPT_05T = yU_05T * yWS_05T + RS_05T + NS * 2 * gc *	tau_05T * H_05T * H_05T * 0.5 * (yU_1T - yU_c) / hy; //**APPROVED**//
+				yyPT_05T = yU_05T * yWS_05T + RS_05T + NS * 2 * gc * tau_05T * H_05T * H_05T * 0.5 * (yU_1T - yU_c) / hy; //**APPROVED**//
 				yyPT_05B = yU_05B * yWS_05B + RS_05B + NS * 2 * gc * tau_05B * H_05B * H_05B * 0.5 * (yU_c - yU_1B) / hy; //**APPROVED**//
 
 				////yxPT
@@ -434,35 +434,63 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				xyPT_05R = xU_05R * yWS_05R + NS * gc * tau_05R * H_05R * H_05R * 0.5 * ((xU_05R05T - xU_05R05B) / hy + (yU_1R - yU_c) / hx); //**APPROVED**//
 				xyPT_05L = xU_05L * yWS_05L + NS * gc * tau_05L * H_05L * H_05L * 0.5 * ((xU_05L05T - xU_05L05B) / hy + (yU_c - yU_1L) / hx); //**APPROVED**//
 						
-				////xUt	
-				//// Well balanced: H[k] _c 0.5*(H2y2+H2y1)
-				xUt[k] = (H_c * xU_c
-					+ dT * PhiX_c
-					+ (dT / hx) * ((xxPT_05R - xxPT_05L) - (xU_05R * xJ_05R - xU_05L * xJ_05L))
-					+ (dT / hy) * ((yxPT_05T - yxPT_05B) - (xU_05T * yJ_05T - xU_05B * yJ_05B))
-					- 0.5 * gc * (dT / hx) * (H_05R + H_05L) * (
-						ForceX_c * hx / (-gc)
-						+ 0.5 * ((H_1R + B_1R) - (H_1L + B_1L))
-						) 
-					- dT * tau_c * ((H_05R * xU_05R - H_05L * xU_05L) / hx
-						+ (H_05T * yU_05T - H_05B * yU_05B) / hy
-						) * (ForceX_c - gc * (B_05R - B_05L) / hx)
-					) / Ht[k]; //**APPROVED**//
+				if (wellBalancedScheme)
+				{
+					////xUt	
+					//// Well balanced: H[k] _c 0.5*(H2y2+H2y1)
+					xUt[k] = (H_c * xU_c
+						+ dT * PhiX_c
+						+ (dT / hx) * ((xxPT_05R - xxPT_05L) - (xU_05R * xJ_05R - xU_05L * xJ_05L))
+						+ (dT / hy) * ((yxPT_05T - yxPT_05B) - (xU_05T * yJ_05T - xU_05B * yJ_05B))
+						- 0.5 * gc * (dT / hx) * (H_05R + H_05L) * (
+							ForceX_c * hx / (-gc)
+							+ 0.5 * ((H_1R + B_1R) - (H_1L + B_1L))
+							)
+						- dT * tau_c * ((H_05R * xU_05R - H_05L * xU_05L) / hx
+							+ (H_05T * yU_05T - H_05B * yU_05B) / hy
+							) * (ForceX_c - gc * (B_05R - B_05L) / hx)
+						) / Ht[k]; //**APPROVED**//
+
+								   ////yUt
+								   //// Well balanced: H[k] _c 0.5*(H2y2+H2y1)
+					yUt[k] = (H_c * yU_c
+						+ dT * PhiY_c
+						+ (dT / hx) * ((xyPT_05R - xyPT_05L) - (yU_05R * xJ_05R - yU_05L * xJ_05L))
+						+ (dT / hy) * ((yyPT_05T - yyPT_05B) - (yU_05T * yJ_05T - yU_05B * yJ_05B))
+						- 0.5 * gc * (dT / hy) * (H_05T + H_05B) * (
+							ForceY_c * hy / (-gc)
+							+ 0.5 * ((H_1T + B_1T) - (H_1B + B_1B))
+							)
+						- dT * tau_c * ((H_05R * xU_05R - H_05L * xU_05L) / hx
+							+ (H_05T * yU_05T - H_05B * yU_05B) / hy
+							) * (ForceY_c - gc * (B_05T - B_05B) / hy)
+						) / Ht[k]; //**APPROVED**//
+				}
+				else
+				{
+					////xUt	
+					xUt[k] = (H_c * xU_c
+						+ dT * PhiX_c
+						+ (dT / hx) * ((xxPT_05R - xxPT_05L) - (xU_05R * xJ_05R - xU_05L * xJ_05L))
+						+ (dT / hy) * ((yxPT_05T - yxPT_05B) - (xU_05T * yJ_05T - xU_05B * yJ_05B))
+						- 0.5 * gc * (dT / hx) * (H_05R*H_05R - H_05L*H_05L) 
+						+ dT *(H_c -  tau_c * ((H_05R * xU_05R - H_05L * xU_05L) / hx
+							+ (H_05T * yU_05T - H_05B * yU_05B) / hy)
+							) * (ForceX_c - gc * (B_05R - B_05L) / hx)
+						) / Ht[k]; //**APPROVED**//
+
+					////yUt
+					yUt[k] = (H_c * yU_c
+						+ dT * PhiY_c
+						+ (dT / hx) * ((xyPT_05R - xyPT_05L) - (yU_05R * xJ_05R - yU_05L * xJ_05L))
+						+ (dT / hy) * ((yyPT_05T - yyPT_05B) - (yU_05T * yJ_05T - yU_05B * yJ_05B))
+						- 0.5 * gc * (dT / hy) * (H_05T*H_05T + H_05B*H_05B) 
+						+ dT * (H_c - tau_c * ((H_05R * xU_05R - H_05L * xU_05L) / hx
+							+ (H_05T * yU_05T - H_05B * yU_05B) / hy) 
+							)* (ForceY_c - gc * (B_05T - B_05B) / hy)
+						) / Ht[k]; //**APPROVED**//
+				}
 				
-				////yUt
-				//// Well balanced: H[k] _c 0.5*(H2y2+H2y1)
-				yUt[k] = (H_c * yU_c
-					+ dT * PhiY_c
-					+ (dT / hx) * ((xyPT_05R - xyPT_05L) - (yU_05R * xJ_05R - yU_05L * xJ_05L))
-					+ (dT / hy) * ((yyPT_05T - yyPT_05B) - (yU_05T * yJ_05T - yU_05B * yJ_05B))
-					- 0.5 * gc * (dT / hy) * (H_05T + H_05B) * (
-						ForceY_c * hy / (-gc)
-						+ 0.5 * ((H_1T + B_1T) - (H_1B + B_1B))
-						)
-					- dT * tau_c * ((H_05R * xU_05R - H_05L * xU_05L) / hx
-						+ (H_05T * yU_05T - H_05B * yU_05B) / hy
-						) * (ForceY_c - gc * (B_05T - B_05B) / hy)
-					) / Ht[k]; //**APPROVED**//
 
 				int  i = int(k / Ny);
 				int j = k % Ny;

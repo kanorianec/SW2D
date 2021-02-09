@@ -11,9 +11,9 @@
 #include <fstream>
 #include <omp.h>
 
-#include "MainCore/Problem_Definition.h"
-#include "MainCore/Raschet.h"
-#include "MainCore/technical.h"
+#include "../MainCore/Problem_Definition.h"
+#include "../MainCore/Raschet.h"
+#include "../MainCore/technical.h"
 
 #include <ctime>   
 using namespace std;
@@ -28,7 +28,7 @@ int main() {
  
 	// T_begin, T_end - start and end time respectively, in seconds х 
 	double T_begin = 0;
-	double T_end = 100;
+	double T_end = 50;
 
 	// start date and time of current problem (UTC)
 
@@ -40,8 +40,8 @@ int main() {
 	int second = 0; // [0, 59] 
 
 	// boundary values of rectangle area
-	double x0 = 0.5;
-	double xN = 27.5;
+	double x0 = -0.5;
+	double xN = 25.5;
 	double y0 = 0;
 	double yN = 2;
 
@@ -62,9 +62,9 @@ int main() {
 	double alpha = 0.5; // tuning parameter
 	double eps = 0.01; // dry zone parameter
 
-	double NS = 0.0; // coefficient for the Navier-Stokes tensor
+	double NS = 1.0; // coefficient for the Navier-Stokes tensor
 
-	int Nx = 28; // 
+	int Nx = 252;//27; // 
 	int Ny = 3; // 
 
 	// выделение пам€ти дл€ массивов данных
@@ -87,7 +87,7 @@ int main() {
 
 	// параметры отрисовки
 	int Visualization_to_techplot_flag = 0; // вывод результатов дл€ визуализации в Tecplot
-	double t_step = 2.0; // (T_end - T_begin) / 20; // интервал вывода данных в файл 
+	double t_step = 1; // (T_end - T_begin) / 20; // интервал вывода данных в файл 
 
 	double sea_level = 10000;  // высота берега, котора€ входит в расчЄт (бќльшие высоты программа игнорирует и не считает)
 	
@@ -114,7 +114,7 @@ int main() {
 	*/
 	for (int i = 0; i < Nx; i++)
 	{
-		double x = x0 + (i - 1)*(xN - x0) / (Nx - 1);
+		double x = x0 + i*(xN - x0) / (Nx - 1);
 		for (int j = 0; j < Ny; j++)
 		{
 			int k = i*Ny + j;
@@ -124,8 +124,10 @@ int main() {
 			}
 			H[k] = 0.33 - B[k];
 		}
-		cout << i << " " << x << " " << B[i*Ny + 1] << " " << H[i*Ny + 1] << endl;
+		//cout << i << " " << x << " " << B[i*Ny + 1] << " " << H[i*Ny + 1] << endl;
 	}
+
+	xU[0 * Ny + 1] = 2* 0.18 / 0.33;
 
 	
 	/* === INITIALIZATION === */

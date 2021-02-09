@@ -144,10 +144,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="1D\1DDamBreak.cpp" />
+    <ClCompile Include="1D\1DcriticalFlow.cpp" />
     <ClCompile Include="ephemeris\Calendar.cpp" />
     <ClCompile Include="ephemeris\Ephemeris.cpp" />
-    <ClCompile Include="Kara_Gate_Tides_MAIN.cpp" />
     <ClCompile Include="MainCore\BoundaryConditions.cpp" />
     <ClCompile Include="MainCore\Constants.cpp" />
     <ClCompile Include="MainCore\Force.cpp" />

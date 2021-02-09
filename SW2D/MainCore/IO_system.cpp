@@ -19,6 +19,11 @@ void Raschet::outputInputs()
 			Save_Grid();
 			Save_Data();			
 		}
+		if (TXToutputFlag)
+		{
+			Save_GridTXT();
+			Save_DataTXT();
+		}
 
 		if (Visualization_to_techplot_flag) 
 		{
@@ -117,6 +122,54 @@ void Raschet::Save_Grid() {
 	ft.close();
 }
 
+void Raschet::Save_GridTXT() {
+	string save_path = path + "/Grid"; // full path name to the preparing folder
+
+	Prepare_Folder(save_path);
+
+	string name_X = save_path + "/Xtxt.dat";
+	string name_Y = save_path + "/Ytxt.dat";
+
+	string name_Lon = save_path + "/Lontxt.dat";
+	string name_Lat = save_path + "/Lattxt.dat";
+
+	string name_B = save_path + "/Btxt.dat";
+	//string name_t = save_path + "/t.dat";
+
+	std::ofstream fX(name_X, std::ios::out);
+	std::ofstream fY(name_Y, std::ios::out);
+
+	std::ofstream fB(name_B, std::ios::out);
+
+	std::ofstream fNN(save_path + "/Nx_Ny.dat", std::ios::out);
+	fNN << Nx << " " << Ny;
+
+	printArray(fX, X, Nx, Ny, "X");
+	printArray(fY, X, Nx, Ny, "Y");
+
+	if (hlat + hlon > 0)
+	{
+		std::ofstream fLon(name_Lon, std::ios::out);
+		std::ofstream fLat(name_Lat, std::ios::out);
+
+		printArray(fLon, Lon, Nx, Ny, "Lon");
+		printArray(fLat, Lat, Nx, Ny, "Lat");
+
+		fLon.close();
+		fLat.close();
+	}
+
+	printArray(fB, B, Nx, Ny, "B");
+
+	fNN.close();
+	fX.close();
+	fY.close();
+	fB.close();
+
+	//std::ofstream ft(name_t, std::ios::out);
+	//ft.close();
+}
+
 // Save all variable at time moment "Time_of_work"
 void Raschet::Save_Data() {
 	string save_path = path + "/" + to_str(Time_elapsed); // full path name to the preparing folder
@@ -179,7 +232,7 @@ void Raschet::Save_DataTXT() {
 	string name_Fx = save_path + "/ForceXtxt.dat";
 	string name_Fy = save_path + "/ForceYtxt.dat";
 
-	string name_t = path + "/Grid/t.dat";
+	//string name_t = path + "/Grid/t.dat";
 
 	std::ofstream fH(name_h, std::ios::out);
 	std::ofstream fxU(name_xU, std::ios::out);
@@ -187,18 +240,18 @@ void Raschet::Save_DataTXT() {
 
 	std::ofstream fC;
 
-	std::ofstream ft(name_t, std::ios::out | std::ios::app);
+	//std::ofstream ft(name_t, std::ios::out | std::ios::app);
 
-	ft << to_str(Time_elapsed) << " ";
+	//ft << to_str(Time_elapsed) << " ";
 
-	Array2FileText(fH, H, Nx, Ny);
-	Array2FileText(fxU, xU, Nx, Ny);
-	Array2FileText(fyU, yU, Nx, Ny);
+	printArray(fH, H, Nx, Ny, "H");
+	printArray(fxU, xU, Nx, Ny, "xU");
+	printArray(fyU, yU, Nx, Ny, "yU");
 
 	fH.close();
 	fxU.close();
 	fyU.close();
-	ft.close();
+	//ft.close();
 
 	if (TransportProblemFlag)
 	{
@@ -207,6 +260,7 @@ void Raschet::Save_DataTXT() {
 		fC.close();
 	}
 }
+
 
 
 // Reastart: reading all variables from time moment "Time_moment"

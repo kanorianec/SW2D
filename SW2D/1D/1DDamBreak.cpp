@@ -28,7 +28,7 @@ int main() {
  
 	// T_begin, T_end - start and end time respectively, in seconds х 
 	double T_begin = 0;
-	double T_end = 100;
+	double T_end = 51;
 
 	// start date and time of current problem (UTC)
 
@@ -40,8 +40,8 @@ int main() {
 	int second = 0; // [0, 59] 
 
 	// boundary values of rectangle area
-	double x0 = -100;
-	double xN = 2100;
+	double x0 = -50;
+	double xN = 2050;
 	double y0 = 0;
 	double yN = 200;
 
@@ -59,12 +59,12 @@ int main() {
 	/* === COEFFICIENTS FOR NUMERICAL SOLUTION  === */
 
 	double beta = 0.1; // CFL number (0; 1)
-	double alpha = 0.5; // tuning parameter
+	double alpha = 0.1; // tuning parameter
 	double eps = 0.01; // dry zone parameter
 
 	double NS = 0.0; // coefficient for the Navier-Stokes tensor
 
-	int Nx = 23; // 
+	int Nx = 22; // 
 	int Ny = 3; // 
 
 	// выделение памяти для массивов данных
@@ -110,7 +110,7 @@ int main() {
 			}				
 		}
 	}
-	
+
 	Raschet *R1 = new Raschet(Test_name,
 		Postscript, 
 		x0,

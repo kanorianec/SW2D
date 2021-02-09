@@ -14,14 +14,14 @@ void pause();
 bool checkSymmetry(double* A, int Nx, int Ny, std::string name = "noname");
 
 template <typename Temp>
-void printTArray(Temp* A, int Nx, int Ny, std::string name);
-void printArray(double* A, int Nx, int Ny, std::string name = "noname");
-void printArray(int* A, int Nx, int Ny, std::string name = "noname");
+void printTArray(std::ostream& os, Temp* A, int Nx, int Ny, std::string name);
+void printArray(std::ostream& os, double* A, int Nx, int Ny, std::string name = "noname");
+void printArray(std::ostream& os, int* A, int Nx, int Ny, std::string name = "noname");
 
 template <typename Temp>
-void printTFlux(Temp* Ax, Temp* Ay, int Nx, int Ny, std::string name);
-void printFlux(double* Ax, double* Ay, int Nx, int Ny, std::string name = "noname");
-void printFlux(int* Ax, int* Ay, int Nx, int Ny, std::string name = "noname");
+void printTFlux(std::ostream& os, Temp* Ax, Temp* Ay, int Nx, int Ny, std::string name);
+void printFlux(std::ostream& os, double* Ax, double* Ay, int Nx, int Ny, std::string name = "noname");
+void printFlux(std::ostream& os, int* Ax, int* Ay, int Nx, int Ny, std::string name = "noname");
 
 bool checkEquality(double* A1, double* A2, int Nx, int Ny);
 

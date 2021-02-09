@@ -33,6 +33,8 @@ extern int Phi_reg;
 extern bool massFluxCorrection; // flag
 extern double epsFlux;
 
+const bool wellBalancedScheme = true;
+
 // ignore warning of existing case folder
 extern bool ignore_warning; 
 

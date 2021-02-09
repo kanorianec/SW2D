@@ -419,52 +419,52 @@ bool checkEquality(double* A1, double* A2, int Nx, int Ny)
 	return eq;
 }
 
-void printArray(double* A, int Nx, int Ny, string name)
+void printArray(std::ostream& os, double* A, int Nx, int Ny, string name)
 {
-	printTArray(A, Nx, Ny, name);
+	printTArray(os, A, Nx, Ny, name);
 }
-void printArray(int* A, int Nx, int Ny, string name)
+void printArray(std::ostream& os, int* A, int Nx, int Ny, string name)
 {
-	printTArray(A, Nx, Ny, name);
+	printTArray(os, A, Nx, Ny, name);
 }
 
 template <typename Temp>
-void printTArray(Temp* A, int Nx, int Ny, string name)
+void printTArray(std::ostream& os, Temp* A, int Nx, int Ny, string name)
 {
-	cout << " == Array \"" << name << "\": ==" << endl;
-	cout.precision(4);
+	os << " == Array \"" << name << "\": ==" << endl;
+	os.precision(4);
 	for (int j = 0; j < Ny; j++)
 	{
 		if (j == 0)
 		{
-			cout << left << setw(10) << " /";
+			os << left << setw(10) << " /";
 			for (int i = 0; i < Nx; i++)
 			{
 				if (j != Ny - 1)
-					cout << setfill('-');
-				cout << left << setw(10)  << to_str(i) + " " << setfill(' ');
+					os << setfill('-');
+				os << left << setw(10)  << to_str(i) + " " << setfill(' ');
 			}
-			cout << endl << endl;
+			os << endl << endl;
 			setfill(' ');
 		}
 
 		for (int i = 0; i < Nx; i++)
 		{
 			if (i == 0)
-				cout << left << setw(10) << " " + to_str(j);
-			cout << left << setw(10) << to_str(A[i*Ny + j]);
+				os << left << setw(10) << " " + to_str(j);
+			os << left << setw(10) << to_str(A[i*Ny + j]);
 		}
 
-		cout << endl << endl;
+		os << endl << endl;
 	}
-	cout << endl;
+	os << endl;
 }
 
 
 template <typename Temp>
-void printTFlux(Temp* Ax, Temp* Ay, int Nx, int Ny, string name)
+void printTFlux(std::ostream& os, Temp* Ax, Temp* Ay, int Nx, int Ny, string name)
 {
-	cout << " == Flux \"" << name << "\": ==" << endl;
+	os << " == Flux \"" << name << "\": ==" << endl;
 
 	int p = 4;
 	//int interval = 5;
@@ -473,7 +473,7 @@ void printTFlux(Temp* Ax, Temp* Ay, int Nx, int Ny, string name)
 	{
 		for (int i = 0; i < Nx; i++)
 		{
-			//cout << left << setw(10) << A[i*Ny + j] << " ";
+			//os << left << setw(10) << A[i*Ny + j] << " ";
 			string Xdirection = " ";
 			double xAval = 0.0; 
 
@@ -490,13 +490,13 @@ void printTFlux(Temp* Ax, Temp* Ay, int Nx, int Ny, string name)
 				Xdirection = ">";
 			
 			if (i != 0 && j != 0 && j != Ny - 1)
-				cout << string((p + 2) / 2 + 1, ' ') << Xdirection + Axstr << string((p + 2) / 2 + 1, ' ') + "x";
+				os << string((p + 2) / 2 + 1, ' ') << Xdirection + Axstr << string((p + 2) / 2 + 1, ' ') + "x";
 			else if (i == 0)
-				cout << "  " + to_str(j);
+				os << "  " + to_str(j);
 			else
-				cout << " " + string(2 * (p + 3) - 1, '-') + " " + to_str(i);			
+				os << " " + string(2 * (p + 3) - 1, '-') + " " + to_str(i);
 		}
-		cout << endl << endl;
+		os << endl << endl;
 		if (j != Ny - 1)
 			for (int i = 0; i < Nx; i++)
 			{
@@ -515,29 +515,29 @@ void printTFlux(Temp* Ax, Temp* Ay, int Nx, int Ny, string name)
 				else if (yAval > 0)
 					Ydirection = "v";
 				//if (j == 0)
-				//	cout << left << setw(interval * 2) << " |";
+				//	os << left << setw(interval * 2) << " |";
 				//else
-				//	cout << internal << setw(interval * 2) << "  |  ";
+				//	os << internal << setw(interval * 2) << "  |  ";
 
 				if (i != Nx - 1 && i != 0)
-					cout << string((p + 2) / 2 + 1, ' ') << "+" << string((p + 2) / 2 + 1, ' ') + Ydirection + Aystr;
+					os << string((p + 2) / 2 + 1, ' ') << "+" << string((p + 2) / 2 + 1, ' ') + Ydirection + Aystr;
 				//cout << string((p + 2) / 2, ' ') + "x" + string((p + 2) / 2, ' ') << Ydirection + Aystr;			
 				else if (i == Nx - 1)
-					cout << string((p + 2) / 2 + 1, ' ') << "+" << string((p + 2) + 1, ' ') + "|";
+					os << string((p + 2) / 2 + 1, ' ') << "+" << string((p + 2) + 1, ' ') + "|";
 				else if (i == 0)
-					cout << "  " + (string)"|" + string((p + 2) / 2, ' ');
+					os << "  " + (string)"|" + string((p + 2) / 2, ' ');
 			}
-		cout << endl << endl;
+		os << endl << endl;
 	}
-	cout << endl;
+	os << endl;
 }
 
-void printFlux(double* Ax, double* Ay, int Nx, int Ny, string name)
+void printFlux(std::ostream& os, double* Ax, double* Ay, int Nx, int Ny, string name)
 {
-	printTFlux(Ax, Ay, Nx, Ny, name);
+	printTFlux(os, Ax, Ay, Nx, Ny, name);
 }
 
-void printFlux(int* Ax, int* Ay, int Nx, int Ny, string name)
+void printFlux(std::ostream& os, int* Ax, int* Ay, int Nx, int Ny, string name)
 {
-	printTFlux(Ax, Ay, Nx, Ny, name);
+	printTFlux(os, Ax, Ay, Nx, Ny, name);
 }
