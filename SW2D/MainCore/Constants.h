@@ -6,7 +6,7 @@
 // =========================================================
 // Physical and Mathematical constants
 
-const double gc = 9.81;
+const double gc = 10.0; // 9.81;
 //const double G = 0.0000000000667408; // gravitational constant
 
 const double SD = 1.2035; // Dudson's constant for Sun
@@ -33,6 +33,8 @@ extern int Phi_reg;
 extern bool massFluxCorrection; // flag
 extern double epsFlux;
 
+const bool wellBalancedScheme = true;
+
 // ignore warning of existing case folder
 extern bool ignore_warning; 
 
@@ -46,7 +48,9 @@ extern double alpha_c;
 // Coefficient of viscosity in the transport equation, basic = 0.0, for special cases = 1.0/gc
 extern double NSC;
 
+
 const bool binaryOutputFlag = true; // output to binary flag
+const bool TXToutputFlag = true; // output to text flag
 
 const double CriticalVal = 10000.0;
 
@@ -84,6 +88,7 @@ enum TypeOfVariable {
 	VELOCITY_X = 1,
 	VELOCITY_Y = 2,
 	CONCENTRATION = 3,
+	FLOW = 4,
 	TIDE = 777
 };
 

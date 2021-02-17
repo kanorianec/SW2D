@@ -77,11 +77,11 @@ void Raschet::SetOpenBoundaryConditions(TypeOfPoint PType1, TypeOfPoint PType2, 
 	SetZeroDerivativeConditions(HEIGHT, PType1, PType2, PType3, PType4, PType5, PType6, PType7, PType8);
 	SetZeroDerivativeConditions(VELOCITY_X, PType1, PType2, PType3, PType4, PType5, PType6, PType7, PType8);
 	SetZeroDerivativeConditions(VELOCITY_Y, PType1, PType2, PType3, PType4, PType5, PType6, PType7, PType8);
+	SetZeroDerivativeConditions(FLOW, PType1, PType2, PType3, PType4, PType5, PType6, PType7, PType8);
 	if (TransportProblemFlag)
 	{
 		SetZeroDerivativeConditions(CONCENTRATION, PType1, PType2, PType3, PType4, PType5, PType6, PType7, PType8);
 	}
-
 	t2_bound = -1; // COSTIL!
 }
 
@@ -113,8 +113,6 @@ void Raschet::SetWallBoundaryConditions(TypeOfPoint PType1, TypeOfPoint PType2, 
 		}
 	}
 }
-
-
 
 void Raschet::SetFileBoundaryConditions(TypeOfVariable VType, TypeOfPoint PType1, TypeOfPoint PType2, TypeOfPoint PType3, TypeOfPoint PType4)
 {

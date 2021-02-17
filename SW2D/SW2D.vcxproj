@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="1D\1DcriticalFlow.cpp" />
     <ClCompile Include="ephemeris\Calendar.cpp" />
     <ClCompile Include="ephemeris\Ephemeris.cpp" />
     <ClCompile Include="MainCore\BoundaryConditions.cpp" />

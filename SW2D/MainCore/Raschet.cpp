@@ -238,8 +238,8 @@ void Raschet::Exec_Raschet()
 void Raschet::Perform_Calculations()
 {		
 	HourMark = ((int)T_begin / 3600);
-	dT = ((hx + hy)*0.5*beta) / sqrt(gc*(Hmax + 10));
-	
+	dT = ((hx + hy)*0.5*beta) / sqrt(gc*(Hmax)); // + 10
+	dT = 0.005;
 	write_extra_inf(cout,0); // output metadata to the screen
 	
 	write_extra_inf_to_file(0); // output metadata to the special file extra_inf.txt
@@ -253,7 +253,7 @@ void Raschet::Perform_Calculations()
 	int est_time = 1;
 	double estimation_time = omp_get_wtime();
 
-	while (T_end>Time_elapsed && !Stop_Raschet_Flag)
+	while (T_end>=Time_elapsed && !Stop_Raschet_Flag)
 	{
 		Numerical_scheme_time_step_parallel();
 		//int Sym = 1;
@@ -291,12 +291,17 @@ void Raschet::Perform_Calculations()
 		if (Time_elapsed > 3600 * (HourMark + 1))
 			HourMark++;
 
-		if (Time_elapsed >= t_graph_export || Stop_Raschet_Flag)
+		if (Time_elapsed >= t_graph_export || Time_elapsed + dT > t_graph_export || Stop_Raschet_Flag)
 		{
 			outputResults();
 			t_graph_export = t_graph_export + t_step;
 		}
 	}
+	/*
+	for (int i = 0; i < Nx; i++)
+	{
+		cout << i << " " << Ht[i*Ny + 1] << endl;
+	}*/
 
 	//if (Stop_Raschet_Flag)
 	//	outputResults();
