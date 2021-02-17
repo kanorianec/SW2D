@@ -250,3 +250,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/SW2D/borders_old
+/SW2D/initial_old
+/SW2D/tidesHarmonics_old

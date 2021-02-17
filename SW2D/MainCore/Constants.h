@@ -91,7 +91,8 @@ enum BoundaryConditions {
 	OPEN_BORDER = 1,
 	WALL = -1,
 	CONSTANT_VALUE = 0,
-	FROM_FILE = 2
+	FROM_FILE = 2,
+	ONLY_TIDE = 3
 };
 
 const int tideNum = 8; // number of tides harmonics

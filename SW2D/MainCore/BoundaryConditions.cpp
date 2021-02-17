@@ -1,6 +1,7 @@
 #include "Raschet.h"
 #include "technical.h"
 #include <cmath>
+#include <algorithm>
 
 // Set up boundary conditions of d/dn = 0
 void Raschet::SetZeroDerivativeConditions(TypeOfVariable VType, TypeOfPoint PType1, TypeOfPoint PType2, TypeOfPoint PType3, TypeOfPoint PType4, TypeOfPoint PType5, TypeOfPoint PType6, TypeOfPoint PType7, TypeOfPoint PType8)
@@ -121,9 +122,12 @@ void Raschet::SetFileBoundaryConditions(TypeOfVariable VType, TypeOfPoint PType1
 	if (t2_bound < 0)
 	{
 		FT = fopen("borders/time_shift.dat", "r");
-		fscanf(FT, "%lf\n", &t2_bound);
-		if (FT == NULL)
+		if (FT == NULL) 
+		{
 			std::cout << "Error: borders/time_shift.dat was not found!" << endl;
+			pause();
+		}			
+		fscanf(FT, "%lf\n", &t2_bound);		
 	}
 
 	const int VarNum = 4;
@@ -370,6 +374,8 @@ void Raschet::SetTidesHarmonicsBoundaryConditions(TypeOfPoint PType1, TypeOfPoin
 			TypeOfPoint PType = tempType[i];
 			if (PType != EXCLUDED)
 			{
+				if (border[HEIGHT][PType] != FROM_FILE && border[HEIGHT][PType] != CONSTANT_VALUE)
+					border[HEIGHT][PType] = ONLY_TIDE;
 				tideSide[PType] = true;
 				int N = Nx;
 				if (PType == LEFT || PType == RIGHT)
@@ -503,9 +509,9 @@ void Raschet::addTidesHarmonicsBoundaryConditions()
 	{
 		if (tideSide[PType])
 		{
-			if (border[HEIGHT][PType] != CONSTANT_VALUE && border[HEIGHT][PType] != FROM_FILE)
+			if (border[HEIGHT][PType] != CONSTANT_VALUE && border[HEIGHT][PType] != FROM_FILE && border[HEIGHT][PType] != ONLY_TIDE)
 			{
-				cout << PType << " boundary conditions has to be const value or from file!" << endl;
+				cout << PType << " boundary conditions has to be const value or from file or ONLY_TIDE!" << endl;
 				cin.ignore(1024, '\n');
 				Stop_Raschet_Flag = 1;
 			}
@@ -542,7 +548,11 @@ void Raschet::addTidesHarmonicsBoundaryConditions()
 					{
 						for (int it = 0; it < tideNum; it++)
 						{
+							if (border[HEIGHT][PType] == ONLY_TIDE)
+								Ht[Na*k + Nb] = std::max(-B[Na*k + Nb] - Bmin, eps);
 							Ht[Na*k + Nb] += f[it] * 0.01 * tideA[PType][it][k] * (cos(t*qTide[it] + v0[it] + u[it] - tidePh[PType][it][k]));
+							if (Ht[Na*k + Nb] < 0)
+								Ht[Na*k + Nb] = eps;
 						}
 					}
 					

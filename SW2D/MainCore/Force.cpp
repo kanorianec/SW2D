@@ -158,7 +158,7 @@ void Raschet::Recalc_forces_parallel()
 
 		if (windForcing)
 		{
-			double gamma = 0.001268 *(1.1 + 0.0004 * sqrt(xWind[k] * xWind[k] + yWind[k] * yWind[k])) * 0.001;
+			double gamma = 0.001268 *(1.1 + 0.04 * sqrt(xWind[k] * xWind[k] + yWind[k] * yWind[k])) * 0.001;
 			PhiX[k] += gamma * xWind[k];
 			PhiY[k] += gamma * yWind[k];
 		}
