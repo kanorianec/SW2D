@@ -11,7 +11,7 @@ std::string to_str(double num, int p = -1);
 bool folderNotExists(std::string folder_path);
 
 void pause();
-bool checkSymmetry(double* A, int Nx, int Ny, std::string name = "noname");
+bool checkSymmetry(double* A, int Nx, int Ny, std::string name = "noname", bool ignoreVert = false, bool ignoreHoriz = false);
 
 template <typename Temp>
 void printTArray(std::ostream& os, Temp* A, int Nx, int Ny, std::string name);

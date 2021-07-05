@@ -60,7 +60,7 @@ int main() {
 
 	double beta = 0.05; // CFL number (0; 1)
 	double alpha = 0.5; //
-	double eps = 1e-3; //
+	double eps = 1e-4; //
 
 	double NS = 1.0; // коээфициент при тензоре Навье-Стокса
 

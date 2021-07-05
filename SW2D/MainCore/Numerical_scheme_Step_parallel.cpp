@@ -140,15 +140,46 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			//yJ //yJ_05B = H_05B*yU_05B - yW_05B; //**APPROVED**//
 			yJ[k] = (dT / hy) * (H_05T*yU_05T - yW_05T);
 
-			if (H[k] <= eps && xJ[k] > 0 || H[k_R] <= eps && xJ[k] < 0)
+			
+				if (H[k] <= eps && xJ[k] > 0 || H[k_R] <= eps && xJ[k] < 0)
+				{
+					xJ[k] = 0.0;
+					//yJ[k] = 0.0;
+				}
+				if (H[k] <= eps && yJ[k] > 0 || H[k_T] <= eps && yJ[k] < 0)
+				{
+					//xJ[k] = 0.0;
+					yJ[k] = 0.0;
+				}
+					
+
+			double xJ_05R(0), xJ_05L(0), yJ_05B(0), yJ_05T(0);
+			if (k > Ny)
 			{
-				xJ[k] = 0.0;
-				//yJ[k] = 0.0;
-			}			
-			if (H[k] <= eps && yJ[k] > 0 || H[k_T] <= eps && yJ[k] < 0)
-			{
-				//xJ[k] = 0.0;
-				yJ[k] = 0.0;
+				//xJ
+				xJ_05R = (hx / dT) * xJ[k]; //H_05R*xU_05R - xW_05R; //**APPROVED**//
+											//if (H[k] <= eps && xJ[k] > 0 || H[k_R] <= eps && xJ[k] < 0)
+											//	xJ_05R = 0.0;
+
+				xJ_05L = (hx / dT) *xJ[k_L]; ////H_05L*xU_05L - xW_05L; //**APPROVED**//
+											 //if (H[k_L] <= eps && xJ[k_L] > 0 || H[k] <= eps && xJ[k_L] < 0)
+											 //	xJ_05L = 0.0;
+
+											 //yJ
+				yJ_05T = (hy / dT) *yJ[k];
+				//if (H[k] <= eps && yJ[k] > 0 || H[k_T] <= eps && xJ[k] < 0)
+				//	yJ_05T = 0.0;
+				// H_05T*yU_05T - yW_05T; //**APPROVED**//
+
+				yJ_05B = (hy / dT) *yJ[k_B]; // H_05B*yU_05B - yW_05B; //**APPROVED**//
+											 //if (H[k_B] <= eps && xJ[k_B] > 0 || H[k] <= eps && xJ[k_B] < 0)
+											 //	yJ_05B = 0.0;
+
+											 // Next time-step H
+
+				Ht[k] = H_c - (dT / hx)*(xJ_05R - xJ_05L) - (dT / hy) * (yJ_05T - yJ_05B); //**APPROVED**//
+				if (Ht[k] < 0.0 /*&& massFluxCorrection*/)
+					Ht[k] = 0.0;// eps / 2;
 			}
 
 			if (j == 1)
@@ -240,20 +271,51 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			B_c = B[k];
 
 			// Bathymetry B
-			B_05R05T = 0.25*(B[k] + B[k_R] + B[k_T] + B[k_RT]);
-			B_05R05B = 0.25*(B[k] + B[k_R] + B[k_B] + B[k_RB]);
-			B_05L05T = 0.25*(B[k] + B[k_L] + B[k_T] + B[k_LT]);
-			B_05L05B = 0.25*(B[k] + B[k_L] + B[k_B] + B[k_LB]);
-
-			B_05R = 0.5*(B[k] + B[k_R]);
-			B_05L = 0.5*(B[k] + B[k_L]);
-			B_05T = 0.5*(B[k] + B[k_T]);
-			B_05B = 0.5*(B[k_B] + B[k]);
+			//B_05R05T = 0.25*(B[k] + B[k_R] + B[k_T] + B[k_RT]);
+			//B_05R05B = 0.25*(B[k] + B[k_R] + B[k_B] + B[k_RB]);
+			//B_05L05T = 0.25*(B[k] + B[k_L] + B[k_T] + B[k_LT]);
+			//B_05L05B = 0.25*(B[k] + B[k_L] + B[k_B] + B[k_LB]);
+			//
+			//B_05R = 0.5*(B[k] + B[k_R]);
+			//B_05L = 0.5*(B[k] + B[k_L]);
+			//B_05T = 0.5*(B[k] + B[k_T]);
+			//B_05B = 0.5*(B[k_B] + B[k]);
 
 			B_1R = B[k_R];
 			B_1L = B[k_L];
 			B_1T = B[k_T];
 			B_1B = B[k_B];
+
+			if (H[k_R] <= eps && B[k_R] + H[k_R] > B[k_L] + H[k_L])
+				B_1R = B[k_L] + H[k_L] - H[k_R];
+
+			if (H[k_L] <= eps && B[k_L] + H[k_L] > B[k_R] + H[k_R])
+				B_1L = B[k_R] + H[k_R] - H[k_L];
+
+			if (H[k_T] <= eps && B[k_T] + H[k_T] > B[k_B] + H[k_B])
+				B_1T = B[k_B] + H[k_B] - H[k_T];
+			
+			if (H[k_B] <= eps && B[k_B] + H[k_B] > B[k_T] + H[k_T])
+				B_1B = B[k_T] + H[k_T] - H[k_B];
+
+			double B_1RT = B[k_RT];
+			double B_1LT = B[k_LT];
+
+			if (H[k_RT] <= eps && B[k_RT] + H[k_RT] > B[k_LT] + H[k_LT])
+				B_1RT = B[k_LT] + H[k_LT] - H[k_RT];
+
+			if (H[k_LT] <= eps && B[k_LT] + H[k_LT] > B[k_RT] + H[k_RT])
+				B_1LT = B[k_RT] + H[k_RT] - H[k_LT];
+
+			B_05R05T = 0.25*(B[k] + B_1R + B_1T + B[k_RT]);
+			B_05R05B = 0.25*(B[k] + B_1R + B_1B + B[k_RB]);
+			B_05L05T = 0.25*(B[k] + B_1L + B_1T + B[k_LT]);
+			B_05L05B = 0.25*(B[k] + B_1L + B_1B + B[k_LB]);
+
+			B_05R = 0.5*(B[k] + B_1R);
+			B_05L = 0.5*(B[k] + B_1L);
+			B_05T = 0.5*(B[k] + B_1T);
+			B_05B = 0.5*(B_1B + B[k]);
 
 			// Velocity-x Ux
 			xU_c = xU[k];
@@ -348,9 +410,9 @@ void Raschet::Numerical_scheme_time_step_parallel()
 
 			// Next time-step H
 
-			Ht[k] = H_c - (dT / hx)*(xJ_05R - xJ_05L) - (dT / hy) * (yJ_05T - yJ_05B); //**APPROVED**//
-			if (Ht[k] < 0.0 /*&& massFluxCorrection*/)
-				Ht[k] = 0.0;// eps / 2;
+			//Ht[k] = H_c - (dT / hx)*(xJ_05R - xJ_05L) - (dT / hy) * (yJ_05T - yJ_05B); //**APPROVED**//
+			//if (Ht[k] < 0.0 /*&& massFluxCorrection*/)
+			//	Ht[k] = 0.0;// eps / 2;
 					
 			// Dry-zone condition
 			if (Ht[k]>eps /*&& !epsilon[k]*/)//
@@ -460,7 +522,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				{
 					////xUt	
 					//// Well balanced: H[k] _c 0.5*(H2y2+H2y1)
-					xUt[k] = (H_c * xU_c
+					xUt[k] = /*(Ht[k_R] > eps) * (Ht[k_L] > eps) */ (H_c * xU_c
 						+ dT * PhiX_c
 						+ (dT / hx) * ((xxPT_05R - xxPT_05L) - (xU_05R * xJ_05R - xU_05L * xJ_05L))
 						+ (dT / hy) * ((yxPT_05T - yxPT_05B) - (xU_05T * yJ_05T - xU_05B * yJ_05B))
@@ -475,7 +537,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 
 					////yUt
 					//// Well balanced: H[k] _c 0.5*(H2y2+H2y1)
-					yUt[k] = (H_c * yU_c
+					yUt[k] = /*(Ht[k_T] > eps) * (Ht[k_B] > eps) */ (H_c * yU_c
 						+ dT * PhiY_c
 						+ (dT / hx) * ((xyPT_05R - xyPT_05L) - (yU_05R * xJ_05R - yU_05L * xJ_05L))
 						+ (dT / hy) * ((yyPT_05T - yyPT_05B) - (yU_05T * yJ_05T - yU_05B * yJ_05B))
@@ -791,10 +853,10 @@ void Raschet::Numerical_scheme_time_step_parallel()
 		// if (H+B)_dry < (H+B)_wet -> only mass flux
 
 		if (H[m] <= eps ) {
-
+			/*
 			#pragma omp atomic
 			epsilon[m] += 1;
-			/*
+			
 			if (i != Nx - 1) {
 				#pragma omp atomic
 				epsilon[(i + 1)*Ny + j] += (int)(Ht[(i + 1)*Ny + j] + B[(i + 1)*Ny + j] < B[m] + eps);
@@ -819,7 +881,8 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				epsilon[i*Ny + j - 1] += (int)(Ht[i*Ny + j - 1] + B[i*Ny + j - 1] < B[m] + eps);
 				//xUt[i*Ny + j - 1] = 0.0;
 				//yUt[i*Ny + j - 1] = 0.0;
-			}	*/
+			}	
+			*/
 			/*
 			if (i != Nx - 1 && j != Ny - 1) {
 				#pragma omp atomic
@@ -932,8 +995,15 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			Stop_Raschet_Flag = 1;
 		}
 	}//end of for (m=0; m<(Ny*Nx); m++)
-	//checkSymmetry(H, Nx, Ny, "H");
-	//checkSymmetry(xU, Nx, Ny, "xU");
-	//checkSymmetry(yU, Nx, Ny, "yU");
-	//pause();
+
+	//bool hSym = checkSymmetry(H, Nx, Ny, "H", true, false);
+	//bool xUSym = checkSymmetry(xU, Nx, Ny, "xU", true, false);
+	//bool yUSym = checkSymmetry(yU, Nx, Ny, "yU", true, false);
+	//
+	//if (!hSym || !xUSym || !yUSym)
+	//{
+	//	cout << hSym << " " << xUSym << " " << yUSym << endl;
+	//	cout << Time_elapsed << endl;
+	//	pause();
+	//}
 }

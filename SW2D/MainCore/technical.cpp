@@ -337,7 +337,7 @@ void pause()
 	cin.get();
 }
 
-bool checkSymmetry(double* A, int Nx, int Ny, string name)
+bool checkSymmetry(double* A, int Nx, int Ny, string name, bool ignoreVert, bool ignoreHoriz)
 {
 	bool Sym = true;
 	// horizontal symmetry
@@ -347,9 +347,9 @@ bool checkSymmetry(double* A, int Nx, int Ny, string name)
 	bool avSym = true;
 
 	cout << " == Array \"" << name << "\": ==" << endl;
-	cout.precision(10);
+	cout.precision(12);
 
-	double difZero = 0;// 1e-16;
+	double difZero = 1e-10;
 
 	for (int j = 0; j < Ny; j++)
 	{
@@ -359,10 +359,10 @@ bool checkSymmetry(double* A, int Nx, int Ny, string name)
 			{
 				hSym = hSym && (fabs(A[i*Ny + j] - A[(Nx - i - 1)*Ny + j]) <= difZero); //(A[i*Ny + j] == A[(Nx - i - 1)*Ny + j]);
 				ahSym = ahSym && (fabs(A[i*Ny + j] + A[(Nx - i - 1)*Ny + j]) <= difZero); //(A[i*Ny + j] == - A[(Nx - i - 1)*Ny + j]);
-				if (!(hSym || ahSym))
+				if (!((fabs(A[i*Ny + j] - A[(Nx - i - 1)*Ny + j]) <= difZero) || (fabs(A[i*Ny + j] + A[(Nx - i - 1)*Ny + j]) <= difZero)) && !ignoreVert)
 				{
-					cout << "h";
-					//DEBUG
+					cout << "v";
+					////DEBUG
 					//cout << fabs(A[i*Ny + j] - A[(Nx - i - 1)*Ny + j]) << " " << fabs(A[i*Ny + j] + A[(Nx - i - 1)*Ny + j]) << endl;
 					//system("pause");
 				}
@@ -373,9 +373,9 @@ bool checkSymmetry(double* A, int Nx, int Ny, string name)
 			{
 				vSym = vSym && (fabs(A[i*Ny + j] - A[i*Ny + Ny - j - 1]) <= difZero); //(A[i*Ny + j] == A[i*Ny + Ny - j - 1]);
 				avSym = avSym && (fabs(A[i*Ny + j] + A[i*Ny + Ny - j - 1]) <= difZero); //(A[i*Ny + j] == - A[i*Ny + Ny - j - 1]);
-				if (!(vSym || avSym))
+				if (!((fabs(A[i*Ny + j] - A[i*Ny + Ny - j - 1]) <= difZero) || (fabs(A[i*Ny + j] + A[i*Ny + Ny - j - 1]) <= difZero)) && !ignoreHoriz)
 				{
-					cout << "v";
+					cout << "h";
 					//DEBUG
 					//cout << fabs(A[i*Ny + j] - A[i*Ny + Ny - j - 1]) << " " << fabs(A[i*Ny + j] + A[i*Ny + Ny - j - 1]) << endl;
 					//system("pause");
@@ -389,19 +389,25 @@ bool checkSymmetry(double* A, int Nx, int Ny, string name)
 
 	cout << "== ==" << endl;
 
-	if (hSym)
-		cout << "Array \"" << name << "\" is symmetrical horizontally: >-<" << endl;
-	else if (ahSym)
-		cout << "Array \"" << name << "\" is symmetrical horizontally up to a sign: +>-<-" << endl;
-	else
-		cout << "Array \"" << name << "\" is NOT symmetrical horizontally!" << endl;
-	if (vSym)
-		cout << "Array \"" << name << "\" is symmetrical vertically: >|< " << endl;
-	else if (avSym)
-		cout << "Array \"" << name << "\" is symmetrical vertically up to a sign: +>|<- " << endl;
-	else
-		cout << "Array \"" << name << "\" is NOT symmetrical vertically!" << endl;
-	Sym = Sym && (hSym || ahSym) && (vSym || avSym);
+	if (!ignoreHoriz)
+	{
+		if (vSym)
+			cout << "Array \"" << name << "\" is symmetrical horizontally: >-<" << endl;
+		else if (avSym)
+			cout << "Array \"" << name << "\" is symmetrical horizontally up to a sign: +>-<-" << endl;
+		else
+			cout << "Array \"" << name << "\" is NOT symmetrical horizontally!" << endl;
+	}
+	if (!ignoreVert)
+	{
+		if (hSym)
+			cout << "Array \"" << name << "\" is symmetrical vertically: >|< " << endl;
+		else if (ahSym)
+			cout << "Array \"" << name << "\" is symmetrical vertically up to a sign: +>|<- " << endl;
+		else
+			cout << "Array \"" << name << "\" is NOT symmetrical vertically!" << endl;
+	}
+	Sym = Sym && (hSym || ahSym || ignoreVert) && (vSym || avSym || ignoreHoriz);
 	return Sym;
 }
 bool checkEquality(double* A1, double* A2, int Nx, int Ny)

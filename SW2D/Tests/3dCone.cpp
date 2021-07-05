@@ -28,7 +28,7 @@ int main() {
 
 	// T_begin, T_end - start and end time respectively, in seconds 
 	double T_begin = 0;
-	double T_end = T_begin + 100;
+	double T_end = T_begin + 100;// 00;
 	int num_of_output_data = 100;// 50;
 
 	int Visualization_to_techplot_flag = 1; //
@@ -62,7 +62,7 @@ int main() {
 
 	double beta = 0.1; // CFL number (0; 1)
 	double alpha = 0.5; //
-	double eps = 1e-2; //
+	double eps = 1e-3; //
 
 	double NS = 2.0; // коээфициент при тензоре Навье-Стокса
 
@@ -81,7 +81,7 @@ int main() {
 	}
 
 	// название папки в \Data формируется как: Test_namePostscript
-	string Test_name = "3Cone"; // название теста 
+	string Test_name = "3Cone_wellB"; // название теста 
 	string Postscript = "_v0_" + to_string(Nx) + "x" + to_string(Ny); // Чем уникален тест, для отличия от остальных
 
 
@@ -127,7 +127,7 @@ int main() {
 			//B[k] = 0.0;// (x - 10.0)*(x - 10.0) / 40.0 + (y - 10.0)*(y - 10.0) / 40.0;
 			//if (y <= 35 && y >= 30)
 			//	B[k] += 5;
-			//H[k] = 5.0 - B[k];
+			//H[k] = 0.5 - B[k];
 			
 			if (x <= -21.5)
 				H[k] = 1.875;
