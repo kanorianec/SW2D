@@ -48,9 +48,13 @@ extern double alpha_c;
 // Coefficient of viscosity in the transport equation, basic = 0.0, for special cases = 1.0/gc
 extern double NSC;
 
+const double tauU = 1.0;
+
+const double n = 0.018;
+
 
 const bool binaryOutputFlag = true; // output to binary flag
-const bool TXToutputFlag = true; // output to text flag
+const bool TXToutputFlag = false; // output to text flag
 
 const double CriticalVal = 10000.0;
 

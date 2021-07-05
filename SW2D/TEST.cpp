@@ -117,8 +117,8 @@ int main() {
 	B[2 * Ny + 6] = 1;
 	B[7 * Ny + 3] = 1;
 	B[7 * Ny + 6] = 1;
-	printArray(B, Nx, Ny, "B");
-	printArray(B, Nx, Ny, "H");
+	printArray(std::cout, B, Nx, Ny, "B");
+	printArray(std::cout, B, Nx, Ny, "H");
 	pause();
 	//checkSymmetry(H, Nx, Ny, "H0");
 	
@@ -259,8 +259,8 @@ int main() {
 			if (R3->H[i*Ny + j] < R3->B[i*Ny + j])
 				R3->H[i*Ny + j] = 0.0;
 		}
-	printArray(R3->H, Nx, Ny, "H");
-	printArray(R3->B, Nx, Ny, "B");
+	printArray(std::cout, R3->H, Nx, Ny, "H");
+	printArray(std::cout, R3->B, Nx, Ny, "B");
 	//R3->Numerical_scheme_time_step_parallel();
 	R3->Exec_Raschet(); // выполнение расчёта
 	int leftOpen = 0;

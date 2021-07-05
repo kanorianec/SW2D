@@ -2,6 +2,7 @@
 #include "technical.h"
 #include <cmath>
 #include "Constants.h"
+#include <algorithm>
 
 void Raschet::SetWindSpeed(forceType fT, double WindFrictionCoefficient, double period, double xWindConst, double yWindConst)
 {
@@ -155,6 +156,13 @@ void Raschet::Recalc_forces_parallel()
 		ForceY[k] = TideForcing * Omy + -fc * 0.000145842 * sin(rad*Lat[k]) * xU[k];
 		PhiX[k] = -mu * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * xU[k];
 		PhiY[k] = -mu * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * yU[k];
+
+		if (H[k] > eps)
+		{
+			PhiX[k] -= gc * n * n * H[k] * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * xU[k] / pow(H[k], 4.0 / 3.0);
+			PhiY[k] -= gc * n * n * H[k] * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * yU[k] / pow(H[k], 4.0 / 3.0);
+		}
+
 
 		if (windForcing)
 		{

@@ -24,6 +24,7 @@ void printFlux(std::ostream& os, double* Ax, double* Ay, int Nx, int Ny, std::st
 void printFlux(std::ostream& os, int* Ax, int* Ay, int Nx, int Ny, std::string name = "noname");
 
 bool checkEquality(double* A1, double* A2, int Nx, int Ny);
+double sqr(double x);
 
 
 //int check_dot(Stations *S1, Stations *S2, int i, int j);

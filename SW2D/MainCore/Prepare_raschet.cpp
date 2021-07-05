@@ -113,7 +113,7 @@ void Raschet::Prepare_Raschet()
 			int m = i*Ny + j;
 			if (H[m] <= eps)
 				epsilon[m] += 1;
-
+			/*
 			if (i != Nx - 1) {
 				if (H[m] < eps)
 					dryFacesX[m] += (int)(H[(i + 1)*Ny + j] + B[(i + 1)*Ny + j] < B[m] + eps || H[(i + 1)*Ny + j] < eps);
@@ -136,7 +136,7 @@ void Raschet::Prepare_Raschet()
 
 			if (j != 0) {
 				epsilon[m] += (int)(H[i*Ny + j - 1] < eps);
-			}
+			}*/
 			/*
 			if (i != Nx - 1) {
 				if (H[m] < eps)
