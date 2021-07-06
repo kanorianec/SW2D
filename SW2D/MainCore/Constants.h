@@ -45,6 +45,8 @@ const bool COMBINE_FILE_AND_FREE_BOUNDARY_CONDITIONS = false; //true;
 // include forcing in boundary conditions
 const int F_bound = 0;
 
+const double tauU = 0.0;
+
 // type of transport equation regularization: alpha_c = 1 - normal, alpha_c = 0 - simplified, also could be between (0,1).
 extern double alpha_c;
 // Coefficient of viscosity in the transport equation, basic = 0.0, for special cases = 1.0/gc

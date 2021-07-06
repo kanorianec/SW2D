@@ -849,7 +849,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 	{ 		
 		if (!epsilon[m])
 		{
-			tau[m] = alpha*sqrt(hx*hy) / sqrt(gc*H[m]);//alpha*sqrt(hx*hy) / sqrt(gc*H[m]);
+			tau[m] = alpha*sqrt(hx*hy) / sqrt(gc*H[m] + tauU*sqrt(xU[m] * xU[m] + yU[m] * yU[m]));//alpha*sqrt(hx*hy) / sqrt(gc*H[m]);
 		}
 		else
 		{
