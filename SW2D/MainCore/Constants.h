@@ -19,6 +19,8 @@ const double pi = 3.141592653589793238462643; // Pi value
 const double rad = pi / 180.0; // degrees to radian factor
 const double Earth_R = 6371200;
 
+const double n = 0.018;
+
 const double SunAxis = 1.0; // Semi-major axis between Earth and Sun in astronomical unit
 const double MoonAxis = 0.00257188153; // Semi-major axis between Earth and Moon in astronomical unit
 

@@ -156,6 +156,12 @@ void Raschet::Recalc_forces_parallel()
 		PhiX[k] = -mu * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * xU[k];
 		PhiY[k] = -mu * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * yU[k];
 
+		if (H[k] > eps)
+		{
+			PhiX[k] -= gc * n * n * H[k] * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * xU[k] / pow(H[k], 4.0 / 3.0);
+			PhiY[k] -= gc * n * n * H[k] * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * yU[k] / pow(H[k], 4.0 / 3.0);
+		}
+
 		if (windForcing)
 		{
 			double gamma = 0.001268 *(1.1 + 0.04 * sqrt(xWind[k] * xWind[k] + yWind[k] * yWind[k])) * 0.001;

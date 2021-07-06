@@ -599,7 +599,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				+ (type == RIGHT) * 0.5 * (ForceY[n] + ForceY[k]) * hy / gc;
 			}
 
-			if (Ht[k]  > eps && !epsilon[n])
+			if (Ht[k]  > eps /*&& !epsilon[n]*/)
 			{
 				if (border[FLOW][type] == -1)
 				{
@@ -678,7 +678,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				k = n + 1 * (type == BOTTOM) - Ny*(type == RIGHT) - 1 * (type == TOP) + Ny*(type == LEFT) + (Ny + 1)*(type == LB_CORNER) + (1 - Ny)*(type == RB_CORNER) + (-Ny - 1)*(type == RT_CORNER) + (Ny - 1)*(type == LT_CORNER);
 				
 
-				if (Ht[k]  > eps && !epsilon[n])
+				if (Ht[k]  > eps /*&& !epsilon[n]*/)
 				{
 					xUt[n] = border_WALL[VELOCITY_X][type] * xUt[k];
 					yUt[n] = border_WALL[VELOCITY_Y][type] * yUt[k];

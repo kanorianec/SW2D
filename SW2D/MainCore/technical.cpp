@@ -541,3 +541,8 @@ void printFlux(std::ostream& os, int* Ax, int* Ay, int Nx, int Ny, string name)
 {
 	printTFlux(os, Ax, Ay, Nx, Ny, name);
 }
+
+double sqr(double x)
+{
+	return x*x;
+}

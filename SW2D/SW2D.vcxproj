@@ -144,7 +144,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="1D\1DcriticalFlow.cpp" />
     <ClCompile Include="ephemeris\Calendar.cpp" />
     <ClCompile Include="ephemeris\Ephemeris.cpp" />
     <ClCompile Include="MainCore\BoundaryConditions.cpp" />
@@ -159,7 +158,7 @@
     <ClCompile Include="MainCore\Time_control.cpp" />
     <ClCompile Include="MainCore\Transport_Problem.cpp" />
     <ClCompile Include="MainCore\Work_With_Techplot.cpp" />
-    <ClCompile Include="North_Seas_MAIN.cpp" />
+    <ClCompile Include="Tests\3dCone.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ephemeris\Ephemeris.h" />

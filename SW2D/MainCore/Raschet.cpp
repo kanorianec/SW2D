@@ -291,7 +291,7 @@ void Raschet::Perform_Calculations()
 		if (Time_elapsed > 3600 * (HourMark + 1))
 			HourMark++;
 
-		if (Time_elapsed >= t_graph_export || Time_elapsed + dT > t_graph_export || Stop_Raschet_Flag)
+		if (Time_elapsed >= t_graph_export || Time_elapsed + dT / 2 > t_graph_export || Stop_Raschet_Flag)
 		{
 			outputResults();
 			t_graph_export = t_graph_export + t_step;
