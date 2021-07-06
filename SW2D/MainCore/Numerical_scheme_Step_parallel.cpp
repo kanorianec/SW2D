@@ -286,6 +286,11 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			B_1T = B[k_T];
 			B_1B = B[k_B];
 
+			double B_1RW = B[k_R];
+			double B_1LW = B[k_L];
+			double B_1TW = B[k_T];
+			double B_1BW = B[k_B]; 
+
 			if (H[k_R] <= eps && B[k_R] + H[k_R] > B[k_L] + H[k_L])
 				B_1R = B[k_L] + H[k_L] - H[k_R];
 
@@ -417,19 +422,35 @@ void Raschet::Numerical_scheme_time_step_parallel()
 			// Dry-zone condition
 			if (Ht[k]>eps /*&& !epsilon[k]*/)//
 			{
-				
+				if (Ht[k_R] <= eps)
+				{
+					tau_05R = 0.0;
+				}
+				if (Ht[k_L] <= eps)
+				{
+					tau_05L = 0.0;
+				}
+				if (Ht[k_T] <= eps)
+				{
+					tau_05T = 0.0;
+				}
+				if (Ht[k_B] <= eps)
+				{
+					tau_05B = 0.0;
+				}
 				//xWS
 				xWS_05R = tau_05R * H_05R * (
 					xU_05R *(xU_1R - xU_c) / hx 
 					+ yU_05R * (xU_05R05T - xU_05R05B) / hy
-					+ gc * ((H_1R + B_1R) - (H_c + B_c)) / hx
+					+ gc * ((H_1R + B_1RW) - (H_c + B_c)) / hx
 					- F_reg * ForceX_05R
 					) 
 					- Phi_reg * tau_05R * PhiX_05R; //**APPROVED**//
+				
 				xWS_05L = tau_05L * H_05L * (
 					xU_05L *(xU_c - xU_1L) / hx 
 					+ yU_05L * (xU_05L05T - xU_05L05B) / hy
-					+ gc * ((H_c + B_c) - (H_1L + B_1L)) / hx
+					+ gc * ((H_c + B_c) - (H_1L + B_1LW)) / hx
 					- F_reg * ForceX_05L
 					) 
 					- Phi_reg * tau_05L * PhiX_05L; //**APPROVED**//
@@ -467,7 +488,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				yWS_05T = tau_05T * H_05T * (
 					xU_05T *(yU_05R05T - yU_05L05T) / hx 
 					+ yU_05T * (yU_1T - yU_c) / hy
-					+ gc * ((H_1T + B_1T) - (H_c + B_c)) / hy
+					+ gc * ((H_1T + B_1TW) - (H_c + B_c)) / hy
 					- F_reg * ForceY_05T
 					) 
 					- Phi_reg * tau_05T * PhiY_05T; //**APPROVED**//
@@ -475,7 +496,7 @@ void Raschet::Numerical_scheme_time_step_parallel()
 				yWS_05B = tau_05B * H_05B * (
 					xU_05B *(yU_05R05B - yU_05L05B) / hx 
 					+ yU_05B * (yU_c - yU_1B) / hy
-					+ gc * ((H_c + B_c) - (H_1B + B_1B)) / hy
+					+ gc * ((H_c + B_c) - (H_1B + B_1BW)) / hy
 					- F_reg * ForceY_05B
 					) 
 					- Phi_reg * tau_05B * PhiY_05B; //**APPROVED**//
@@ -501,6 +522,31 @@ void Raschet::Numerical_scheme_time_step_parallel()
 					+ yU_05B * 0.5 * (H_c * H_c - H_1B * H_1B) / hy
 					+ H_05B * H_05B * ((xU_05R05B - xU_05L05B) / hx + (yU_c - yU_1B) / hy) 
 					); //**APPROVED**//
+
+				//if (Ht[k_R] <= eps)
+				//{
+				//	xWS_05R = 0.0;
+				//	yWS_05R = 0.0;
+				//	//RS_05R = 0.0;
+				//}
+				//if (Ht[k_L] <= eps)
+				//{
+				//	xWS_05L = 0.0;
+				//	yWS_05L = 0.0;
+				//	//RS_05L = 0.0;
+				//}
+				//if (Ht[k_T] <= eps)
+				//{
+				//	xWS_05T = 0.0;
+				//	yWS_05T = 0.0;
+				//	//RS_05T = 0.0;
+				//}
+				//if (Ht[k_B] <= eps)
+				//{
+				//	xWS_05B = 0.0;
+				//	yWS_05B = 0.0;
+				//	//RS_05B = 0.0;
+				//}
 				
 				////xxPT
 				xxPT_05R = xU_05R * xWS_05R + RS_05R + NS * 2 * gc * tau_05R * H_05R * H_05R * 0.5 * (xU_1R - xU_c) / hx; //**APPROVED**//
