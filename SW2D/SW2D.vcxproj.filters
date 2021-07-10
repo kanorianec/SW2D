@@ -69,7 +69,7 @@
     <ClCompile Include="MainCore\technical.cpp">
       <Filter>Файлы исходного кода\MainCore</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\3dCone.cpp">
+    <ClCompile Include="RNF_2021_Rosneft.cpp">
       <Filter>Файлы ресурсов</Filter>
     </ClCompile>
   </ItemGroup>

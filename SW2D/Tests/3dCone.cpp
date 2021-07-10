@@ -104,9 +104,7 @@ int main() {
 	double RR = 2.0;
 	double xc = 10.0;
 	double yc = 10.0;
-	double HGT = 4.0;
-
-	
+	double HGT = 4.0;	
 	
 	//	#funkySetFields - create - field h - expression 'pos().x <= -21.5 ? 1.875 : 0.0' - dimension '[0 1 0 0 0 0 0]' - time 0
 	//	funkySetFields - create - field h - expression 'max(10.0 - b, 0.0)' - dimension '[0 1 0 0 0 0 0]' - time 0

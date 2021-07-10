@@ -158,7 +158,7 @@
     <ClCompile Include="MainCore\Time_control.cpp" />
     <ClCompile Include="MainCore\Transport_Problem.cpp" />
     <ClCompile Include="MainCore\Work_With_Techplot.cpp" />
-    <ClCompile Include="Tests\3dCone.cpp" />
+    <ClCompile Include="RNF_2021_Rosneft.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ephemeris\Ephemeris.h" />

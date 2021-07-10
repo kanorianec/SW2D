@@ -661,8 +661,62 @@ void Raschet::Numerical_scheme_time_step_parallel()
 					Ct[k] = C_c;
 				}
 			}
+			//cout.precision(30);
+			//int  i = int(k / Ny);
+			//int j = k % Ny;
+			//
+			//double temp = yU[i*Ny + j];
+			////if (temp != 0.0)
+			////	cout << "(" << i << " , " << j << "): " << temp << endl;
+			//if (i == 41 && j == 29 && int(Time_elapsed / dT) == 167)
+			//{
+			//	cout << int(Time_elapsed / dT) << "; (" << i << " , " << j << "): " << temp << endl;
+			//	//Print_info_about_point("Error", k);
+			//	//cout << pow(H[k], 4.0 / 3.0) << " " << exp(4.0 / 3.0 * log(H[k])) << endl; 
+			//	pause();
+			//}
 		} // end if (TypeOfPoint == INTERNAL)
 	} //end for (int k = Ny + 1; k < (Nx - 2)*Ny + Ny - 2 + 1; k++)
+	/*
+	cout.precision(30);
+	if (Time_elapsed > -1)
+	{
+		for (int i = 0; i < Nx; i++)
+			for (int j = 0; j < Ny; j++)
+			{
+				double temp = yU[i*Ny + j];
+				//if (temp != 0.0)
+				//	cout << "(" << i << " , " << j << "): " << temp << endl;
+				if (i == 41 && j == 29 && int(Time_elapsed / dT) == 167)
+				{
+					cout << int(Time_elapsed / dT) << "; (" << i << " , " << j << "): " << temp << endl;
+					Print_info_about_point("Error", i*Ny + j);
+					pause();
+				}
+			}
+		//cout << "Time_elapsed = " << Time_elapsed << endl;
+		if (Time_elapsed > 5)
+			pause();
+	}
+	*/
+
+	//cout.precision(30);
+	//if (int(Time_elapsed/dT) == 5)
+	//{
+	//	double sumH = 0.0;
+	//	double sumxU = 0.0;
+	//	double sumyU = 0.0;
+	//
+	//	for (int i = 0; i < Nx; i++)
+	//		for (int j = 0; j < Ny; j++)
+	//		{
+	//			sumH += fabs(Ht[i*Ny + j]);
+	//			sumxU += fabs(xUt[i*Ny + j]);
+	//			sumyU += fabs(yUt[i*Ny + j]);
+	//		}
+	//	cout << int(Time_elapsed / dT) << ": " << sumH << " " << sumxU << " " << sumyU << endl;
+	//	pause();
+	//}
 
 	// Boundary conditions
 	if (BoundaryConditionsFromFile)
@@ -1052,4 +1106,6 @@ void Raschet::Numerical_scheme_time_step_parallel()
 	//	cout << Time_elapsed << endl;
 	//	pause();
 	//}
+	//pause();
+	
 }
