@@ -30,7 +30,7 @@ extern const double qTide[tideNum] = {rad*15.041069,
 // === DEFAULT VALUES OF TECHNICAL PARAMETERS ===
 
 // use OpenMP
-bool parallelOpenMP = false; // true;
+bool parallelOpenMP = true; // true;
 // include forcing to regularization
 int F_reg = 0;
 int Phi_reg = 0;

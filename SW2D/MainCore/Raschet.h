@@ -54,6 +54,7 @@ public:
 
 	double eps; // dry-zones parameter
 	int* epsilon; // flags for dry zones detecting
+	double* epsilonArr;
 
 	// arrays of data in the next time step k + 1
 	double* tau;

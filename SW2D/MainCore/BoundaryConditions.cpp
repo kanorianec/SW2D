@@ -127,7 +127,7 @@ void Raschet::SetFileBoundaryConditions(TypeOfVariable VType, TypeOfPoint PType1
 		}			
 		fscanf(FT, "%lf\n", &t2_bound);		
 	}
-
+	
 	const int VarNum = 4;
 	TypeOfPoint tempType[VarNum] = { PType1, PType2, PType3, PType4 };
 	for (int i = 0; i < VarNum; i++)
@@ -139,8 +139,11 @@ void Raschet::SetFileBoundaryConditions(TypeOfVariable VType, TypeOfPoint PType1
 
 			FV[VType][PType] = fopen(Name.c_str(), "r");
 			if (FV[VType][PType] == NULL)
+			{
 				std::cout << "Error: " << Name << " was not found!" << endl;
-
+				pause();
+			}				
+			
 			int N = Nx;
 			if (PType != EXCLUDED)
 			{

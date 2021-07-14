@@ -124,51 +124,54 @@ void Raschet::Recalc_forces_parallel()
 		}
 	}
 
-#pragma omp parallel for
+	#pragma omp parallel for
 	for (int k = 0; k < Nx*Ny; k++)
 	{
-		double Omx = 0.0;
-		double Omy = 0.0;
-
-		if (TideForcing)
-		{
-			double H_Sun = ST - Sa + Lon[k] * rad;
-			double H_Moon = ST - Ma + Lon[k] * rad;
-
-			Omx = -SD * (SunAxis / SDist) * (SunAxis / SDist) * (SunAxis / SDist) * (sin(2 * Lat[k] * rad) * sin(2 * Sbeta) * sin(H_Sun) + 2 * cos(Lat[k] * rad)*cos(Lat[k] * rad) * cos(Sbeta)*cos(Sbeta) * sin(2 * H_Sun));
-			Omx += -MD * (MoonAxis / MDist)* (MoonAxis / MDist) * (MoonAxis / MDist) * (sin(2 * Lat[k] * rad) * sin(2 * Mbeta) * sin(H_Moon) + 2 * cos(Lat[k] * rad)*cos(Lat[k] * rad) * cos(Mbeta)*cos(Mbeta) * sin(2 * H_Moon));
-			Omx *= hlon * rad / hx;
-
-			Omy = SD * (SunAxis / SDist) * (SunAxis / SDist) * (SunAxis / SDist) * (sin(2 * Lat[k] * rad) * (3 * sin(Sbeta)*sin(Sbeta) - 1) + 2 * cos(2 * Lat[k] * rad) * sin(2 * Sbeta) * cos(H_Sun) - sin(2 * Lat[k] * rad) * cos(Sbeta)*cos(Sbeta) * cos(2 * H_Sun));
-			Omy += MD * (MoonAxis / MDist)* (MoonAxis / MDist) * (MoonAxis / MDist) * (sin(2 * Lat[k] * rad) * (3 * sin(Mbeta)*sin(Mbeta) - 1) + 2 * cos(2 * Lat[k] * rad) * sin(2 * Mbeta) * cos(H_Moon) - sin(2 * Lat[k] * rad) * cos(Mbeta)*cos(Mbeta) * cos(2 * H_Moon));
-			Omy *= hlat * rad / hy;
-
-			/*Omx = -2 * SD * (SunAxis/SDist) * (SunAxis / SDist) * (SunAxis / SDist) * (sin(2 * Lat[k] * rad)*sin(2 * Sbeta)*(sin(ST - Sa + 2 * Lon[k] * rad)) + 2 * cos(Lat[k] * rad)*cos(Lat[k] * rad)*cos(Sbeta)*cos(Sbeta)*(sin(2 * (ST - Sa + 2 * Lon[k] * rad))));
-			Omx += -2 * MD * (MoonAxis / MDist)* (MoonAxis / MDist) * (MoonAxis / MDist) * (sin(2 * Lat[k] * rad)*sin(2 * Mbeta)*(sin(ST - Ma + 2 * Lon[k] * rad)) + 2 * cos(Lat[k] * rad)*cos(Lat[k] * rad)*cos(Mbeta)*cos(Mbeta)*(sin(2 * (ST - Ma + 2 * Lon[k] * rad))));
-			Omx *= hlon * rad / hx;
-
-			Omy = SD * (SunAxis / SDist) * (SunAxis / SDist) * (SunAxis / SDist) * (sin(2 * Lat[k] * rad) * (3 * sin(Sbeta)*sin(Sbeta) - 1) + 2 * cos(2 * Lat[k] * rad)*sin(2 * Sbeta)*cos(ST - Sa + 2 * Lon[k] * rad) - sin(2 * Lat[k] * rad)*cos(Sbeta)*cos(Sbeta)*cos(2 * (ST - Sa + 2 * Lon[k] * rad)));
-			Omy += MD * (MoonAxis / MDist)* (MoonAxis / MDist) * (MoonAxis / MDist) * (sin(2 * Lat[k] * rad) * (3 * sin(Mbeta)*sin(Mbeta) - 1) + 2 * cos(2 * Lat[k] * rad)*sin(2 * Mbeta)*cos(ST - Ma + 2 * Lon[k] * rad) - sin(2 * Lat[k] * rad)*cos(Mbeta)*cos(Mbeta)*cos(2 * (ST - Ma + 2 * Lon[k] * rad)));
-			Omy *= hlat * rad / hy;*/
-			// 0.000145842 = 2 * 7.2921 / 100000
-		}
-		ForceX[k] = TideForcing * Omx + fc * 0.000145842 * sin(rad*Lat[k]) * yU[k];
-		ForceY[k] = TideForcing * Omy + -fc * 0.000145842 * sin(rad*Lat[k]) * xU[k];
-		PhiX[k] = -mu * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * xU[k];
-		PhiY[k] = -mu * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * yU[k];
-
 		if (H[k] > eps)
 		{
-			PhiX[k] -= gc * n * n * H[k] * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * xU[k] / pow(H[k], 4.0 / 3.0);
-			PhiY[k] -= gc * n * n * H[k] * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * yU[k] / pow(H[k], 4.0 / 3.0);
-		}
+			double Omx = 0.0;
+			double Omy = 0.0;
+
+			if (TideForcing)
+			{
+				double H_Sun = ST - Sa + Lon[k] * rad;
+				double H_Moon = ST - Ma + Lon[k] * rad;
+
+				Omx = -SD * (SunAxis / SDist) * (SunAxis / SDist) * (SunAxis / SDist) * (sin(2 * Lat[k] * rad) * sin(2 * Sbeta) * sin(H_Sun) + 2 * cos(Lat[k] * rad)*cos(Lat[k] * rad) * cos(Sbeta)*cos(Sbeta) * sin(2 * H_Sun));
+				Omx += -MD * (MoonAxis / MDist)* (MoonAxis / MDist) * (MoonAxis / MDist) * (sin(2 * Lat[k] * rad) * sin(2 * Mbeta) * sin(H_Moon) + 2 * cos(Lat[k] * rad)*cos(Lat[k] * rad) * cos(Mbeta)*cos(Mbeta) * sin(2 * H_Moon));
+				Omx *= hlon * rad / hx;
+
+				Omy = SD * (SunAxis / SDist) * (SunAxis / SDist) * (SunAxis / SDist) * (sin(2 * Lat[k] * rad) * (3 * sin(Sbeta)*sin(Sbeta) - 1) + 2 * cos(2 * Lat[k] * rad) * sin(2 * Sbeta) * cos(H_Sun) - sin(2 * Lat[k] * rad) * cos(Sbeta)*cos(Sbeta) * cos(2 * H_Sun));
+				Omy += MD * (MoonAxis / MDist)* (MoonAxis / MDist) * (MoonAxis / MDist) * (sin(2 * Lat[k] * rad) * (3 * sin(Mbeta)*sin(Mbeta) - 1) + 2 * cos(2 * Lat[k] * rad) * sin(2 * Mbeta) * cos(H_Moon) - sin(2 * Lat[k] * rad) * cos(Mbeta)*cos(Mbeta) * cos(2 * H_Moon));
+				Omy *= hlat * rad / hy;
+
+				/*Omx = -2 * SD * (SunAxis/SDist) * (SunAxis / SDist) * (SunAxis / SDist) * (sin(2 * Lat[k] * rad)*sin(2 * Sbeta)*(sin(ST - Sa + 2 * Lon[k] * rad)) + 2 * cos(Lat[k] * rad)*cos(Lat[k] * rad)*cos(Sbeta)*cos(Sbeta)*(sin(2 * (ST - Sa + 2 * Lon[k] * rad))));
+				Omx += -2 * MD * (MoonAxis / MDist)* (MoonAxis / MDist) * (MoonAxis / MDist) * (sin(2 * Lat[k] * rad)*sin(2 * Mbeta)*(sin(ST - Ma + 2 * Lon[k] * rad)) + 2 * cos(Lat[k] * rad)*cos(Lat[k] * rad)*cos(Mbeta)*cos(Mbeta)*(sin(2 * (ST - Ma + 2 * Lon[k] * rad))));
+				Omx *= hlon * rad / hx;
+
+				Omy = SD * (SunAxis / SDist) * (SunAxis / SDist) * (SunAxis / SDist) * (sin(2 * Lat[k] * rad) * (3 * sin(Sbeta)*sin(Sbeta) - 1) + 2 * cos(2 * Lat[k] * rad)*sin(2 * Sbeta)*cos(ST - Sa + 2 * Lon[k] * rad) - sin(2 * Lat[k] * rad)*cos(Sbeta)*cos(Sbeta)*cos(2 * (ST - Sa + 2 * Lon[k] * rad)));
+				Omy += MD * (MoonAxis / MDist)* (MoonAxis / MDist) * (MoonAxis / MDist) * (sin(2 * Lat[k] * rad) * (3 * sin(Mbeta)*sin(Mbeta) - 1) + 2 * cos(2 * Lat[k] * rad)*sin(2 * Mbeta)*cos(ST - Ma + 2 * Lon[k] * rad) - sin(2 * Lat[k] * rad)*cos(Mbeta)*cos(Mbeta)*cos(2 * (ST - Ma + 2 * Lon[k] * rad)));
+				Omy *= hlat * rad / hy;*/
+				// 0.000145842 = 2 * 7.2921 / 100000
+			}
+			ForceX[k] = TideForcing * Omx + fc * 0.000145842 * sin(rad*Lat[k]) * yU[k];
+			ForceY[k] = TideForcing * Omy + -fc * 0.000145842 * sin(rad*Lat[k]) * xU[k];
+			PhiX[k] = -mu * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * xU[k];
+			PhiY[k] = -mu * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * yU[k];
+
+			//if (H[k] > eps)
+			//{
+			//	PhiX[k] -= gc * n * n * H[k] * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * xU[k] / pow(H[k], 4.0 / 3.0);
+			//	PhiY[k] -= gc * n * n * H[k] * sqrt(xU[k] * xU[k] + yU[k] * yU[k]) * yU[k] / pow(H[k], 4.0 / 3.0);
+			//}
 
 
-		if (windForcing)
-		{
-			double gamma = 0.001268 *(1.1 + 0.04 * sqrt(xWind[k] * xWind[k] + yWind[k] * yWind[k])) * 0.001;
-			PhiX[k] += gamma * xWind[k];
-			PhiY[k] += gamma * yWind[k];
+			if (windForcing)
+			{
+				double gamma = 0.001268 *(1.1 + 0.0004 /** 100*/ * sqrt(xWind[k] * xWind[k] + yWind[k] * yWind[k])) * 0.001;
+				PhiX[k] += gamma * xWind[k] * sqrt(xWind[k] * xWind[k] + yWind[k] * yWind[k]);
+				PhiY[k] += gamma * yWind[k] * sqrt(xWind[k] * xWind[k] + yWind[k] * yWind[k]);
+			}
 		}
 	}
 };

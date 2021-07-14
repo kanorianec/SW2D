@@ -98,11 +98,12 @@ void Raschet::Print_info_about_point(string name, int index) {
 		cout << "Info about point " << name << endl;
 		cout << "index = " << index << "; i = " << i << ", j = " << j << endl;
 		cout << "X = " << X[index] << ", Y = " << Y[index] << ";" << endl;
-		cout << "eps = " << epsilon[index] << ";" << endl;
+		cout << "ep = " << eps << "; epsilon = " << epsilon[index] << "; epsArr = " << epsilonArr[index] << ";" << endl;
 		cout << "High = " << H[index] << "; B =  " << B[index] + Bmin << ";" << endl;
 		cout << "Ux = " << xU[index] << "; Uy = " << yU[index] << ";" << endl;
 		cout << "Utx = " << xUt[index] << "; Uty = " << yUt[index] << ";" << endl;
 		cout << "Ht = " << Ht[index] << ";" << endl;
+		cout << "Forces: PhiX = " << PhiX[index] << "; PhiY = " << PhiY[index] << "; ForceX = " << ForceX[index] << ";" << " ForceY = " << ForceY[index] << ";" << endl;
 		if (TransportProblemFlag)
 		{
 			cout << "C = " << C[index] << "; Ct = " << Ct[index] << ";" << endl;

@@ -24,11 +24,11 @@ double Bmin;
 int main() {
 	// T_begin, T_end - start and end time respectively, in seconds 
 	double T_begin = 0;
-	double T_end = 12 * 3600; // *24;
+	double T_end = 3600; // *24;
 	int num_of_output_data = 1;// 50;
 
 	int Visualization_to_techplot_flag = 0; //
-	double t_step = 3600;// 3600.0;// (T_end - T_begin) / num_of_output_data; 
+	double t_step = 100;//3600;// 3600.0;// (T_end - T_begin) / num_of_output_data; 
 
 	// start date and time of current problem (UTC)
 
@@ -39,8 +39,8 @@ int main() {
 	int minute = 0; // [0, 59]
 	int second = 0; // [0, 59] 
 
-	int Nx = 776;//1320; // 3240; // 
-	int Ny = 686;// 960; // 1080;
+	int Nx = 1056;//1320; // 3240; // 
+	int Ny = 726;// 960; // 1080;
 
 	// boundary values of rectangle area
 	double x0 = 0;
@@ -58,10 +58,10 @@ int main() {
 
 
 	double beta = 0.1; // CFL number (0; 1)
-	double alpha = 0.3; //
-	double eps = 0.9; //
+	double alpha = 0.5; //
+	double eps = 0.01; //
 
-	double NS = 1.0;//1.0; //
+	double NS = 2.0;//1.0; //
 	
 	
 	if (!parallelOpenMP)
@@ -100,18 +100,26 @@ int main() {
 	//int level_points = 0;  //
 
 	/* === Preparing initial data === */
-
-	FILE *F = fopen("bathymetry/North_776x686.dat", "r");
+	
+	FILE *F = fopen("bathymetry/RNFK2021_B_1056x726.dat", "r");
 	if (F == NULL)
-	    cout<<"Can't open bathymetry file!"<<endl;
+	{
+		cout << "Can't open bathymetry file!" << endl;
+		pause();
+	}
+	    
 	FILE *FH = fopen("initial/H_in.dat", "r");
-	if (FH == NULL) 
+	if (FH == NULL)
+	{
 	    cout<<"Can't open FH file"<<endl;
+		pause();
+	}
 	FILE *FU = fopen("initial/U_in.dat", "r");
 	FILE *FV = fopen("initial/V_in.dat", "r");
 	Bmin = 0;
 	// либо внутри цикла	
-	for (int j = Ny - 1; j >= 0; j--)
+	//for (int j = Ny - 1; j >= 0; j--)
+	for (int j = 0; j < Ny; j++)
 	{
 		for (int i = 0; i < Nx; i++)
 		{
@@ -153,23 +161,27 @@ int main() {
 		}
 	}
 	
-	//for (int i = 0; i < Nx; i++)
-	//{
-	//	B[i*Ny + Ny - 1] = B[i*Ny + Ny - 2];
-	//	H[i*Ny + Ny - 1] = H[i*Ny + Ny - 2];
-	//
-	//	//B[i*Ny + Ny - 1] = B[i*Ny + Ny - 2];
-	//	//H[i*Ny + Ny - 1] = H[i*Ny + Ny - 2];
-	//}
+	for (int i = 0; i < Nx; i++)
+	{
+		//B[i*Ny + Ny - 1] = B[i*Ny + Ny - 2];
+		//H[i*Ny + Ny - 1] = H[i*Ny + Ny - 2];
+	
+		B[i*Ny + Ny - 1] = B[i*Ny + Ny - 2];
+		H[i*Ny + Ny - 1] = H[i*Ny + Ny - 2];
+		xU[i*Ny + Ny - 1] = xU[i*Ny + Ny - 2];
+		yU[i*Ny + Ny - 1] = yU[i*Ny + Ny - 2];
+	}
 
-	//for (int j = 0; j < Ny; j++)
-	//{
-	//	B[0*Ny + j] = B[1*Ny + j];
-	//	H[0*Ny + j] = H[1*Ny + j];
-	//
-	//	B[(Nx - 1) * Ny + j] = B[(Nx - 2) * Ny + j];
-	//	H[(Nx - 1) * Ny + j] = H[(Nx - 2) * Ny + j];
-	//}
+	for (int j = 0; j < Ny; j++)
+	{
+		B[0*Ny + j] = B[1*Ny + j];
+		H[0*Ny + j] = H[1*Ny + j];
+		xU[0 * Ny + j] = xU[1 * Ny + j];
+		yU[0 * Ny + j] = yU[1 * Ny + j];
+		//
+		//B[(Nx - 1) * Ny + j] = B[(Nx - 2) * Ny + j];
+		//H[(Nx - 1) * Ny + j] = H[(Nx - 2) * Ny + j];
+	}
 	
 	Raschet *R = new Raschet(Test_name,
 		Postscript,
@@ -209,10 +221,10 @@ int main() {
 	//R->SetVisualizationProperties(0, T_end, Nx - 580, Ny - 150, Nx - 1, Ny - 1);
 	R->SetVisualizationProperties(T_begin, T_end, 0, 0, Nx - 1, Ny - 1);
 //	R->SetWallBoundaryConditions(TOP,RIGHT);
-	//R->SetFileBoundaryConditions(VELOCITY_X, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
-	//R->SetFileBoundaryConditions(VELOCITY_Y, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
+	R->SetFileBoundaryConditions(VELOCITY_X, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
+	R->SetFileBoundaryConditions(VELOCITY_Y, /*RIGHT,*/ LEFT, TOP/*, BOTTOM*/);
 	//R->SetWindSpeed(0.0, 3600);// 3600);
-	//R->SetWindSpeed(CONST_FORCE, 1.0, 3600, 2, -1);// 3600);
+	//R->SetWindSpeed(CONST_FORCE, 1.0, 3600, 10, -10);// 3600);
 	//R->SetTidesHarmonicsBoundaryConditions(LEFT, TOP, RIGHT);
 	//R->SetFileBoundaryConditions(HEIGHT, RIGHT, LEFT, TOP/*, BOTTOM*/);
 	/*
@@ -220,7 +232,6 @@ int main() {
 	R->SetFileBoundaryConditions(VELOCITY_Y, LEFT);
 	R->SetFileBoundaryConditions(HEIGHT, LEFT);
 	*/
-	
 	//R->SetWallBoundaryConditions(RIGHT, LEFT, TOP, BOTTOM);
 	//R->SetFixedBoundaryConditions(VELOCITY_X, RIGHT, -0.01);
 	//R->Restart_from_time_moment(75601.439079);

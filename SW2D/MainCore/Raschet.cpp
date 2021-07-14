@@ -97,6 +97,7 @@ Raschet::Raschet(string Test_name,
 	Raschet::xUt = new double[N]();
 	Raschet::yUt = new double[N]();
 	Raschet::Ht = new double[N]();
+	Raschet::epsilonArr = new double[N]();
 	//Raschet::PhiXt = new double[N]();
 	//Raschet::PhiYt = new double[N]();
 	Raschet::S = new int[N]();
@@ -192,6 +193,7 @@ Raschet::Raschet(string Test_name,
 	Raschet::xUt = new double[N](); // Initialization by zero
 	Raschet::yUt = new double[N]();
 	Raschet::Ht = new double[N]();
+	Raschet::epsilonArr = new double[N]();
 	//Raschet::PhiXt = new double[N]();
 	//Raschet::PhiYt = new double[N]();
 	Raschet::S = new int[N]();
@@ -329,6 +331,7 @@ Raschet::~Raschet()
 	delete[] Ht;
 	delete[] xUt;
 	delete[] yUt;
+	delete[] epsilonArr;
 
 	for (int PType = BOTTOM; PType <= LEFT; PType++)
 	{

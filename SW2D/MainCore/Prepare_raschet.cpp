@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "technical.h"
+#include <algorithm>
 
 #include <cmath>
 //#include <time.h>
@@ -152,6 +153,56 @@ void Raschet::Prepare_Raschet()
 			}
 			*/
 		}
+	}
+
+	if (epsGradB)
+	{
+		double MAX_epsilon;
+		int I0, J0;
+
+		for (int i = 1; i < Nx - 1; i++)
+		{
+			for (int j = 1; j < Ny - 1; j++)
+			{
+				epsilonArr[i*Ny + j] = fabs(B[(i + 1)*Ny + j] - B[(i - 1)*Ny + j]) + fabs(B[i*Ny + j + 1] - B[i*Ny + j - 1]);
+			}
+		}
+
+		for (int i = 1; i < Nx - 1; i++)
+		{
+			for (int j = 1; j < Ny - 1; j++)
+			{
+				MAX_epsilon = epsilonArr[i*Ny + j];
+
+				for (int k = 0; k < 3; k++)
+				{
+					for (int n = 0; n < 3; n++)
+					{
+						I0 = i - 1 + k;
+						J0 = j - 1 + n;
+
+						if (MAX_epsilon < epsilonArr[I0*Ny + J0])	MAX_epsilon = epsilonArr[I0*Ny + J0];
+					}
+				}
+				tau[i*Ny + j] = MAX_epsilon;
+			}
+		}
+	}
+
+	
+
+	for (int i = 0; i<Nx; i++)
+	{
+		for (int j = 0; j<Ny; j++)
+		{
+			//epsilon->V[i*Ny+j] = max(kappa*tau->V[i*Ny+j];,eps);
+			if (epsGradB)
+				epsilonArr[i*Ny + j] = max(kappa*tau[i*Ny + j], eps);
+			else
+				epsilonArr[i*Ny + j] = eps;
+		}
+
+
 	}
 
 	for (int i = 0; i<Nx; i++)

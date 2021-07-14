@@ -118,7 +118,7 @@ int main() {
 	B[7 * Ny + 3] = 1;
 	B[7 * Ny + 6] = 1;
 	printArray(std::cout, B, Nx, Ny, "B");
-	printArray(std::cout, B, Nx, Ny, "H");
+	printArray(std::cout, H, Nx, Ny, "H");
 	pause();
 	//checkSymmetry(H, Nx, Ny, "H0");
 	
@@ -198,6 +198,12 @@ int main() {
 	checkSymmetry(R1->xU, Nx, Ny, "xU");
 	checkSymmetry(R1->yU, Nx, Ny, "yU");
 	checkSymmetry(R1->C, Nx, Ny, "C");
+
+	//printArray(std::cout, R1->H, Nx, Ny, "H");
+	//printArray(std::cout, R1->xU, Nx, Ny, "xU");
+	//printArray(std::cout, R1->yU, Nx, Ny, "yU");
+	//printArray(std::cout, R1->epsilonArr, Nx, Ny, "epsilon");
+	pause();
 
 	/*
 	Raschet* R2(R1);

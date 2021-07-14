@@ -84,6 +84,7 @@ void Raschet::Save_Grid() {
 	string name_Lat = save_path + "/Lat.dat";
 	
 	string name_B = save_path + "/B.dat";
+	string name_eps = save_path + "/epsilon.dat";
 	string name_t = save_path + "/t.dat";
 
 	
@@ -92,6 +93,7 @@ void Raschet::Save_Grid() {
 	std::ofstream fY(name_Y, std::ios::out | std::ios::binary);
 	
 	std::ofstream fB(name_B, std::ios::out | std::ios::binary);
+	std::ofstream feps(name_eps, std::ios::out | std::ios::binary);
 
 	std::ofstream fNN(save_path + "/Nx_Ny.dat", std::ios::out);
 	fNN << Nx << " " << Ny;
@@ -112,11 +114,13 @@ void Raschet::Save_Grid() {
 	}
 	
 	fB.write(reinterpret_cast<const char*> (B), sizeof(double) * Nx * Ny);
+	feps.write(reinterpret_cast<const char*> (epsilonArr), sizeof(double) * Nx * Ny);
 
 	fNN.close();
 	fX.close();
 	fY.close();	
 	fB.close();
+	feps.close();
 	
 	std::ofstream ft(name_t, std::ios::out);
 	ft.close();

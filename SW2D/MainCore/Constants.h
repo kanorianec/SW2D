@@ -6,7 +6,7 @@
 // =========================================================
 // Physical and Mathematical constants
 
-const double gc = 10.0; // 9.81;
+const double gc = 9.81;
 //const double G = 0.0000000000667408; // gravitational constant
 
 const double SD = 1.2035; // Dudson's constant for Sun
@@ -49,8 +49,10 @@ extern double alpha_c;
 extern double NSC;
 
 const double tauU = 1.0;
+const bool epsGradB = true;
+const double kappa = 1.0;
 
-const double n = 0.018;
+const double n = 0.0;// 0.018;
 
 
 const bool binaryOutputFlag = true; // output to binary flag
